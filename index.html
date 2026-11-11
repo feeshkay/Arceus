@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Hisui Completionist Companion</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/htm@3.1.1/dist/htm.umd.js"></script>
+<style>:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{background:#0f1419;color:#e2e8f0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.pre{white-space:pre-line}</style></head>
+<body><div id="root"></div>
+<script>
+const h=htm.bind(React.createElement),{useState,useEffect}=React;
+const P=t=>t.trim().split("\n").map(r=>r.split("|"));
+// ---------- DATA (edit/extend here) ----------
+const EVO=P(`Quilava|Hisuian Typhlosion|Level 36 (in Hisui)|Standard level-up evolution in Hisui.
+Dewott|Hisuian Samurott|Level 36 (in Hisui)|Standard level-up evolution in Hisui.
+Dartrix|Hisuian Decidueye|Level 36 (in Hisui)|Standard level-up evolution in Hisui.
+Stantler|Wyrdeer|Use Agile Style Psyshield Bash 20 times|Learns Psyshield Bash at Lv. 21, masters it at Lv. 31. Trigger evolution from satchel menu.
+Scyther|Kleavor|Use Black Augurite|Use directly from satchel like an evolution stone. Dropped by Graveler or dug up by Ursaluna.
+Ursaring|Ursaluna|Use Peat Block during a Full Moon|Sleep at camp until Nightfall and check the sky for a full moon before using Peat Block from satchel.
+White-Striped Basculin|Basculegion|Take 294+ recoil damage without fainting|Use Wave Crash or Double-Edge; healing at camp or with potions preserves the recoil counter, fainting resets it.
+Hisuian Sneasel|Sneasler|Use Razor Claw during Daytime|Use directly from satchel during Morning, Midday, or Evening.
+Hisuian Qwilfish|Overqwil|Use Strong Style Barb Barrage 20 times|Learns Barb Barrage at Lv. 15, masters it at Lv. 25.
+Goomy|Hisuian Sliggoo|Level 40 (in Hisui)|Standard level-up.
+Hisuian Sliggoo|Hisuian Goodra|Level 50 during Rain or Fog|Must be actively raining or foggy in the overworld when triggering evolution.
+Bergmite|Hisuian Avalugg|Level 37 (in Hisui)|Standard level-up.
+Rufflet|Hisuian Braviary|Level 54 (in Hisui)|Standard level-up.
+Petilil|Hisuian Lilligant|Use Sun Stone|Use directly from satchel.
+Hisuian Zorua|Hisuian Zoroark|Level 30|Standard level-up.
+Hisuian Voltorb|Hisuian Electrode|Use Leaf Stone|Use directly from satchel.
+Johtonian Sneasel|Weavile|Use Razor Claw at Night|Johtonian Sneasel is exclusive to Obsidian Fieldlands Space-Time Distortions.
+Magneton|Magnezone|Use Thunder Stone OR level up in Coronet Highlands|Magneton is exclusive to Cobalt Coastlands Space-Time Distortions.
+Nosepass|Probopass|Use Thunder Stone OR level up in Coronet Highlands|Both methods work.
+Eevee|Leafeon|Use Leaf Stone OR approach Moss Rock in Obsidian Fieldlands|Moss Rock is in The Heartwood.
+Eevee|Glaceon|Use Ice Stone OR approach Ice Rock in Alabaster Icelands|Ice Rock is in an underground cavern beneath Bonechill Wastes.
+Eevee|Sylveon|High Friendship + knowing a Fairy-type move|Remove Fairy moves if aiming for Espeon or Umbreon instead.
+Mime Jr.|Mr. Mime|Level up while knowing Mimic|Learns Mimic at Lv. 25.
+Bonsly|Sudowoodo|Level up while knowing Mimic|Learns Mimic at Lv. 29.
+Aipom|Ambipom|Level up while knowing Double Hit|Learns Double Hit at Lv. 25.
+Yanma|Yanmega|Level up while knowing Ancient Power|Learns Ancient Power at Lv. 33.
+Tangela|Tangrowth|Level up while knowing Ancient Power|Learns Ancient Power at Lv. 24.
+Piloswine|Mamoswine|Level up while knowing Ancient Power|Learns Ancient Power at Lv. 34.
+Porygon2|Porygon-Z|Use Dubious Disc|No trading required; use directly from satchel.
+Rhydon|Rhyperior|Use Protector|No trading required; use directly from satchel.
+Electabuzz|Electivire|Use Electirizer|No trading required; use directly from satchel.
+Magmar|Magmortar|Use Magmarizer|No trading required; use directly from satchel.
+Dusclops|Dusknoir|Use Reaper Cloth|No trading required; use directly from satchel.
+Scyther|Scizor|Use Metal Coat|No trading required; use directly from satchel.
+Onix|Steelix|Use Metal Coat|No trading required; use directly from satchel.
+Kadabra|Alakazam|Use Linking Cord|Buy from Simona for 1,000 MP or find in Space-Time Distortions.
+Machoke|Machamp|Use Linking Cord|Use directly from satchel.
+Graveler|Golem|Use Linking Cord|Use directly from satchel.
+Haunter|Gengar|Use Linking Cord|Use directly from satchel.`);
+const LEG=P(`Dialga|Steel/Dragon|65|Main Story Mission 17 (Temple of Sinnoh)|Ursaluna, Garchomp, Machamp|Earth Power, High Horsepower, Drain Punch|Caught via story battle or Origin Ball depending on Adaman/Irida choice.
+Palkia|Water/Dragon|65|Main Story Mission 17 (Temple of Sinnoh)|Hisuian Goodra, Sylveon, Togekiss|Dragon Pulse, Moonblast, Dazzling Gleam|Fairy types completely block Spacial Rend.
+Uxie|Psychic|70|Post-Game Mission 21 (Lake Acuity)|Hisuian Zoroark, Darkrai, Spiritomb|Bitter Malice, Dark Pulse, Shadow Ball|Riddle answer is 60131 (eyes on Combee, Zubat, Unown, Magneton, Dusclops).
+Mesprit|Psychic|70|Post-Game Mission 21 (Lake Verity)|Hisuian Zoroark, Darkrai, Weavile|Bitter Malice, Dark Pulse, Night Slash|Hisuian Zoroark resists Psychic and is immune to Normal/Ghost coverage.
+Azelf|Psychic|70|Post-Game Mission 21 (Lake of Valor)|Hisuian Zoroark, Drapion, Spiritomb|Bitter Malice, Crunch, Shadow Ball|Throw balms during the initial trial phase, then chip down with False Swipe.
+Heatran|Fire/Steel|70|Post-Game Mission 22 (Lava Dome Sanctum)|Garchomp, Ursaluna, Gastrodon|Earth Power, Bulldoze, Headlong Rush|Throw Mud Balls or Sticky Globs at Heatran to break its magma shield before throwing a Pokémon.
+Cresselia|Psychic|70|Post-Game Mission 23 (Moonview Arena)|Hisuian Typhlosion, Drapion, Weavile|Infernal Parade, Crunch, Night Slash|Controls are reversed near Cresselia; stun it with a thrown item first, then engage.
+Regigigas|Normal|70|Post-Game Mission 24 (Snowpoint Temple)|Hisuian Decidueye, Lucario, Gallade|Triple Arrows, Aura Sphere, Close Combat|Requires Iron, Stone, and Icicle Plates in your satchel to open the temple door.
+Giratina|Ghost/Dragon|70|Post-Game Mission 26-27 (Turnback Cave)|Togekiss, Umbreon, Weavile|Moonblast, Dark Pulse, Ice Shard|Defeat Volo’s 6 Pokémon + 2 Giratina phases at Temple of Sinnoh first; Giratina then spawns in Turnback Cave.
+Tornadus|Flying|70|Post-Game Request 94 (Bonechill Wastes)|Magnezone, Electivire, Rhyperior|Thunderbolt, Thunder Punch, Rock Slide|Only spawns during a Blizzard/Snowstorm. Use Smoke Bombs + Jet Balls to break its wind shield.
+Thundurus|Electric/Flying|70|Post-Game Request 94 (Sand’s Reach)|Mamoswine, Glaceon, Garchomp|Ice Beam, Icicle Crash, Stone Edge|Only spawns in water during a Thunderstorm. Approach on Basculegion and stun with Feather/Jet Balls.
+Landorus|Ground/Flying|70|Post-Game Request 94 (Ramanas Island)|Mamoswine, Glaceon, Weavile|Ice Beam, Blizzard, Ice Shard|Always present on Ramanas Island in Obsidian Fieldlands. Break shield with Sticky Globs.
+Enamorus|Fairy/Flying|70|Post-Game Request 94 (Scarlet Bog)|Magnezone, Hisuian Goodra, Empoleon|Flash Cannon, Iron Head, Thunderbolt|Unlocks after showing Cogita completed Research Lv. 10 entries for Tornadus, Thundurus, and Landorus.
+Manaphy|Water|50|Request 66: The Sea’s Legend (Seaside Hollow)|Magnezone, Hisuian Electrode, Shaymin|Thunderbolt, Energy Ball, Seed Flare|Have Buizel, Mantyke, and Overqwil in party; swim through Cobalt Coastlands sea arch at Evening.
+Phione|Water|35|Request 66: The Sea’s Legend (Seaside Hollow)|Gallade, Hisuian Electrode|False Swipe, Thunder Wave|Three Phione spawn alongside Manaphy inside Seaside Hollow.
+Shaymin|Grass|70|Request 92 (Requires Sword/Shield save data)|Hisuian Arcanine, Togekiss, Crobat|Flare Blitz, Air Slash, Cross Poison|Speak to Medi at Obsidian Fieldlands camp, then visit Floaro Gardens.
+Darkrai|Dark|70|Request 93 (Requires BDSP save data)|Togekiss, Sylveon, Lucario|Moonblast, Dazzling Gleam, Aura Sphere|Spawns at Clamberclaw Cliffs in Coronet Highlands at Night.
+Arceus|Normal (Dynamic Plate)|75|Mission 27 (Catch all 239 non-Mythical/DLC entries)|Garchomp, Hisuian Goodra, Cresselia, Ursaluna|Earth Power, Dragon Pulse, Lunar Blessing, Headlong Rush|Complete balm-throwing phase, then battle Lv. 75 Arceus. It shifts types dynamically via Legend Plate.`);
+const GIN=P(`Mechanical Box|Rotom Heat (Microwave)|20000
+Mechanical Tub|Rotom Wash (Washing Machine)|20000
+Mechanical Cabinet|Rotom Frost (Refrigerator)|20000
+Mechanical Pinwheel|Rotom Fan (Electric Fan)|20000
+Mechanical Circular Saw|Rotom Mow (Lawnmower)|20000
+Lump of Coal|Black Augurite (Evolves Scyther -> Kleavor)|10000
+Clod of Mud|Peat Block (Evolves Ursaring -> Ursaluna)|10000
+Hunk of Metal|Metal Coat (Evolves Scyther/Onix)|10000
+Strange Cloth|Reaper Cloth (Evolves Dusclops)|10000
+Jagged Claw|Razor Claw (Evolves Sneasel)|10000
+Fanged Tooth|Razor Fang (Evolves Gligar)|10000
+Sparkling Stone|Shiny Stone / Dawn Stone / Dusk Stone|5000
+Glittering Stone|Thunder Stone / Sun Stone / Moon Stone|5000
+Chilly Stone|Ice Stone / Water Stone|5000
+Warm Stone|Fire Stone / Leaf Stone|5000`);
+const SIM=P(`Linking Cord|1000|Haunter, Kadabra, Machoke, Graveler
+Peat Block|1200|Ursaring -> Ursaluna (Full Moon)
+Black Augurite|1200|Scyther -> Kleavor
+Metal Coat|1000|Scyther -> Scizor, Onix -> Steelix
+Protector|1400|Rhydon -> Rhyperior
+Upgrade|1000|Porygon -> Porygon2
+Dubious Disc|1400|Porygon2 -> Porygon-Z
+Electirizer / Magmarizer|1400|Electabuzz / Magmar
+Razor Claw / Razor Fang|1400|Sneasel / Gligar
+Reaper Cloth|1400|Dusclops -> Dusknoir`);
+const ZIS=P(`False Swipe|Normal|High|Leaves wild Pokémon at 1 HP for safe captures.
+Thunder / Ice / Fire Punch|Electric/Ice/Fire|High|Cheap early coverage for Noble bosses and Alphas.
+Recover / Roost|Normal/Flying|High|Self-healing saves Potions during long Alpha runs.
+Calm Mind / Bulk Up|Psychic/Fighting|Medium|Agile Style boosts stats while often granting an immediate follow-up turn.
+Earth Power / Flamethrower / Ice Beam / Thunderbolt|Special|Post-Game|High-accuracy special coverage for Volo and Arceus.`);
+const REQ=P(`22|Eerie Apparitions in the Night|Collect all 107 Spiritomb Wisps across Hisui.
+27|Help Wanted: Plowing the Fields|Expands Jubilife Farm plot #1.
+42|Help Wanted: Watering the Fields|Expands Jubilife Farm plot #2.
+60|Help Wanted: Rock Smashing in the Fields|Expands Jubilife Farm plot #3 (unlocks Mint harvests for Nature changing).
+23|Getting Ahold of New Wares|Expands Choy’s General Store inventory.
+43|More New Wares|Expands Choy’s General Store inventory (tier 2).
+61|Even More New Wares|Expands Choy’s General Store inventory (tier 3).
+71|New Wares Yet Again|Unlocks full General Store inventory including Ultra Ball & Sticky Glob ingredients.
+95|A New Anomaly|Starts the Massive Mass Outbreak questline (Requests 95-102).`);
+const WISP={"Jubilife Village (7)":`Automatically given by Vessa when accepting Request 22.
+Behind the houses near the Training Grounds.
+Behind the southern houses near the Pasture.
+Along the river bank west of the Galaxy Hall bridge.
+In the small clearing behind the Photography Studio / Clothier.
+Near the western gate leading toward Prelude Beach.
+On the grassy hill behind the Galaxy Hall building.`,
+"Obsidian Fieldlands (20)":`Aspiration Hill - On the ridge just north of the Fieldlands Camp.
+Aspiration Hill - On a ledge south of the Alpha Rapidash field.
+Horseshoe Plains - Near the western cliff edge overlooking the river.
+Floaro Gardens - On the upper grassy hill north of the flower field.
+Worn Bridge - On the cliff ledge just north of the bridge.
+Tidewater Dam - On the rock ledge overlooking the dam from the west.
+Heights Camp - On the hill directly southeast of the camp.
+Deertrack Heights - At the very peak near the Alpha Stantler.
+Deertrack Path - Tucked into a corner along the winding cliff path.
+Windswept Run - On a high rock shelf near the Kleavor arena.
+Grandtree Arena - Behind the massive tree on the southern edge.
+Nature’s Pantry - On a grassy ledge on the eastern cliffside.
+The Heartwood - Near the river bank south of the Moss Rock.
+The Heartwood - High on a cliff ledge in the southeastern corner.
+Obsidian Falls - On a rock ledge halfway down the waterfall.
+Sandgem Flats - On the western shore near the Alpha Alakazam.
+Sandgem Flats - On the small cliff overlooking the southwestern beach.
+Lake Verity - On the northern cliff ridge above the lake.
+Ramanas Island - On the western shore of the island (requires Basculegion).
+Ramanas Island - Near the southern tip of the island.`,
+"Crimson Mirelands (20)":`Mirelands Camp - On the cliff ridge directly south of the camp.
+Golden Lowlands - On a rocky hill northwest of the Diamond Settlement.
+Golden Lowlands - Near the river bend east of the Diamond Settlement.
+Gapejaw Bog - On a small dirt mound in the northern swamp.
+Gapejaw Bog - Near the cliff wall along the western border.
+Sludge Mound - On the hill overlooking the Alpha Toxicroak.
+Ursa’s Ring - On the rocky ridge above the Ursaluna arena.
+Holm of Trials - On the southern shore of the island.
+Holm of Trials - At the top of the central cliff on the island.
+Brava Arena - On the high cliff ledge overlooking the Lilligant arena.
+Cloudpool Ridge - Near the northern mountain pass.
+Cloudpool Ridge - On a narrow ledge on the eastern cliff face.
+Solaceon Ruins - On the hill directly behind the ruins.
+Scarlet Bog - On a small island in the middle of the red marsh.
+Scarlet Bog - Along the southern riverbank near the Alpha Hippowdon.
+Droning Meadow - On the high cliff ridge on the eastern edge.
+Droning Meadow - Near the pond in the southeastern corner.
+Cottonsedge Prairie - In the flower field near the Alpha Yanmega.
+Lake Valor - On the eastern cliff ridge overlooking the lake.
+Lake Valor - On a small ledge on the northwestern side of the lake.`,
+"Cobalt Coastlands (20)":`Beachside Camp - On the grassy hill directly north of the camp.
+Crossing Slope - On a rocky ledge overlooking Ginkgo Landing.
+Ginkgo Landing - On the high cliff at the southern tip of the peninsula.
+Bathers’ Lagoon - On the small grassy island in the center of the lagoon.
+Aipom Hill - At the peak of the hill overlooking the sea.
+Deadwood Haunt - Inside the hull of the southern shipwreck.
+Deadwood Haunt - On the cliff ledge above the northern shipwreck.
+Veilstone Cape - Halfway up the steep slope toward the cape.
+Veilstone Cape - Near the Alpha Machamp on the upper ridge.
+Windbreak Stand - On the narrow cliff path leading north.
+Hideaway Bay - Tucked inside the hidden cove at water level.
+Tranquility Cove - On top of the giant stone archway in the sea.
+Lunker’s Lair - On the small rocky islet east of the main coast.
+Islespy Shore - Along the northern beach near the Alpha Empoleon.
+Tombolo Walk - On the sandbar connecting to Firespit Island.
+Firespit Island - On the outer western beach of the volcano.
+Firespit Island - High up on the northern crater rim.
+Castaway Shore - On a rock pillar rising out of the shallow water.
+Seagrass Haven - On the small grassy island in the southern sea.
+Sand’s Reach - At the tip of the leftmost finger peninsula.`,
+"Coronet Highlands (20)":`Highlands Camp - On the cliff ledge directly north of the camp.
+Wayward Wood - On a rock outcrop near the river bend.
+Wayward Wood - High on the southern cliff wall overlooking the woods.
+Sonorous Path - On a ledge along the eastern canyon wall.
+Heavenward Lookout - Near the ruined stone pillars on the cliffside.
+Ancient Quarry - Inside the quarry on an upper wooden scaffolding ledge.
+Ancient Quarry - On the exterior mountain ridge above the quarry.
+Celestica Ruins - Behind the main ruined temple structure.
+Celestica Ruins - On a pillar ledge overlooking the southern valley.
+Sacred Plaza - On the snowy cliff edge west of the plaza.
+Cloudcap Pass - On a narrow rock shelf along the winding mountain trail.
+Lonely Spring - On the cliff ridge directly above the hot spring.
+Fabled Spring - On the high rock wall overlooking the purple flowers.
+Primeval Grotto - Inside the dark cavern near the entrance.
+Clamberclaw Cliffs - Halfway up the vertical rock wall (use Sneasler).
+Clamberclaw Cliffs - At the very top of the eastern peak.
+Bolderoll Ravine - On a ledge deep inside the ravine.
+Bolderoll Slope - Near the Alpha Gliscor on the snowy slope.
+Stonetooth Rows - On top of one of the jagged stone spires.
+Moonview Arena - On the outer rock wall behind the arena.`,
+"Alabaster Icelands (20)":`Snowfields Camp - On the icy ridge directly northeast of the camp.
+Bonechill Wastes - Inside a sunken snow pit near the Alpha Froslass.
+Bonechill Wastes - On top of a jagged ice spike on the western edge.
+Whiteout Valley - Along the high snowy cliff bordering the valley.
+Whiteout Valley - Behind a large boulder near the Alpha Abomasnow.
+Glacier Terrace - On a narrow ice shelf overlooking the terrace.
+Glacier Terrace - Near the Alpha Gardevoir on the upper snowfield.
+Avalugg’s Legacy - On top of one of the mid-height flat ice pillars.
+Avalugg’s Legacy - Tucked inside a ground-level alcove between ice walls.
+Icebound Falls - On a cliff ledge halfway up the frozen waterfall.
+Arena’s Approach - Behind the stone archway leading to the arena.
+Icepeak Arena - On the high snowy wall behind the Avalugg arena.
+Pearl Settlement - Behind one of the tents on the northern edge.
+Lake Acuity - On the northern snowbank overlooking the lake.
+Lake Acuity - On the southeastern cliff edge above the lake.
+Heart’s Crag - Near the Alpha Garchomp on the upper mountain ledge.
+Heart’s Crag - Inside the underground ice cavern (drop down the hole).
+Snowpoint Temple - On the exterior snowy ledge to the left of the temple.
+Snowpoint Temple - Inside the temple basement near the ice puzzle.
+Snowpoint Temple - On the roof/upper exterior balcony of the temple.`};
+const UNO=P(`A|Crimson Mirelands|Golden Lowlands - On top of a tent at the Diamond Settlement.
+B|Cobalt Coastlands|Firespit Island - High up on the exterior rock face of the volcano facing the sea.
+C|Crimson Mirelands|Solaceon Ruins - On top of a broken stone pillar inside the ruins.
+D|Crimson Mirelands|Golden Lowlands - On a tree stump next to the campfire near the Diamond Settlement.
+E|Obsidian Fieldlands|Grueling Grove - High up in the branches of a tree near the pond.
+F|Coronet Highlands|Ancient Quarry - Near the top of a stone pillar on the upper ledge.
+G|Obsidian Fieldlands|Obsidian Falls - At the very top of the waterfall cliff.
+H|Jubilife Village|Village Entrance - Hanging on the right side of the wooden front gate sign.
+I|Obsidian Fieldlands|Lake Verity - On the back side of the island cavern.
+J|Coronet Highlands|Ancient Quarry - Inside a high nook on the stone wall.
+K|Cobalt Coastlands|Veilstone Cape - Embedded in a pile of rocks along the misty ridge.
+L|Coronet Highlands|Wayward Cave - Inside the cave, break the rock wall in the dead-end tunnel.
+M|Crimson Mirelands|Sludge Mound - On the side of a fallen tree trunk in the mud.
+N|Cobalt Coastlands|Sand’s Reach - High on top of the right-hand sea stack (finger rock).
+O|Alabaster Icelands|Avalugg’s Legacy - Inside a small ice cave on one of the frozen pillars.
+P|Coronet Highlands|Fabled Spring - In the middle of the purple flower patch.
+Q|Cobalt Coastlands|Turnback Cave - On the right-hand tree just outside the cave entrance.
+R|Cobalt Coastlands|Veilstone Cape - On the tip of the rocky cliff overlooking the sea.
+S|Obsidian Fieldlands|Tidewater Dam - On the front side of the wooden beaver dam logs.
+T|Alabaster Icelands|Avalugg’s Legacy - On top of the tallest flat-topped ice pillar.
+U|Alabaster Icelands|Heart’s Crag - High up on the snowy cliff above the waterfall.
+V|Crimson Mirelands|Scarlet Bog - Perched on a dead tree branch sticking out of the red swamp.
+W|Jubilife Village|Galaxy Hall - On the left Magikarp statue on the roof (fly up with Braviary).
+X|Obsidian Fieldlands|Grandtree Arena - High up on the trunk of the massive central tree.
+Y|Alabaster Icelands|Icebound Falls - Halfway up the frozen waterfall wall.
+Z|Cobalt Coastlands|Deadwood Haunt - On the mast of the wrecked ship on the beach.
+!|Cobalt Coastlands|Deadwood Haunt - Hanging in a dead tree near the hot springs.
+?|Jubilife Village|Your Quarters - Hanging on the back outside wall of the player’s house.`);
+const VER=P(`Crimson Mirelands|Solaceon Ruins - Just outside the southeastern entrance.
+Crimson Mirelands|Gapejaw Bog - Near the northwestern edge of the swamp.
+Obsidian Fieldlands|Floaro Gardens - In the middle of the western flower patch.
+Obsidian Fieldlands|Sandgem Flats - Near the southern tip of the peninsula.
+Cobalt Coastlands|Castaway Shore - Near the northern rocks along the beach.
+Crimson Mirelands|Brava Arena - Just south of the Lilligant arena.
+Cobalt Coastlands|Lunker’s Lair - On the easternmost grassy island.
+Obsidian Fieldlands|Nature’s Pantry - Near the cliff wall on the eastern side.
+Crimson Mirelands|Scarlet Bog - On the small central island in the red marsh.
+Obsidian Fieldlands|Grandtree Arena - Just north of the Kleavor arena.
+Cobalt Coastlands|Veilstone Cape - On the grassy ridge overlooking the sea.
+Cobalt Coastlands|Deadwood Haunt - Between the two shipwrecks on the beach.
+Coronet Highlands|Sacred Plaza - Near the ruined stone columns.
+Coronet Highlands|Wayward Wood - Along the southern riverbank.
+Coronet Highlands|Celestica Ruins - Inside the eastern courtyard of the ruins.
+Coronet Highlands|Lonely Spring - Just west of the hot spring.
+Alabaster Icelands|Avalugg’s Legacy - Near the northern edge of the ice pillars.
+Alabaster Icelands|Bonechill Wastes - Near the southeastern snow mounds.
+Alabaster Icelands|Heart’s Crag - On the snowy plateau south of the waterfall.
+Alabaster Icelands|Lake Acuity - On the southwestern shore of the lake.`);
+const DEX1=P(`1|Rowlet|Grass/Flying|H,G|Starter gift from Prof. Laventon; Coronet Highlands Distortions|Post-game Space-Time Distortions or Massive Mass Outbreaks|Lv. 17 -> Dartrix|1
+2|Dartrix|Grass/Flying|H|Coronet Highlands Space-Time Distortions & MMOs|Post-game only|Lv. 36 -> Hisuian Decidueye|1
+3|Hisuian Decidueye|Grass/Fighting|H|Coronet Highlands Space-Time Distortions & MMOs|Post-game only|Final stage|1
+4|Cyndaquil|Fire|M,G|Starter gift from Prof. Laventon; Crimson Mirelands Distortions|Post-game Space-Time Distortions or Massive Mass Outbreaks|Lv. 17 -> Quilava|1
+5|Quilava|Fire|M|Crimson Mirelands Space-Time Distortions & MMOs|Post-game only|Lv. 36 -> Hisuian Typhlosion|1
+6|Hisuian Typhlosion|Fire/Ghost|M|Crimson Mirelands Space-Time Distortions & MMOs|Post-game only|Final stage|1
+7|Oshawott|Water|A,G|Starter gift from Prof. Laventon; Alabaster Icelands Distortions|Post-game Space-Time Distortions or Massive Mass Outbreaks|Lv. 17 -> Dewott|1
+8|Dewott|Water|A|Alabaster Icelands Space-Time Distortions & MMOs|Post-game only|Lv. 36 -> Hisuian Samurott|1
+9|Hisuian Samurott|Water/Dark|A|Alabaster Icelands Space-Time Distortions & MMOs|Post-game only|Final stage|1
+10|Bidoof|Normal|O,M,B,H,A|Aspiration Hill, Horseshoe Plains, Tidewater Dam|Any time/weather|Lv. 15 -> Bibarel|0
+11|Bibarel|Normal/Water|O,M,B,H,A|Tidewater Dam, Lake Verity, Gapejaw Bog (Static Alpha)|Any time/weather|Final stage|0
+12|Starly|Normal/Flying|O,M,B|Aspiration Hill, Horseshoe Plains, Windswept Run|Morning, Midday, Evening (flees easily)|Lv. 14 -> Staravia|0
+13|Staravia|Normal/Flying|O,M,B|Windswept Run, Nature's Pantry, Crossing Slope|Morning, Midday, Evening|Lv. 34 -> Staraptor|0
+14|Staraptor|Normal/Flying|O,B|Lake Verity (Static Alpha), Veilstone Cape|Morning, Midday, Evening|Final stage|0
+15|Shinx|Electric|O,H|Aspiration Hill, Horseshoe Plains, Floaro Gardens|Any time/weather|Lv. 15 -> Luxio|0
+16|Luxio|Electric|O,H|Floaro Gardens, Deertrack Heights, Sonorous Path|Any time/weather|Lv. 30 -> Luxray|0
+17|Luxray|Electric|O,H|Floaro Gardens (Static Alpha), Sacred Plaza|Any time/weather|Final stage|0
+18|Wurmple|Bug|O|Aspiration Hill, Horseshoe Plains, Floaro Gardens|Any time/weather|Lv. 7 -> Silcoon or Cascoon (personality-based)|0
+19|Silcoon|Bug|O|Floaro Gardens, The Heartwood, Grueling Grove|Morning, Midday, Evening|Lv. 10 -> Beautifly|0
+20|Beautifly|Bug/Flying|O|Floaro Gardens, The Heartwood|Morning, Midday, Evening|Final stage|0
+21|Cascoon|Bug|O|Floaro Gardens, The Heartwood, Grueling Grove|Night only|Lv. 10 -> Dustox|0
+22|Dustox|Bug/Poison|O|Floaro Gardens, The Heartwood|Night only|Final stage|0
+23|Ponyta|Fire|O|Horseshoe Plains (also guaranteed Shiny via Request 19)|Any time/weather|Lv. 40 -> Rapidash|0
+24|Rapidash|Fire|O|Horseshoe Plains (Static Alpha)|Any time/weather|Final stage|0
+25|Eevee|Normal|O,B,A|Horseshoe Plains (rare), Crossing Slope, all Space-Time Distortions|Rare overworld spawn or inside Space-Time Distortions|Branches into 8 Eeveelutions|1
+26|Vaporeon|Water|B|Cobalt Coastlands Space-Time Distortions|Evolve Eevee with Water Stone|Final stage|1
+27|Jolteon|Electric|H|Coronet Highlands Space-Time Distortions|Evolve Eevee with Thunder Stone|Final stage|1
+28|Flareon|Fire|M,B|Crimson Mirelands & Cobalt Coastlands Distortions|Evolve Eevee with Fire Stone|Final stage|1
+29|Espeon|Psychic|H,A|Coronet Highlands & Alabaster Icelands Distortions|High Friendship during Day (no Fairy moves)|Final stage|1
+30|Umbreon|Dark|M|Crimson Mirelands Space-Time Distortions|High Friendship at Night (no Fairy moves)|Final stage|1
+31|Leafeon|Grass|O|Obsidian Fieldlands Space-Time Distortions|Leaf Stone OR Moss Rock in The Heartwood|Final stage|1
+32|Glaceon|Ice|A|Alabaster Icelands Space-Time Distortions|Ice Stone OR Ice Rock beneath Bonechill Wastes|Final stage|1
+33|Sylveon|Fairy|O,H|Obsidian Fieldlands & Coronet Highlands Distortions|High Friendship while knowing a Fairy move|Final stage|1
+34|Zubat|Poison/Flying|O,M,B,H,A|Deertrack Path, Oreburrow Tunnel, Crossing Slope|Night only (or inside caves)|Lv. 22 -> Golbat|0
+35|Golbat|Poison/Flying|O,M,B,H,A|Oreburrow Tunnel, Wayward Cave, Celestica Ruins|Night only (or inside caves)|High Friendship -> Crobat|0
+36|Crobat|Poison/Flying|H|Wayward Cave (Static Alpha)|Any time inside Wayward Cave|Final stage|0
+37|Drifloon|Ghost/Flying|O,B|Aspiration Hill, Horseshoe Plains, Bathers' Lagoon|Night only|Lv. 28 -> Drifblim|0
+38|Drifblim|Ghost/Flying|O,B|Sandgem Flats, Deadwood Haunt|Night only|Final stage|0
+39|Kricketot|Bug|O,M|Nature's Pantry, Deertrack Heights, Golden Lowlands|Any time/weather|Lv. 10 -> Kricketune|0
+40|Kricketune|Bug|O,M|Nature's Pantry (Static Alpha), Cloudpool Ridge|Any time/weather|Final stage|0
+41|Buizel|Water|O,B|Horseshoe Plains, Worn Bridge, Aipom Hill|Any time/weather|Lv. 26 -> Floatzel|0
+42|Floatzel|Water|O,B|Worn Bridge (Static Alpha), Islespy Shore|Any time/weather|Final stage|0
+43|Burmy|Bug|O,M,B,H,A|Shaking trees across all 5 regions (3 cloak forms)|Exclusive to shaking trees|Lv. 20 -> Wormadam (Female) / Mothim (Male)|1
+44|Wormadam|Bug/Grass|O,M,B,H|Shaking trees (rare) or evolve Female Burmy|Type changes by cloak (Grass/Ground/Steel)|Final stage|1
+45|Mothim|Bug/Flying|O,M|The Heartwood, Droning Meadow, or evolve Male Burmy|Morning, Midday, Evening|Final stage|0
+46|Geodude|Rock/Ground|O,M,B,H,A|Deertrack Path, Oreburrow Tunnel, shaking ores|Any time/weather|Lv. 25 -> Graveler|0
+47|Graveler|Rock/Ground|O,M,B,H,A|Oreburrow Tunnel, Ancient Quarry, shaking ores|Any time/weather|Use Linking Cord -> Golem|0
+48|Golem|Rock/Ground|H|Bolderoll Ravine (Static Alpha)|Any time/weather|Final stage|0
+49|Stantler|Normal|O,B,H,A|Deertrack Heights, Windbreak Stand, Glacier Terrace|Any time/weather|Use Agile Style Psyshield Bash 20 times -> Wyrdeer|0
+50|Wyrdeer|Normal/Psychic|O|Evolve Stantler (cannot be caught in the wild)|Evolution only|Final stage|1
+51|Munchlax|Normal|O,A|Deertrack Heights (rare), Snowfields Camp hot springs|Rare spawn; flees quickly if spotted|High Friendship -> Snorlax|1
+52|Snorlax|Normal|O,A|Sandgem Flats (Static Alpha), Snowfields Camp|Any time/weather|Final stage|0
+53|Paras|Bug/Grass|O,M,H|Nature's Pantry, The Heartwood, Gapejaw Bog|Any time/weather|Lv. 24 -> Parasect|0
+54|Parasect|Bug/Grass|O,M,H|Nature's Pantry (Static Alpha), Gapejaw Bog|Any time/weather|Final stage|0
+55|Pichu|Electric|O,M|Nature's Pantry, Floaro Gardens, Golden Lowlands|Rare spawn; flees easily|High Friendship -> Pikachu|1
+56|Pikachu|Electric|O,M|Nature's Pantry, Floaro Gardens, Golden Lowlands|Any time/weather|Use Thunder Stone -> Raichu|0
+57|Raichu|Electric|M|Golden Lowlands (Static Alpha)|Any time/weather|Final stage|0
+58|Abra|Psychic|O,A|Windswept Run, Sandgem Flats, Lake Acuity|Teleports immediately if spotted; use Stealth Spray|Lv. 16 -> Kadabra|0
+59|Kadabra|Psychic|O,A|Windswept Run, Sandgem Flats, Lake Acuity|Any time/weather|Use Linking Cord -> Alakazam|0
+60|Alakazam|Psychic|O|Sandgem Flats (Static Alpha)|Any time/weather|Final stage|0`);
+// ---------- POKEDEX (batches append here: DEX2, DEX3, DEX4) ----------
+const RGN={O:"Obsidian Fieldlands",M:"Crimson Mirelands",B:"Cobalt Coastlands",H:"Coronet Highlands",A:"Alabaster Icelands",G:"Special/Gift",J:"Jubilife Village"};
+const DEX2=P(`61|Chimchar|Fire|O|Deertrack Heights (rare), Ramanas Island|Any time/weather; flees quickly if spotted|Lv. 14 -> Monferno|1
+62|Monferno|Fire/Fighting|O|Ramanas Island|Any time/weather|Lv. 36 -> Infernape|0
+63|Infernape|Fire/Fighting|O|Ramanas Island (Static Alpha)|Any time/weather|Final stage|0
+64|Buneary|Normal|O,A|The Heartwood, Snowfields Camp|Any time/weather|High Friendship -> Lopunny|0
+65|Lopunny|Normal|O,A|The Heartwood (Static Alpha), Snowfields Camp|Any time/weather|Final stage|0
+66|Cherubi|Grass|O,M,H|The Heartwood, Gapejaw Bog, Lonely Spring (shaking trees)|Exclusive to shaking blue-leaved trees|Lv. 25 -> Cherrim|1
+67|Cherrim|Grass|O,M,H|The Heartwood, Gapejaw Bog, Lonely Spring (shaking trees)|Shaking trees or evolve Cherubi|Final stage|1
+68|Psyduck|Water|O,M,B|Worn Bridge, Gapejaw Bog, Bathers' Lagoon|Any time/weather|Lv. 33 -> Golduck|0
+69|Golduck|Water|O,M,B|Lake Verity, Holm of Trials (Static Alpha), Bathers' Lagoon|Any time/weather|Final stage|0
+70|Combee|Bug/Flying|O,M,B|Grueling Grove, Ramanas Island, Aipom Hill, shaking trees|Any time/weather|Lv. 21 (Female only) -> Vespiquen|0
+71|Vespiquen|Bug/Flying|M|Cottonsedge Prairie (Static Alpha)|Any time/weather|Final stage|0
+72|Scyther|Bug/Flying|O,H|Grandtree Arena, Primeval Grotto|Any time/weather|Use Black Augurite -> Kleavor OR Metal Coat -> Scizor|0
+73|Kleavor|Bug/Rock|O|Evolve Scyther with Black Augurite (cannot catch wild)|Evolution only|Final stage|1
+74|Scizor|Bug/Steel|A|Alabaster Icelands Space-Time Distortions or Metal Coat|Space-Time Distortions or evolve Scyther|Final stage|1
+75|Heracross|Bug/Fighting|O,H|Grueling Grove (Static Alpha), Wayward Wood, shaking trees|Any time/weather|Final stage|0
+76|Mime Jr.|Psychic/Fairy|O|Horseshoe Plains, Sandgem Flats|Rare overworld spawn|Level up knowing Mimic -> Mr. Mime|1
+77|Mr. Mime|Psychic/Fairy|O|Sandgem Flats, Obsidian Fieldlands Space-Time Distortions|Any time/weather|Final stage|0
+78|Aipom|Normal|B,A|Aipom Hill, Ramanas Island, Glacier Terrace|Any time/weather|Level up knowing Double Hit -> Ambipom|0
+79|Ambipom|Normal|B,A|Hideaway Bay (Static Alpha), Glacier Terrace|Any time/weather|Final stage|0
+80|Magikarp|Water|O,B,H|Obsidian Falls, Lake Verity, Islespy Shore, Fabled Spring|Any time/weather|Lv. 20 -> Gyarados|0
+81|Gyarados|Water/Flying|O,B,H|Lake Verity (Static Alpha), Sand's Reach, Obsidian Falls (flying)|Any time/weather|Final stage|0
+82|Shellos|Water|O,B|Sandgem Flats (West Sea), Islespy Shore & Seagrass Haven (East Sea)|Any time/weather|Lv. 30 -> Gastrodon|0
+83|Gastrodon|Water/Ground|O,B|Sandgem Flats, Seagrass Haven (Static Alpha)|Any time/weather|Final stage|0
+84|Qwilfish|Dark/Poison|O,B|Ramanas Island, Tranquility Cove, Lunker's Lair, Islespy Shore|Any time/weather|Use Strong Style Barb Barrage 20 times -> Overqwil|0
+85|Overqwil|Dark/Poison|B|Evolve Hisuian Qwilfish (also appears in Request 66)|Evolution only|Final stage|1
+86|Happiny|Normal|O,B,A|Oreburrow Tunnel, Hideaway Bay, Avalanche Slopes|Rare overworld spawn|Use Oval Stone during Daytime -> Chansey|1
+87|Chansey|Normal|O,B,A|Obsidian Falls, Tombolo Walk, Avalanche Slopes|Any time/weather|High Friendship -> Blissey|0
+88|Blissey|Normal|O,A|Obsidian Falls (Static Alpha), Avalanche Slopes|Any time/weather|Final stage|0
+89|Budew|Grass/Poison|M,H|Golden Lowlands, Gapejaw Bog, Fabled Spring|Morning, Midday, Evening|High Friendship during Daytime -> Roselia|0
+90|Roselia|Grass/Poison|M,H|Cloudpool Ridge, Cottonsedge Prairie, Fabled Spring|Morning, Midday, Evening|Use Shiny Stone -> Roserade|0
+91|Roserade|Grass/Poison|M|Cloudpool Ridge (Static Alpha)|Any time/weather|Final stage|0
+92|Carnivine|Grass|M,H|Gapejaw Bog, Holm of Trials (Static Alpha), Wayward Wood|Any time/weather|Final stage|0
+93|Petilil|Grass|M|Holm of Trials, Cottonsedge Prairie|Any time/weather|Use Sun Stone -> Hisuian Lilligant|0
+94|Hisuian Lilligant|Grass/Fighting|M|Evolve Petilil with Sun Stone|Evolution only|Final stage|1
+95|Tangela|Grass|M,B|Gapejaw Bog, Crossing Slope|Any time/weather|Level up knowing Ancient Power -> Tangrowth|0
+96|Tangrowth|Grass|M|Gapejaw Bog (Static Alpha)|Any time/weather|Final stage|0
+97|Barboach|Water/Ground|M,H|Gapejaw Bog, Lake Valor, Fabled Spring|Any time/weather|Lv. 30 -> Whiscash|0
+98|Whiscash|Water/Ground|M,H|Lake Valor (Static Alpha), Fabled Spring|Any time/weather|Final stage|0
+99|Croagunk|Poison/Fighting|M|Gapejaw Bog, Sludge Mound, Scarlet Bog|Any time/weather|Lv. 37 -> Toxicroak|0
+100|Toxicroak|Poison/Fighting|M|Holm of Trials (Static Alpha), Scarlet Bog|Any time/weather|Final stage|0
+101|Ralts|Psychic/Fairy|M,A|Shrouded Ruins, Heart's Crag|Any time/weather|Lv. 20 -> Kirlia|0
+102|Kirlia|Psychic/Fairy|M,A|Shrouded Ruins, Heart's Crag|Any time/weather|Lv. 30 -> Gardevoir OR Dawn Stone (Male) -> Gallade|0
+103|Gardevoir|Psychic/Fairy|A|Heart's Crag (Static Alpha), Alabaster Icelands Distortions|Any time/weather|Final stage|0
+104|Gallade|Psychic/Fighting|H,A|Snowpoint Temple (Static Alpha), Alabaster Icelands Distortions|Evolve Male Kirlia with Dawn Stone|Final stage|0
+105|Yanma|Bug/Flying|M,H|Gapejaw Bog, Droning Meadow, Sonorous Path|Any time/weather|Level up knowing Ancient Power -> Yanmega|0
+106|Yanmega|Bug/Flying|M,H|Droning Meadow (Static Alpha), Sonorous Path|Any time/weather|Final stage|0
+107|Hippopotas|Ground|M|Sludge Mound, Scarlet Bog|Any time/weather|Lv. 34 -> Hippowdon|0
+108|Hippowdon|Ground|M|Sludge Mound (Static Alpha), Scarlet Bog|Any time/weather|Final stage|0
+109|Pachirisu|Electric|M|Golden Lowlands, Droning Meadow, Cottonsedge Prairie|Any time/weather|Final stage|0
+110|Stunky|Poison/Dark|M|Sludge Mound, Scarlet Bog, Cottonsedge Prairie|Any time/weather|Lv. 34 -> Skuntank|0
+111|Skuntank|Poison/Dark|M|Scarlet Bog (Static Alpha)|Any time/weather|Final stage|0
+112|Teddiursa|Normal|M,H|Ursa's Ring, Sonorous Path|Any time/weather|Lv. 30 -> Ursaring|0
+113|Ursaring|Normal|M,H|Ursa's Ring (Static Alpha), Sonorous Path|Any time/weather|Use Peat Block during a Full Moon -> Ursaluna|0
+114|Ursaluna|Ground/Normal|M|Evolve Ursaring with Peat Block during Full Moon|Evolution only|Final stage|1
+115|Goomy|Dragon|M,H|Holm of Trials, Ancient Quarry|Any time/weather|Lv. 40 -> Hisuian Sliggoo|0
+116|Hisuian Sliggoo|Steel/Dragon|M,H|Holm of Trials (Static Alpha), Ancient Quarry|Any time/weather|Lv. 50 during Rain or Fog -> Hisuian Goodra|0
+117|Hisuian Goodra|Steel/Dragon|H|Ancient Quarry (Static Alpha)|Any time/weather|Final stage|0
+118|Onix|Rock/Ground|M,H,A|Diamond Heath, Celestica Ruins, Snowpoint Temple|Any time/weather|Use Metal Coat -> Steelix|0
+119|Steelix|Steel/Ground|H|Celestica Ruins (Static Alpha), Crimson Mirelands Distortions|Any time/weather|Final stage|0
+120|Rhyhorn|Ground/Rock|M,H|Diamond Heath, Shrouded Ruins, Sacred Plaza|Any time/weather|Lv. 42 -> Rhydon|0`);
+const DEX3=P(`121|Rhydon|Ground/Rock|M,H|Shrouded Ruins, Sacred Plaza, Celestica Ruins|~A|Use Protector -> Rhyperior|0
+122|Rhyperior|Ground/Rock|H|Sacred Plaza (Static Alpha), Coronet Highlands Distortions|~A|~F|0
+123|Bonsly|Rock|M,H|Cloudpool Ridge, Celestica Ruins, shaking ores|Rare spawn; flees if spotted|Level up knowing Mimic -> Sudowoodo|1
+124|Sudowoodo|Rock|M,H|Cloudpool Ridge, Celestica Ruins|~A|~F|0
+125|Lickitung|Normal|M|Shrouded Ruins, Scarlet Bog|~A|Level up knowing Rollout -> Lickilicky|0
+126|Lickilicky|Normal|M,A|Shrouded Ruins (Static Alpha), Lake Acuity|~A|~F|0
+127|Togepi|Fairy|M,B|Cottonsedge Prairie, Bathers' Lagoon, Tranquility Cove|Rare spawn; flees easily|High Friendship -> Togetic|1
+128|Togetic|Fairy/Flying|M,B|Cottonsedge Prairie, Tranquility Cove|Morning, Midday, Evening|Use Shiny Stone -> Togekiss|0
+129|Togekiss|Fairy/Flying|O|Lake Verity (flying high overhead; use Feather/Jet Balls)|Morning, Midday, Evening|~F|1
+130|Turtwig|Grass|M|Droning Meadow (pond in southeast corner)|~A|Lv. 18 -> Grotle|1
+131|Grotle|Grass|M|Droning Meadow|~A|Lv. 32 -> Torterra|0
+132|Torterra|Grass/Ground|M|Holm of Trials (Static Alpha)|~A|~F|0
+133|Porygon|Normal|M|Crimson Mirelands Space-Time Distortions only|Exclusive to Crimson Mirelands Distortions|Use Upgrade -> Porygon2|1
+134|Porygon2|Normal|M|Crimson Mirelands Space-Time Distortions or Upgrade|Exclusive to Crimson Mirelands Distortions|Use Dubious Disc -> Porygon-Z|1
+135|Porygon-Z|Normal|M|Crimson Mirelands Space-Time Distortions or Dubious Disc|Exclusive to Crimson Mirelands Distortions|~F|1
+136|Gastly|Ghost/Poison|M,B,H,A|Shrouded Ruins, Deadwood Haunt, Sacred Plaza|Night only|Lv. 25 -> Haunter|0
+137|Haunter|Ghost/Poison|M,B,H,A|Shrouded Ruins, Deadwood Haunt, Sacred Plaza|Night only|Use Linking Cord -> Gengar|0
+138|Gengar|Ghost/Poison|O,M|Obsidian & Crimson Distortions, or Linking Cord|Space-Time Distortions or evolution|~F|0
+139|Spiritomb|Ghost/Dark|M|Shrouded Ruins (after collecting all 107 Spiritomb Wisps)|Complete Request 22; spawns in Crimson MMOs afterward|~F|1
+140|Murkrow|Dark/Flying|M,B,H|Cloudpool Ridge, Veilstone Cape, Wayward Wood|Night only|Use Dusk Stone -> Honchkrow|0
+141|Honchkrow|Dark/Flying|M,B|Cloudpool Ridge (Static Alpha), Veilstone Cape|Night only|~F|0
+142|Unown|Psychic|J,O,M,B,H,A|28 fixed landmarks across Hisui (see Unown tab)|Catch all 28 forms to unlock Solaceon Ruins spawns|~F|1
+143|Spheal|Ice/Water|B|Ginkgo Landing, Bathers' Lagoon, Islespy Shore|~A|Lv. 32 -> Sealeo|0
+144|Sealeo|Ice/Water|B|Islespy Shore, Sand's Reach|~A|Lv. 44 -> Walrein|0
+145|Walrein|Ice/Water|B|Islespy Shore (Static Alpha)|~A|~F|0
+146|Remoraid|Water|B|Tranquility Cove, Lunker's Lair, Islespy Shore|~A|Lv. 25 -> Octillery|0
+147|Octillery|Water|B|Castaway Shore (Static Alpha), Lunker's Lair|~A|~F|0
+148|Skorupi|Poison/Bug|B|Ginkgo Landing, Deadwood Haunt, Tombolo Walk|~A|Lv. 40 -> Drapion|0
+149|Drapion|Poison/Dark|B|Ginkgo Landing (Static Alpha), Deadwood Haunt|~A|~F|0
+150|Growlithe|Fire/Rock|B|Windbreak Stand, Veilstone Cape|~A|Use Fire Stone -> Hisuian Arcanine|0
+151|Hisuian Arcanine|Fire/Rock|B|Evolve Hisuian Growlithe with Fire Stone|Evolution only|~F|1
+152|Glameow|Normal|B|Crossing Slope, Veilstone Cape, Islespy Shore|~A|Lv. 38 -> Purugly|0
+153|Purugly|Normal|B|Veilstone Cape (Static Alpha), Islespy Shore|~A|~F|0
+154|Machop|Fighting|B,H,A|Windbreak Stand, Wayward Wood, Arena's Approach|~A|Lv. 28 -> Machoke|0
+155|Machoke|Fighting|B,H,A|Veilstone Cape, Wayward Wood, Arena's Approach|~A|Use Linking Cord -> Machamp|0
+156|Machamp|Fighting|B,A|Veilstone Cape (Static Alpha), Arena's Approach|~A|~F|0
+157|Chatot|Normal/Flying|B|Deadwood Haunt, Castaway Shore|Morning, Midday, Evening|~F|0
+158|Duskull|Ghost|B,A|Deadwood Haunt, Avalanche Slopes|Night only|Lv. 37 -> Dusclops|0
+159|Dusclops|Ghost|B,A|Deadwood Haunt, Avalanche Slopes|Night only|Use Reaper Cloth -> Dusknoir|0
+160|Dusknoir|Ghost|B|Deadwood Haunt (Static Alpha), Cobalt Distortions|Night only (or Distortions)|~F|0
+161|Piplup|Water|B|Islespy Shore (pond near northwestern spring)|~A|Lv. 16 -> Prinplup|1
+162|Prinplup|Water|B|Islespy Shore|~A|Lv. 36 -> Empoleon|0
+163|Empoleon|Water/Steel|B|Islespy Shore (Static Alpha)|~A|~F|0
+164|Mantyke|Water/Flying|B|Tranquility Cove, Ginkgo Landing, Lunker's Lair|~A|Level up with Remoraid in party -> Mantine|0
+165|Mantine|Water/Flying|B|Tranquility Cove (Static Alpha), Sand's Reach|~A|~F|0
+166|Basculin|Water|B,H,A|Tranquility Cove, Islespy Shore, Fabled Spring, Heart's Crag|Flees immediately if spotted; use Stealth Spray + Jet Balls|Take 294+ recoil damage without fainting -> Basculegion|0
+167|Basculegion|Water/Ghost|B|Evolve White-Striped Basculin (cannot catch wild)|Evolution only|~F|1
+168|Vulpix|Fire|B|Veilstone Cape (also Request 83 for Alolan Vulpix)|~A|Use Fire Stone -> Ninetales (Ice Stone for Alolan)|0
+169|Ninetales|Fire|B|Firespit Island (Static Alpha), Veilstone Cape|~A|~F|0
+170|Tentacool|Water/Poison|B|Tranquility Cove, Lunker's Lair, Sand's Reach|~A|Lv. 30 -> Tentacruel|0
+171|Tentacruel|Water/Poison|B|Lunker's Lair (Static Alpha), Sand's Reach|~A|~F|0
+172|Finneon|Water|B|Seagrass Haven, Sand's Reach|~A|Lv. 31 -> Lumineon|0
+173|Lumineon|Water|B|Seagrass Haven (Static Alpha), Sand's Reach|~A|~F|0
+174|Magby|Fire|B|Firespit Island|~A|Lv. 30 -> Magmar|0
+175|Magmar|Fire|B|Firespit Island|~A|Use Magmarizer -> Magmortar|0
+176|Magmortar|Fire|B|Firespit Island (Static Alpha), Distortions|~A|~F|0
+177|Magnemite|Electric/Steel|B|Cobalt Coastlands Space-Time Distortions only|Exclusive to Cobalt Coastlands Distortions|Lv. 30 -> Magneton|1
+178|Magneton|Electric/Steel|B|Cobalt Coastlands Space-Time Distortions only|Exclusive to Cobalt Coastlands Distortions|Thunder Stone OR level up in Coronet Highlands -> Magnezone|1
+179|Magnezone|Electric/Steel|H|Clamberclaw Cliffs / Celestica Ruins (flying high; use Jet Balls)|~A|~F|0
+180|Bronzor|Steel/Psychic|H,A|Wayward Cave, Celestica Ruins, Snowpoint Temple|~A|Lv. 33 -> Bronzong|0`);
+const DEX4=P(`181|Bronzong|Steel/Psychic|H,A|Celestica Ruins (Static Alpha), Snowpoint Temple|~A|~F|0
+182|Elekid|Electric|H,A|Cloudcap Pass, Icebound Falls|~A|Lv. 30 -> Electabuzz|0
+183|Electabuzz|Electric|H,A|Cloudcap Pass, Icebound Falls|~A|Use Electirizer -> Electivire|0
+184|Electivire|Electric|H|Cloudcap Pass (Static Alpha), Coronet Distortions|~A|~F|0
+185|Gligar|Ground/Flying|H,A|Celestica Ruins, Primeval Grotto, Avalanche Slopes|~A|Use Razor Fang at Night -> Gliscor|0
+186|Gliscor|Ground/Flying|H|Primeval Grotto (Static Alpha)|~A|~F|0
+187|Gible|Dragon/Ground|H,A|Wayward Cave, Clamberclaw Cliffs, Avalanche Slopes|~A|Lv. 24 -> Gabite|0
+188|Gabite|Dragon/Ground|H,A|Clamberclaw Cliffs (Static Alpha), Avalanche Slopes|~A|Lv. 48 -> Garchomp|0
+189|Garchomp|Dragon/Ground|A|Avalanche Slopes (Static Alpha)|~A|~F|0
+190|Nosepass|Rock|H|Celestica Ruins, Primeval Grotto, shaking ores|~A|Use Thunder Stone OR level up in Coronet Highlands -> Probopass|0
+191|Probopass|Rock/Steel|H|Primeval Grotto (Static Alpha)|~A|~F|0
+192|Voltorb|Electric/Grass|H|Sacred Plaza|~A|Use Leaf Stone -> Hisuian Electrode|0
+193|Hisuian Electrode|Electric/Grass|H|Evolve Hisuian Voltorb with Leaf Stone|Evolution only|~F|1
+194|Rotom|Electric/Ghost|H|Sacred Plaza, Stonetooth Rows (6 forms via Ginter's appliances)|~A|Final stage (Form changes)|1
+195|Chingling|Psychic|H,A|Sacred Plaza, Lake Acuity|~A|High Friendship at Night -> Chimecho|0
+196|Chimecho|Psychic|H,A|Lonely Spring, Lake Acuity (Static Alpha)|~A|~F|0
+197|Misdreavus|Ghost|H,A|Stonetooth Rows, Lake Acuity|Night only|Use Dusk Stone -> Mismagius|0
+198|Mismagius|Ghost|H|Stonetooth Rows (Static Alpha)|Night only|~F|0
+199|Cleffa|Fairy|H|Fabled Spring|Night only (rare spawn)|High Friendship -> Clefairy|1
+200|Clefairy|Fairy|H|Fabled Spring|Night only|Use Moon Stone -> Clefable|0
+201|Clefable|Fairy|H|Fabled Spring (Static Alpha)|Night only|~F|0
+202|Sneasel|Fighting/Poison|O,H,A|Primeval Grotto, Avalanche Slopes (Johtonian in Fieldlands Distortions)|~A|Razor Claw Day -> Sneasler (Hisuian) / Night -> Weavile (Johtonian)|0
+203|Sneasler|Fighting/Poison|H|Evolve Hisuian Sneasel with Razor Claw during Daytime|Evolution only|~F|1
+204|Weavile|Dark/Ice|O|Obsidian Fieldlands Space-Time Distortions or Johtonian Sneasel|Space-Time Distortions or Night Razor Claw|~F|1
+205|Snorunt|Ice|A|Bonechill Wastes, Avalugg's Legacy, Icebound Falls|~A|Lv. 42 -> Glalie OR Dawn Stone (Female) -> Froslass|0
+206|Glalie|Ice|A|Bonechill Wastes (Static Alpha), Avalugg's Legacy|~A|~F|0
+207|Froslass|Ice/Ghost|A|Bonechill Wastes underground cavern (Static Alpha)|~A|~F|0
+208|Cranidos|Rock|H|Coronet Highlands Space-Time Distortions only|Exclusive to Coronet Highlands Distortions|Lv. 30 -> Rampardos|1
+209|Rampardos|Rock|H|Coronet Highlands Space-Time Distortions only|Exclusive to Coronet Highlands Distortions|~F|1
+210|Shieldon|Rock/Steel|H|Coronet Highlands Space-Time Distortions only|Exclusive to Coronet Highlands Distortions|Lv. 30 -> Bastiodon|1
+211|Bastiodon|Rock/Steel|H|Coronet Highlands Space-Time Distortions only|Exclusive to Coronet Highlands Distortions|~F|1
+212|Swinub|Ice/Ground|A|Bonechill Wastes, Avalugg's Legacy, Heart's Crag|~A|Lv. 33 -> Piloswine|0
+213|Piloswine|Ice/Ground|A|Avalugg's Legacy, Heart's Crag|~A|Level up knowing Ancient Power -> Mamoswine|0
+214|Mamoswine|Ice/Ground|A|Avalugg's Legacy (Static Alpha)|~A|~F|0
+215|Bergmite|Ice|A|Avalugg's Legacy, Arena's Approach|~A|Lv. 37 -> Hisuian Avalugg|0
+216|Hisuian Avalugg|Ice/Rock|A|Evolve Bergmite at Lv. 37 (also MMO spawns)|Evolution or Massive Mass Outbreaks|~F|0
+217|Snover|Grass/Ice|A|Whiteout Valley, Heart's Crag|~A|Lv. 40 -> Abomasnow|0
+218|Abomasnow|Grass/Ice|A|Whiteout Valley (Static Alpha), Heart's Crag|~A|~F|0
+219|Zorua|Normal/Ghost|A|Bonechill Wastes (underground ice caves), Lake Acuity|~A|Lv. 30 -> Hisuian Zoroark|0
+220|Hisuian Zoroark|Normal/Ghost|A|Bonechill Wastes underground cavern (Static Alpha)|~A|~F|0
+221|Rufflet|Normal/Flying|A|Heart's Crag, Lake Acuity, Snowpoint Temple|~A|Lv. 54 -> Hisuian Braviary|0
+222|Hisuian Braviary|Psychic/Flying|A|Snowpoint Temple roof (flying overhead; use Jet Balls)|~A|~F|0
+223|Riolu|Fighting|A|Icebound Falls (snowy hill above waterfall)|~A|High Friendship during Daytime -> Lucario|1
+224|Lucario|Fighting/Steel|A|Icebound Falls (Static Alpha)|~A|~F|0
+225|Uxie|Psychic|A|Lake Acuity cavern (Post-game Mission 21; riddle: 60131)|Legendary encounter|Legendary|1
+226|Mesprit|Psychic|O|Lake Verity cavern (Post-game Mission 21)|Legendary encounter|Legendary|1
+227|Azelf|Psychic|M|Lake Valor cavern (Post-game Mission 21)|Legendary encounter|Legendary|1
+228|Heatran|Fire/Steel|B|Lava Dome Sanctum on Firespit Island (Post-game Mission 22)|Legendary encounter|Legendary|1
+229|Regigigas|Normal|A|Snowpoint Temple basement (Post-game Mission 24)|Requires Iron, Stone, and Icicle Plates|Legendary|1
+230|Cresselia|Psychic|H|Moonview Arena (Post-game Mission 23)|Legendary encounter|Legendary|1
+231|Tornadus|Flying|A|Bonechill Wastes during a Blizzard/Snowstorm (Request 94)|Blizzard weather only|Legendary|1
+232|Thundurus|Electric/Flying|B|Sand's Reach water during a Thunderstorm (Request 94)|Thunderstorm weather only|Legendary|1
+233|Landorus|Ground/Flying|O|Ramanas Island (Request 94)|Legendary encounter|Legendary|1
+234|Enamorus|Fairy/Flying|M|Scarlet Bog (Request 94 after Research Lv. 10 on other 3)|Requires completed entries for Tornadus/Thundurus/Landorus|Legendary|1
+235|Dialga|Steel/Dragon|H|Temple of Sinnoh (Main Story Mission 17)|Story Legendary|Legendary|1
+236|Palkia|Water/Dragon|H|Temple of Sinnoh (Main Story Mission 17)|Story Legendary|Legendary|1
+237|Giratina|Ghost/Dragon|B|Turnback Cave (after defeating Volo in Mission 26)|Post-game Legendary|Legendary|1
+238|Arceus|Normal|H|Temple of Sinnoh (Mission 27 after catching 239 Dex entries)|Requires all 237 standard Pokémon + Manaphy + Phione|Mythical|1
+239|Phione|Water|B|Seaside Hollow (Request 66: The Sea's Legend)|3 spawn with Manaphy|Mythical|1
+240|Manaphy|Water|B|Seaside Hollow (Request 66 with Buizel, Mantyke, Overqwil)|Swim through Sand's Reach sea arch at Evening|Mythical|1
+241|Shaymin|Grass|O|Floaro Gardens (Request 92; requires Sword/Shield save data)|Save-data bonus (not required for Arceus)|Mythical|1
+242|Darkrai|Dark|H|Clamberclaw Cliffs at Night (Request 93; requires BDSP save data)|Save-data bonus (not required for Arceus)|Mythical|1`);
+const X=x=>x.replace(/~A/g,"Any time/weather").replace(/~F/g,"Final stage");
+const DEX=[DEX1,DEX2,DEX3,DEX4].flat().map(r=>({i:+r[0],n:r[1],ty:r[2].split("/"),rg:r[3].split(","),loc:r[4],cond:X(r[5]),evo:X(r[6]).replace("->","→"),sp:r[7]==="1"}));
+const DK=[["c","Caught"],["l","Lv. 10"],["p","Perfected"],["a","Alpha"]],DXM={"Pokédex Caught":"c","Research Lv. 10":"l","Perfected Entries":"p","Alpha Caught":"a"};
+function Dex({s,set}){
+ const [q,sq]=useState(""),[rg,sr]=useState(""),[st,ss]=useState(""),c=s.c||{},on=(k,i)=>!!c["d"+k+i];
+ const F={nc:d=>!on("c",d.i),c:d=>on("c",d.i),sp:d=>d.sp,nl:d=>!on("l",d.i),np:d=>!on("p",d.i)};
+ const rows=DEX.filter(d=>(!q||(d.n+" "+d.ty.join(" ")+" "+d.loc+" "+d.cond+" "+d.evo).toLowerCase().includes(q.toLowerCase()))&&(!rg||d.rg.includes(rg))&&(!st||F[st](d)));
+ const tg=(k,i)=>set(p=>({...p,c:{...p.c,["d"+k+i]:!(p.c||{})["d"+k+i]}}));
+ const sel="bg-slate-900 border border-slate-700 rounded p-2 text-sm";
+ return h`<div><${Bar} l=${"Caught ("+DEX.length+" of 242 entries loaded)"} v=${DEX.filter(d=>on("c",d.i)).length} m=${242}/>
+ <input placeholder="Search name, type, location…" value=${q} onInput=${e=>sq(e.target.value)} className="w-full mb-2 bg-slate-900 border border-slate-700 rounded p-2"/>
+ <div className="flex gap-2 mb-3"><select value=${rg} onChange=${e=>sr(e.target.value)} className=${sel}><option value="">All regions</option>${Object.entries(RGN).map(([k,v])=>h`<option key=${k} value=${k}>${v}</option>`)}</select>
+ <select value=${st} onChange=${e=>ss(e.target.value)} className=${sel}><option value="">All entries</option><option value="nc">Not caught</option><option value="c">Caught</option><option value="nl">Not Lv. 10</option><option value="np">Not perfected</option><option value="sp">Rare / special</option></select></div>
+ <p className="text-xs text-slate-400 mb-2">${rows.length} shown</p>
+ ${rows.map(d=>h`<details key=${d.i} className="bg-slate-800/70 rounded-lg border border-slate-700 mb-2"><summary className="p-3 cursor-pointer">
+  <div className=${"font-medium "+(on("c",d.i)?"opacity-60":"")}>#${d.i} ${d.n}${d.sp?" ★":""} <span className="text-xs text-slate-400 font-normal">${d.ty.join(" / ")}</span></div>
+  <div className="flex gap-3 mt-1 flex-wrap">${DK.map(([k,l])=>h`<label key=${k} onClick=${e=>e.stopPropagation()} className="text-xs flex items-center gap-1"><input type="checkbox" checked=${on(k,d.i)} onChange=${()=>tg(k,d.i)} className="w-4 h-4 accent-amber-500"/>${l}</label>`)}</div></summary>
+  <div className="px-4 pb-3 text-sm text-slate-300 space-y-1"><div>Regions: ${d.rg.map(x=>RGN[x]).join(", ")}</div><div>Where: ${d.loc}</div><div>When: ${d.cond}</div><div>Evolution: ${d.evo}</div>
+  <input placeholder="Notes…" value=${(s.n||{})["d"+d.i]||""} onInput=${e=>{const v=e.target.value;set(p=>({...p,n:{...p.n,["d"+d.i]:v}}))}} className="w-full bg-slate-900 rounded p-2 border border-slate-700"/></div></details>`)}</div>`}
+// ---------- LISTS ----------
+const WL=[];Object.entries(WISP).forEach(([r,t])=>t.split("\n").forEach((x,i)=>WL.push({id:"w"+r+i,t:x,sub:r+" #"+(i+1)})));
+const LISTS={
+ evo:{n:"Evolutions",p:"e",rows:EVO.map((r,i)=>({id:"e"+i,t:r[0]+" → "+r[1],sub:r[2],body:r[3]}))},
+ leg:{n:"Legendaries",p:"l",rows:LEG.map(r=>({id:"l"+r[0],t:r[0],sub:r[1]+" · Lv. "+r[2]+" · "+r[3],body:"Counters: "+r[4]+"\nBest moves: "+r[5]+"\n"+r[6]}))},
+ req:{n:"Key Requests",p:"r",rows:REQ.map(r=>({id:"r"+r[0],t:"#"+r[0]+" "+r[1],sub:r[2],body:r[2]}))},
+ wisp:{n:"Wisps",p:"w",rows:WL.map(x=>({...x,body:x.t}))},
+ uno:{n:"Unown",p:"u",rows:UNO.map(r=>({id:"u"+r[0],t:"Unown "+r[0],sub:r[1],body:r[2]}))},
+ ver:{n:"Old Verses",p:"v",rows:VER.map((r,i)=>({id:"v"+i,t:"Verse "+(i+1),sub:r[0],body:r[1]}))}};
+const GOALS=[["Pokédex Caught",242],["Research Lv. 10",242],["Perfected Entries",242],["Alpha Caught",0],["Side Requests",122]];
+// ---------- V2 DATA ----------
+const TYPES=["Normal","Fire","Water","Electric","Grass","Ice","Fighting","Poison","Ground","Flying","Psychic","Bug","Rock","Ghost","Dragon","Dark","Steel","Fairy"];
+const TC={};P(`Normal|Fighting||Ghost
+Fire|Water,Ground,Rock|Fire,Grass,Ice,Bug,Steel,Fairy|
+Water|Electric,Grass|Fire,Water,Ice,Steel|
+Electric|Ground|Electric,Flying,Steel|
+Grass|Fire,Ice,Poison,Flying,Bug|Water,Electric,Grass,Ground|
+Ice|Fire,Fighting,Rock,Steel|Ice|
+Fighting|Flying,Psychic,Fairy|Bug,Rock,Dark|
+Poison|Ground,Psychic|Grass,Fighting,Poison,Bug,Fairy|
+Ground|Water,Grass,Ice|Poison,Rock|Electric
+Flying|Electric,Ice,Rock|Grass,Fighting,Bug|Ground
+Psychic|Bug,Ghost,Dark|Fighting,Psychic|
+Bug|Fire,Flying,Rock|Grass,Fighting,Ground|
+Rock|Water,Grass,Fighting,Ground,Steel|Normal,Fire,Poison,Flying|
+Ghost|Ghost,Dark|Poison,Bug|Normal,Fighting
+Dragon|Ice,Dragon,Fairy|Fire,Water,Electric,Grass|
+Dark|Fighting,Bug,Fairy|Ghost,Dark|Psychic
+Steel|Fire,Fighting,Ground|Normal,Grass,Ice,Flying,Psychic,Bug,Rock,Dragon,Steel,Fairy|Poison
+Fairy|Poison,Steel|Fighting,Bug,Dark|Dragon`).forEach(r=>TC[r[0]]={w:r[1].split(","),r:r[2].split(","),i:(r[3]||"").split(",")});
+const mult=(d,a)=>d.reduce((m,t)=>m*(TC[t].i.includes(a)?0:TC[t].w.includes(a)?2:TC[t].r.includes(a)?.5:1),1);
+const IN="bg-slate-900 border border-slate-700 rounded p-2";
+const MIS=P(`1|In an Unfamiliar Land|Jubilife Village|None|Receive Arc Phone, choose a starter (Rowlet, Cyndaquil or Oshawott), catch Bidoof, Starly and Shinx at Prelude Beach.
+2|The Trial|Obsidian Fieldlands|None|Earn 1st Star Rank (500 pts) through initial research tasks to join the Survey Corps.
+3|The Basics of Crafting|Jubilife Village|1 Star|Visit Anvin at the Craftworks to learn crafting and unlock basic recipes.
+4|Getting to Work on Research Tasks|Obsidian Fieldlands|1 Star|Go to Heights Camp, battle Mai’s Munchlax (Lv. 10), investigate the raging Alpha Kricketune.
+5|A Request from Mai|Obsidian Fieldlands|1 Star|Defeat Alpha Kricketune (Lv. 12) at Nature’s Pantry, get the Celestica Flute, unlock Ride Wyrdeer.
+6|Summoned by Commander Kamado|Jubilife Village|1 Star|Battle Commander Kamado (Lv. 14 Snorlax) at Galaxy Hall for your next assignment.
+7|The Frenzy of the Lord of the Woods|Obsidian Fieldlands|1 Star|Battle Lian (Lv. 15 Goomy) at Grandtree Arena, craft Forest Balms, quell Noble Kleavor (Lv. 18).
+8|Arezu’s Predicament|Crimson Mirelands|2 Stars|Reach 2nd Star (1,800 pts), unlock Crimson Mirelands, recover the Wall Fragment from the Miss Fortune sisters, unlock Ride Ursaluna.
+9|A New Mission|Jubilife Village|2 Stars|Report to Galaxy Hall and prepare for the frenzied Noble in the Crimson Mirelands.
+10|The Lordless Island|Cobalt Coastlands|3 Stars|Reach 3rd Star (3,500 pts), unlock Cobalt Coastlands, catch a Dusclops for Basculegion Food, unlock Ride Basculegion, quell Noble Hisuian Arcanine.
+11|Scaling Perilous Heights|Coronet Highlands|4 Stars|Reach 4th Star (6,000 pts), unlock Coronet Highlands, battle Melli (Lv. 41 Skuntank) and Ingo, unlock Ride Sneasler.
+12|The Slumbering Lord of the Tundra|Alabaster Icelands|5 Stars|Reach 5th Star (8,500 pts), unlock Alabaster Icelands, battle Gaeric (Lv. 48 Glalie & Froslass), solve Snowpoint Temple, unlock Ride Braviary.
+13|Disaster Looming|Jubilife Village|5 Stars|Sky turns crimson, you are exiled. Visit the Ancient Retreat, meet Cogita, and choose Adaman (Dialga first) or Irida (Palkia first).
+14|The Trial of Lake Verity|Obsidian Fieldlands|5 Stars|Defeat or catch Alpha Hisuian Goodra (Lv. 58) in the cavern, share emotions with Mesprit, get Mesprit’s Plume.
+15|The Trial of Lake Valor|Crimson Mirelands|5 Stars|Defeat or catch Alpha Overqwil (Lv. 58), refuse to give up with Azelf, get Azelf’s Fang.
+16|The Trial of Lake Acuity|Alabaster Icelands|5 Stars|Defeat or catch Alpha Hisuian Zoroark (Lv. 58), answer Uxie’s riddle (60131), get Uxie’s Claw.
+17|Atop Mount Coronet|Coronet Highlands|5 Stars|Forge the Red Chain, battle Beni (Stone Portal) and Commander Kamado, catch Dialga or Palkia (Lv. 65).
+18|The Counterpart|Coronet Highlands|5 Stars|Mine Origin Ore at Primeval Grotto, craft the Origin Ball, quell Origin Forme Palkia/Dialga (Lv. 65), credits roll.
+19|A New Day Dawns|Jubilife Village|5 Stars|Post-game begins; speak with Volo and Cogita to start hunting the Plates.
+20|The Researcher of Myths|Ancient Retreat|5 Stars|Speak with Cogita to unlock the Legendary Plate missions (21–24).
+21|The Plate of the Lakes|All Lakes|5 Stars|Catch Mesprit, Azelf and Uxie (60131) for the Draco, Splash and Mind Plates.
+22|The Plate of Firespit Island|Cobalt Coastlands|5 Stars|Break Heatran’s magma shield with Mud Balls/Sticky Globs, catch Heatran (Lv. 70) for the Iron Plate.
+23|The Plate of Moonview Arena|Coronet Highlands|5 Stars|Handle reversed controls, stun and catch Cresselia (Lv. 70) for the Dread Plate.
+24|The Plate of Snowpoint Temple|Alabaster Icelands|5 Stars|Solve the statue puzzles, catch Regigigas (Lv. 70) for the Blank Plate.
+25|The Plate of Prelude Beach|Jubilife Village|5 Stars|Defeat Commander Kamado (Lv. 68–70 team) for the Fist Plate.
+26|Seeking the Remaining Plates|Coronet Highlands|5 Stars|At Temple of Sinnoh beat Volo’s team plus Giratina (Altered & Origin, Lv. 70) for the Spooky Plate and Azure Flute.
+27|The Deified Pokémon|Coronet Highlands|5 Stars|Catch all 239 required entries, play the Azure Flute at Temple of Sinnoh, defeat Arceus (Lv. 75) for the Legend Plate.`);
+const NOB=P(`Kleavor (Lord of the Woods)|Obsidian Fieldlands (Grandtree Arena)|18|Bug/Rock|Bait its charge into the central tree or walls so it stuns itself.|Dodge the spinning axe dash sideways, then throw 3–4 Forest Balms while it recovers.|Buizel/Floatzel, Bibarel, Oshawott/Dewott, Geodude/Graveler|Water Pulse, Aqua Jet, Rollout, Rock Smash
+Hisuian Lilligant (Lady of the Ridge)|Crimson Mirelands (Brava Arena)|30|Grass/Fighting|It hops 3–4 times before a shockwave ring; learn the rhythm.|Dodge inward through the ring and throw Marsh Balms in the post-jump pause.|Staravia/Staraptor, Crobat, Quilava, Scyther|Aerial Ace, Air Slash, Flame Wheel, Wing Attack
+Hisuian Arcanine (Lord of the Isles)|Cobalt Coastlands (Molten Arena)|36|Fire/Rock|Hit its floating fireballs with Coast Balms to cancel the arena-wide explosion (five fireballs, one lost per balm).|When it splits the arena with lava, dodge its charge to open a long balm window.|Gastrodon, Gyarados, Whiscash, Hisuian Samurott|Earth Power, Water Pulse, Aqua Tail, Bulldoze
+Hisuian Electrode (Lord of the Hollow)|Coronet Highlands (Moonview Arena)|46|Electric/Grass|Sprint in a wide circle to outrun falling Voltorb and homing orbs.|Dodge Self-Destruct (red expanding circle) at the last second, then throw Mountain Balms while it is dazed.|Hisuian Typhlosion, Mamoswine, Crobat, Hisuian Goodra|Flamethrower, Infernal Parade, Ice Fang, Sludge Bomb
+Hisuian Avalugg (Lord of the Tundra)|Alabaster Icelands (Icepeak Arena)|56|Ice/Rock|Stay on a far edge during icicle barrages; dodge sideways from the central ice beam.|Throw Snow Balms continuously between patterns. Its Defense is huge but Sp. Def is tiny, so bulky physical attackers or resisted special hits work.|Lucario, Hisuian Decidueye, Hisuian Goodra, Machamp|Aura Sphere, Close Combat, Triple Arrows, Flash Cannon`);
+const SR=P(`1 Star|500|20|Heavy Ball recipe, Obsidian Fieldlands
+2 Stars|1800|30|Great Ball, Feather Ball, Super Potion recipes, Crimson Mirelands
+3 Stars|3500|40|Cobalt Coastlands
+4 Stars|6000|50|Leaden Ball, Hyper Potion recipes, Coronet Highlands
+5 Stars|8500|65|Wing Ball recipe, Alabaster Icelands
+6 Stars|12000|80|10x Rare Candy, 5x Grit Gravel
+7 Stars|16000|100|Full obedience (Lv. 100), 10x Grit Gravel, 3x Grit Pebble
+8 Stars|25000|100|10x Ultra Ball, 5x Grit Pebble
+9 Stars|38000|100|10x Grit Pebble, 3x Grit Rock
+10 Stars (Full)|60000|100|20x Rare Candy, 10x Grit Rock`);
+const CR=P(`Ultra Ball|Poké Balls|20|Apricorn:1,Tumblestone:2,Iron Chunk:2|Apricorns/Tumblestones: shake trees/ores in all regions. Iron Chunks: black ore in Cobalt Coastlands, Coronet Highlands, Alabaster Icelands, or buy from Anvin (Craftworks).
+Jet Ball|Poké Balls|15|Apricorn:1,Sky Tumblestone:2,Iron Chunk:2|Sky Tumblestones: blue crystal deposits in Coronet Highlands (Celestica Ruins, Wayward Wood) and Cobalt Coastlands cliffs.
+Gigaton Ball|Poké Balls|10|Apricorn:1,Black Tumblestone:2,Iron Chunk:2|Black Tumblestones: dark ore in Crimson Mirelands (Ursa’s Ring, Holm of Trials) and Alabaster Icelands.
+Sticky Glob|Stun Items|15|Ball of Mud:1,Spoiled Apricorn:1,Caster Fern:1|Mud: Crimson Mirelands ground/swamps. Spoiled Apricorn: wild drops or near trees. Caster Fern: Crimson Mirelands & Cobalt Coastlands grass. Or buy from Choy after Request 71.
+Smoke Bomb|Stealth Items|10|Sootfoot Root:1,Caster Fern:1|Sootfoot Root: Crimson Mirelands (Scarlet Bog, Golden Lowlands) & Coronet Highlands. Caster Fern: Crimson Mirelands.
+Stealth Spray|Stealth Items|5|Hopo Berry:1,Bugwort:3,Caster Fern:1|Bugwort: Obsidian Fieldlands (Grueling Grove, The Heartwood). Hopo Berry: shaking berry trees everywhere.
+Full Restore / Max Potion|Healing|10|Hyper Potion:1,Full Heal:1|Full Heal can be swapped for 1 King’s Leaf + 1 Medicinal Leek. King’s Leaf: Alabaster Icelands & Coronet Highlands. Medicinal Leek: Obsidian Fieldlands & Crimson Mirelands, or Jubilife Farm.
+Max Revive|Healing|5|Revive:1,King’s Leaf:1|Vivichoke (for Revives): Crimson Mirelands & Coronet Highlands, or Jubilife Farm.
+Aguav Berry (MMO Scouting)|Outbreak Scouting|15|-|Not craftable. Berry trees in Coronet Highlands & Alabaster Icelands, or grow at Jubilife Farm.`);
+LISTS.story={n:"Story",p:"s",rows:MIS.map(r=>({id:"s"+r[0],t:"Mission "+r[0]+": "+r[1],sub:r[2]+" · "+r[3],body:r[4]}))};
+LISTS.nob={n:"Nobles",p:"n",rows:NOB.map((r,i)=>({id:"n"+i,t:(i+1)+". "+r[0],sub:r[1]+" · Lv. "+r[2]+" · "+r[3],body:"Balm phase:\n• "+r[4]+"\n• "+r[5]+"\nCounters: "+r[6]+"\nBest moves: "+r[7]}))};
+// ---------- V2 COMPONENTS ----------
+function TypesTab(){const [a,sa]=useState("Water"),[b,sb]=useState("");
+ const d=b?[a,b]:[a],g={};TYPES.forEach(t=>{const m=mult(d,t);(g[m]=g[m]||[]).push(t)});
+ const sel=(v,f,ph)=>h`<select value=${v} onChange=${e=>f(e.target.value)} className=${IN}>${ph?h`<option value="">No 2nd type</option>`:null}${TYPES.map(t=>h`<option key=${t}>${t}</option>`)}</select>`;
+ return h`<div><p className="text-sm text-slate-400 mb-2">Defending type(s):</p><div className="flex gap-2 mb-3">${sel(a,sa)}${sel(b,sb,1)}</div>${[4,2,.5,.25,0].filter(m=>g[m]).map(m=>h`<div key=${m} className="mb-2"><b className="text-amber-400">${m===0?"Immune to":"Takes ×"+m+" from"}</b> ${g[m].join(", ")}</div>`)}</div>`}
+function Roster({s,set}){
+ const ro=s.ro||[],ST=["HP","Atk","Def","SpA","SpD","Spe"];
+ const [f,sf]=useState({n:"",t1:"Normal",t2:"",lv:50,nat:"",al:false,el:[0,0,0,0,0,0]}),[mode,sm]=useState("bal"),[lg,sl]=useState("Dialga");
+ const tot=m=>m.el.reduce((a,b)=>a+b,0),ty=m=>m.t2?[m.t1,m.t2]:[m.t1];
+ const L=LEG.find(r=>r[0]===lg),lt=TYPES.filter(t=>L[1].includes(t));
+ const M={bal:["Balanced Story & Exploration",TYPES,TYPES],cat:["Ultimate Catching Squad",TYPES,TYPES],vol:["Volo & Giratina Gauntlet",["Ghost","Dragon"],["Ghost","Dragon","Dark"]],arc:["Arceus Boss Fight",["Normal"],["Normal","Dragon","Ground"]],leg:["Specific Legendary Counter",lt,lt]};
+ const [,E,A]=M[mode],names=mode==="cat"?["Gallade","Hisuian Goodra","Cresselia"]:mode==="leg"?L[4].split(", "):[];
+ const hit=(m,e)=>ty(m).some(a=>TC[e].w.includes(a));
+ const score=m=>tot(m)/60*30+(m.al?8:0)+m.lv/100*8+E.filter(e=>hit(m,e)).length/E.length*30+A.reduce((x,t)=>{const y=mult(ty(m),t);return x+(y<1?1:y>1?-1:0)},0)/A.length*20+(names.includes(m.n)?15:0);
+ const pool=ro.slice(),team=[],cov=new Set(),nw=m=>E.filter(e=>!cov.has(e)&&hit(m,e)).length;
+ while(team.length<6&&pool.length){pool.sort((a,b)=>score(b)+4*nw(b)-score(a)-4*nw(a));const m=pool.shift();team.push(m);E.forEach(e=>hit(m,e)&&cov.add(e))}
+ const miss=E.filter(e=>!cov.has(e)).slice(0,6),stack=A.filter(t=>team.filter(m=>mult(ty(m),t)>1).length>=3);
+ const sel=(v,fn,ph)=>h`<select value=${v} onChange=${e=>fn(e.target.value)} className=${IN}>${ph?h`<option value="">No 2nd type</option>`:null}${TYPES.map(t=>h`<option key=${t}>${t}</option>`)}</select>`;
+ return h`<div className="space-y-4">
+ <div className="bg-slate-800/70 rounded-lg p-3 space-y-2"><h3 className="font-semibold text-amber-400">Add to roster</h3>
+  <div className="flex flex-wrap gap-2"><input placeholder="Pokémon (e.g. Gallade)" value=${f.n} onInput=${e=>sf({...f,n:e.target.value})} className=${IN}/>${sel(f.t1,v=>sf({...f,t1:v}))}${sel(f.t2,v=>sf({...f,t2:v}),1)}<input type="number" min="1" max="100" value=${f.lv} onInput=${e=>sf({...f,lv:+e.target.value})} className=${IN+" w-20"}/><input placeholder="Nature" value=${f.nat} onInput=${e=>sf({...f,nat:e.target.value})} className=${IN+" w-28"}/><label className="flex items-center gap-1 text-sm"><input type="checkbox" checked=${f.al} onChange=${e=>sf({...f,al:e.target.checked})}/>Alpha</label></div>
+  <div className="flex flex-wrap gap-2 text-xs">${ST.map((x,i)=>h`<label key=${x}>${x} EL<input type="number" min="0" max="10" value=${f.el[i]} onInput=${e=>{const v=Math.min(10,Math.max(0,+e.target.value));sf({...f,el:f.el.map((y,j)=>j===i?v:y)})}} className=${IN+" w-16 ml-1"}/></label>`)}</div>
+  <button className="bg-amber-600 px-4 py-2 rounded" onClick=${()=>{if(f.n.trim()){set(p=>({...p,ro:[...(p.ro||[]),{...f,n:f.n.trim()}]}));sf({...f,n:""})}}}>Add</button></div>
+ ${ro.map((m,i)=>h`<div key=${i} className="flex gap-2 items-center text-sm bg-slate-800/70 rounded p-2"><b>${m.n}</b><span className="text-slate-400">${ty(m).join("/")} · Lv.${m.lv}${m.nat?" · "+m.nat:""}${m.al?" · Alpha":""}</span><span className="ml-auto">EL ${tot(m)}/60</span><button onClick=${()=>set(p=>({...p,ro:p.ro.filter((_,j)=>j!==i)}))} className="text-red-400">✕</button></div>`)}
+ <div className="bg-slate-800/70 rounded-lg p-3 space-y-2"><h3 className="font-semibold text-amber-400">Best team</h3>
+  <div className="flex flex-wrap gap-2"><select value=${mode} onChange=${e=>sm(e.target.value)} className=${IN}>${Object.entries(M).map(([k,v])=>h`<option key=${k} value=${k}>${v[0]}</option>`)}</select>${mode==="leg"?h`<select value=${lg} onChange=${e=>sl(e.target.value)} className=${IN}>${LEG.map(r=>h`<option key=${r[0]}>${r[0]}</option>`)}</select>`:null}</div>
+  ${team.length?null:h`<p className="text-sm text-slate-400">Add Pokémon above to get a lineup.</p>`}
+  ${team.map((m,i)=>h`<div key=${i} className="text-sm"><b>${i+1}. ${m.n}</b> — ${E.filter(e=>hit(m,e)).length}/${E.length} target types hit super-effectively · resists ${A.filter(t=>mult(ty(m),t)<1).length}/${A.length} attack types · EL ${tot(m)}/60${m.al?" · Alpha":""}${names.includes(m.n)?" · listed counter":""}</div>`)}
+  ${team.length&&team.length<6?h`<p className="text-sm text-amber-400">Only ${team.length} in roster: catch ${6-team.length} more.</p>`:null}
+  ${team.length?miss.map(e=>h`<p key=${e} className="text-sm text-amber-400">Gap: nothing hits ${e} super-effectively. Catch a ${TYPES.filter(a=>TC[e].w.includes(a)).join("/")} attacker.</p>`):null}
+  ${stack.length?h`<p className="text-sm text-red-400">Defensive risk: 3+ members are weak to ${stack.join(", ")}.</p>`:null}
+  <p className="text-xs text-slate-500">Rule-based scoring (Effort Levels, Alpha, level, type coverage). Mode targets are simplified assumptions. No AI involved.</p></div></div>`}
+function Satchel({s,set}){
+ const D={slots:20,used:0,cost:""},sa={...D,...s.sat},inv=s.inv||{};
+ const up=(k,v)=>set(p=>({...p,sat:{...D,...p.sat,[k]:v}})),cs=(k,v)=>set(p=>({...p,inv:{...p.inv,[k]:Math.max(0,v||0)}}));
+ const R=CR.map(r=>({n:r[0],c:r[1],t:+r[2],g:r[3]==="-"?[]:r[3].split(",").map(x=>x.split(":")),w:r[4]}));
+ const mats=[...new Set(R.flatMap(r=>r.g.map(x=>x[0])))];
+ const can=r=>r.g.length?Math.min(...r.g.map(([k,n])=>Math.floor((inv[k]||0)/n))):null;
+ const low=R.filter(r=>(inv[r.n]||0)<r.t);
+ const num=(v,f)=>h`<input type="number" min="0" value=${v} onInput=${e=>f(+e.target.value)} className=${IN+" w-24"}/>`;
+ return h`<div className="space-y-3">
+  <div className="bg-slate-800/70 rounded-lg p-3"><h3 className="font-semibold text-amber-400 mb-2">Satchel</h3>
+   <div className="flex flex-wrap gap-4 text-sm items-center"><label>Slots (20–60) ${num(sa.slots,v=>up("slots",Math.min(60,Math.max(20,v||20))))}</label><label>Used ${num(sa.used,v=>up("used",v))}</label><span>Free: ${sa.slots-sa.used}</span><label>Next upgrade cost ${num(sa.cost,v=>up("cost",v))}</label></div>
+   <p className="text-xs text-slate-400 mt-2">Total cost 20→60 slots: 4,399,500. Suggested stop: 35–40 slots (costs escalate past 40, reaching 1,000,000 for slot 60). Per-slot prices weren’t in the data, so enter Bagin’s quoted price.</p></div>
+  ${low.length?h`<div className="bg-red-900/40 border border-red-700 rounded-lg p-3 text-sm">Low stock: ${low.map(r=>r.n).join(", ")}</div>`:null}
+  ${R.map(r=>{const n=inv[r.n]||0,lo=n<r.t,c=can(r);return h`<div key=${r.n} className=${"rounded-lg p-3 border "+(lo?"border-amber-600 bg-slate-800":"border-slate-700 bg-slate-800/70")}>
+   <div className="flex flex-wrap items-center gap-3"><b>${r.n}</b><span className="text-xs text-slate-400">${r.c} · restock below ${r.t}</span>${lo?h`<span className=${"text-xs px-2 rounded "+(n===0?"bg-red-600":"bg-amber-600")}>Low Stock Alert</span>`:null}<span className="ml-auto">${num(n,v=>cs(r.n,v))}</span></div>
+   <div className="text-xs text-slate-300 mt-1">${r.g.length?"Recipe: "+r.g.map(([k,q])=>q+" "+k).join(" + ")+" · can craft now: "+c:"Not craftable"}</div><div className="text-xs text-slate-400">${r.w}</div></div>`})}
+  <h3 className="font-semibold text-amber-400">Raw materials</h3><div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">${mats.map(k=>h`<label key=${k} className="flex justify-between items-center gap-2 bg-slate-800/70 rounded p-2">${k}${num(inv[k]||0,v=>cs(k,v))}</label>`)}</div></div>`}
+function Shiny(){const [o,so]=useState({r:0,p:0,c:0,x:0});
+ const n=1+(o.p?3:o.r?1:0)+(o.c?3:0)+o.x,pr=1-Math.pow(1-1/4096,n);
+ const cb=(k,l)=>h`<label className="flex gap-2 mb-2"><input type="checkbox" checked=${!!o[k]} onChange=${e=>so({...o,[k]:e.target.checked?1:0})} className="accent-amber-500"/>${l}</label>`;
+ return h`<div>${cb("r","Research Level 10 on this species (+1 roll)")}${cb("p","Perfected entry (+3 rolls total, includes Lv. 10)")}${cb("c","Shiny Charm (+3 rolls)")}
+ <select value=${o.x} onChange=${e=>so({...o,x:+e.target.value})} className=${IN+" mb-3"}><option value="0">No outbreak</option><option value="25">Mass Outbreak (+25)</option><option value="12">Massive Mass Outbreak (+12)</option></select>
+ <div className="text-3xl font-bold text-amber-400">1 in ${(1/pr).toFixed(1)}</div><div className="text-sm text-slate-400">${n} rolls at 1/4096 each · ${(pr*100).toFixed(2)}% per encounter</div>
+ <ul className="list-disc pl-5 text-sm mt-4 space-y-1"><li>Shinies chime and sparkle in the overworld before battle.</li><li>Keep Autosave off and save manually when you hear the chime; reloading keeps the same spawn.</li><li>Static Alphas reroll each time you return to Jubilife Village and re-enter the region.</li></ul></div>`}
+function Stars({s,set}){const pts=+((s.m||{}).pts)||0,i=SR.filter(r=>pts>=+r[1]).length-1,nx=SR[i+1];
+ return h`<div><label className="text-sm">Research points <input type="number" min="0" value=${pts} onInput=${e=>{const v=+e.target.value;set(p=>({...p,m:{...p.m,pts:v}}))}} className=${IN+" w-28 ml-2"}/></label>
+ <p className="my-3">${i<0?"Below 1 Star":SR[i][0]+" · obey up to Lv. "+SR[i][2]}${nx?" · "+(nx[1]-pts)+" pts to "+nx[0]:" · max rank"}</p><${Tbl} head=${["Rank","Points","Obey Lv.","Unlocks"]} rows=${SR}/></div>`}
+const Sec=({t,l})=>h`<div className="mb-4"><h3 className="font-semibold text-amber-400 mb-1">${t}</h3><ul className="list-disc pl-5 text-sm space-y-1">${l.map((x,i)=>h`<li key=${i}>${x}</li>`)}</ul></div>`;
+const Doc=S=>()=>h`<div>${S.map(([t,l])=>h`<${Sec} key=${t} t=${t} l=${l}/>`)}</div>`;
+const PATH=Doc([["Unlock",["Complete Request 102 (Daybreak), then talk to Gared at the Jubilife Village Training Grounds."]],["Rules",["1-on-1 single-species challenge against a fixed opponent.","Items cannot be used in battle.","Each cleared species gets a Pokédex mark (not needed for Shiny Charm or Arceus, needed for true 100%)."]],["Winning formula",["Raise HP, defenses and main attacking stat to Effort Level 9–10 with Grit.","Use Zisu’s tutor for coverage or healing (Recover, Roost, Rest, Drain Punch, Leech Life).","Weak babies (Magikarp, Wurmple, Abra, Kricketot, Unown, Burmy): Lv. 80–100, EL 10, Agile Style status/stat moves or Struggle."]],["Hardest trials",["Magikarp vs Lv. 50 Electrode: Lv. 90+, EL 10 HP/Def/SpDef; survive Self-Destruct or Splash until Struggle.","Wurmple vs Lv. 30 Staravia: Lv. 85+, EL 10 HP/Def/Atk; Poison Sting, outlast with Tackle.","Kricketot vs Lv. 40 Cherrim: Lv. 85+, EL 10; teach Struggle Bug and spam it.","Abra vs Lv. 45 Mr. Mime: Lv. 85+, EL 10; teach Shadow Ball.","Unown vs Lv. 55 Gastly, Haunter & Gengar (3v1): Lv. 90+, EL 10 SpA/Spe/HP; Hidden Power (Psychic)."]]]);
+const MECH=Doc([["Differences from mainline",["No breeding or eggs.","No held items or abilities in battle (exceptions: Regigigas’s Slow Start, Cherrim’s Flower Gift).","Effort Levels 0–10 via Grit replace EVs/IVs (IVs set the starting EL).","Evolution is triggered manually from the satchel/party menu."]],["Action speed",["Hidden Action Time counter decides turn order; higher Speed shortens recovery so fast Pokémon can act repeatedly.","Standard moves cost 8; priority moves (Quick Attack, Aqua Jet, Ice Shard, Bullet Punch, Mach Punch) cost 5; heavy moves (Hyper Beam, Giga Impact, Roar of Time, Self-Destruct) cost 11–12."]],["Move mastery",["Master a move by leveling roughly 10 past its learn level, or feed a Seed of Mastery at Zisu’s Training Grounds.","Agile Style: 0.8× power, recovery −3 (often an immediate extra turn), 2 PP.","Strong Style: 1.2× power (1.25× on weak moves), +10–20% accuracy and secondary chance, recovery +5, 2 PP."]],["Research",["Each task is 1 point toward Level 10; double-arrow tasks give 2.","Lv. 10 on all 239 required species unlocks the Shiny Charm.","Finishing every task on a species marks it Perfect and adds shiny rolls for it."]],["Alphas",["At least three 31-IV stats (start at EL 3+ in those).","Spawn with a mastered tutor move.","Drop Seeds of Mastery, Exp. Candy and Grit.","Static Alphas respawn when you return to Jubilife Village and re-enter the region."]],["Ride unlocks",["Wyrdeer (M5), Ursaluna (M8), Basculegion (M10), Sneasler (M11), Braviary (M12)."]]]);
+const NEW={dex:Dex,types:TypesTab,roster:Roster,sat:Satchel,shiny:Shiny,stars:Stars,path:PATH,mech:MECH};
+// ---------- APP ----------
+const KEY="pla-companion-v1";
+function Row({r,s,set}){const on=!!(s.c||{})[r.id];
+ return h`<details className="bg-slate-800/70 rounded-lg border border-slate-700 mb-2"><summary className="flex items-center gap-3 p-3 cursor-pointer">
+ <input type="checkbox" checked=${on} onClick=${e=>e.stopPropagation()} onChange=${()=>set(p=>({...p,c:{...p.c,[r.id]:!(p.c||{})[r.id]}}))} className="w-5 h-5 accent-amber-500"/>
+ <div className="flex-1 min-w-0"><div className=${on?"line-through opacity-60":"font-medium"}>${r.t}</div><div className="text-xs text-slate-400">${r.sub}</div></div></summary>
+ <div className="px-4 pb-3 text-sm text-slate-300 space-y-2"><div className="pre">${r.body}</div>
+ <input placeholder="Notes…" value=${(s.n||{})[r.id]||""} onInput=${e=>{const v=e.target.value;set(p=>({...p,n:{...p.n,[r.id]:v}}))}} className="w-full bg-slate-900 rounded p-2 border border-slate-700"/></div></details>`}
+function Bar({l,v,m}){return h`<div className="mb-3"><div className="flex justify-between text-sm"><span>${l}</span><span>${v}/${m}</span></div><div className="h-2 bg-slate-700 rounded"><div className="h-2 rounded bg-amber-500" style=${{width:(m?Math.min(100,v/m*100):0)+"%"}}></div></div></div>`}
+function Tbl({head,rows}){return h`<div className="overflow-x-auto mb-6"><table className="w-full text-sm"><thead><tr>${head.map(x=>h`<th key=${x} className="text-left p-2 text-amber-400 border-b border-slate-600">${x}</th>`)}</tr></thead><tbody>${rows.map((r,i)=>h`<tr key=${i} className="border-b border-slate-800">${r.map((c,j)=>h`<td key=${j} className="p-2">${c}</td>`)}</tr>`)}</tbody></table></div>`}
+function App(){
+ const [s,set]=useState(()=>{try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}});
+ const [tab,setTab]=useState("dash"),[q,setQ]=useState(""),[imp,setImp]=useState(""),[gq,setGq]=useState(""),[rs,setRs]=useState(false);
+ useEffect(()=>{try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}},[s]);
+ const cnt=p=>Object.keys(s.c||{}).filter(k=>s.c[k]&&k[0]===p).length;
+ const tabs=[["dash","Dashboard"],["story","Story"],["nob","Nobles"],["leg","Legendaries"],["dex","Pokédex"],["evo","Evolutions"],["roster","Roster"],["sat","Satchel"],["shiny","Shiny"],["types","Types"],["stars","Stars"],["shop","Shops"],["req","Requests"],["wisp","Wisps"],["uno","Unown"],["ver","Verses"],["path","Solitude"],["mech","Mechanics"],["bk","Backup"]];
+ let body;
+ const res=gq.length>1?Object.entries(LISTS).flatMap(([k,L])=>L.rows.filter(r=>(r.t+" "+r.sub+" "+r.body).toLowerCase().includes(gq.toLowerCase())).slice(0,4).map(r=>[k,L.n,r.t])).slice(0,12):[];
+ const omni=h`<div className="mb-3"><input placeholder="Search everything…" value=${gq} onInput=${e=>setGq(e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded p-2"/>${res.map(([k,n,t],i)=>h`<button key=${i} onClick=${()=>{setTab(k);setQ(gq);setGq("")}} className="block w-full text-left text-sm p-2 border-b border-slate-800">${t} <span className="text-slate-400">· ${n}</span></button>`)}</div>`;
+ if(tab==="dash")body=h`<div><h2 className="text-lg font-semibold mb-1 text-amber-400">Completion</h2><p className="text-xs text-slate-400 mb-3">Arceus unlocks at 239 caught entries (237 standard + Manaphy + Phione) out of 242.</p>
+  ${GOALS.map(([l,m],i)=>{const v=(s.m||{})[l]||0;return h`<div key=${l}><${Bar} l=${l} v=${v} m=${m||242}/><input type="number" min="0" value=${v} onInput=${e=>{const x=+e.target.value;set(p=>({...p,m:{...p.m,[l]:x}}))}} className="w-24 bg-slate-900 border border-slate-700 rounded p-1 mb-3 text-sm"/>${DXM[l]?h`<span className="text-xs text-slate-400 ml-2">Pokédex tab: ${Object.keys(s.c||{}).filter(x=>s.c[x]&&x.startsWith("d"+DXM[l])).length}</span>`:null}</div>`})}
+  <${Bar} l="Legendary/Mythical (18)" v=${cnt("l")} m=${LEG.length}/><${Bar} l="Spiritomb Wisps" v=${cnt("w")} m=${WL.length}/><${Bar} l="Unown Forms" v=${cnt("u")} m=${UNO.length}/><${Bar} l="Old Verses" v=${cnt("v")} m=${VER.length}/><${Bar} l="Key Requests (of 122)" v=${cnt("r")} m=${REQ.length}/><${Bar} l="Story Missions (27)" v=${cnt("s")} m=${MIS.length}/><${Bar} l="Noble Pokémon (5)" v=${cnt("n")} m=${NOB.length}/><${Bar} l="Evolutions Done" v=${cnt("e")} m=${EVO.length}/></div>`;
+ else if(tab==="shop")body=h`<div><h2 className="font-semibold text-amber-400 mb-2">Ginter (Ginkgo Guild)</h2><${Tbl} head=${["Disguised","Real item","Cost"]} rows=${GIN}/>
+  <h2 className="font-semibold text-amber-400 mb-2">Simona’s Trading Post (Merit Points)</h2><${Tbl} head=${["Item","MP","Evolves"]} rows=${SIM}/>
+  <h2 className="font-semibold text-amber-400 mb-2">Zisu’s Move Tutor</h2><${Tbl} head=${["Move","Type","Priority","Why"]} rows=${ZIS}/></div>`;
+ else if(NEW[tab]){const C=NEW[tab];body=h`<${C} s=${s} set=${set}/>`}
+ else if(tab==="bk")body=h`<div className="space-y-3"><p className="text-sm text-slate-300">Copy this text somewhere safe. To restore, paste a backup below and press Import.</p>
+  <textarea readOnly value=${JSON.stringify(s)} className="w-full h-32 bg-slate-900 border border-slate-700 rounded p-2 text-xs"/>
+  <textarea value=${imp} onInput=${e=>setImp(e.target.value)} placeholder="Paste backup JSON here" className="w-full h-32 bg-slate-900 border border-slate-700 rounded p-2 text-xs"/>
+  <button className="bg-amber-600 px-4 py-2 rounded" onClick=${()=>{try{set(JSON.parse(imp));setImp("")}catch(e){alert("That isn’t valid backup JSON.")}}}>Import</button><button className="bg-red-700 px-4 py-2 rounded ml-2" onClick=${()=>{if(rs){set({});setRs(false)}else setRs(true)}}>${rs?"Click again to confirm reset":"Reset all progress"}</button></div>`;
+ else{const L=LISTS[tab],rows=L.rows.filter(r=>(r.t+r.sub+r.body).toLowerCase().includes(q.toLowerCase()));
+  body=h`<div><${Bar} l=${L.n} v=${cnt(L.p)} m=${L.rows.length}/><input placeholder="Search…" value=${q} onInput=${e=>setQ(e.target.value)} className="w-full mb-3 bg-slate-900 border border-slate-700 rounded p-2"/>${rows.map(r=>h`<${Row} key=${r.id} r=${r} s=${s} set=${set}/>`)}</div>`}
+ return h`<div className="max-w-3xl mx-auto p-4"><h1 className="text-2xl font-bold text-amber-400 mb-1">Hisui Completionist Companion</h1>${omni}
+ <div className="flex gap-2 overflow-x-auto pb-2 mb-4">${tabs.map(([k,n])=>h`<button key=${k} onClick=${()=>{setTab(k);setQ("")}} className=${"px-3 py-1 rounded-full text-sm whitespace-nowrap "+(tab===k?"bg-amber-600":"bg-slate-800")}>${n}</button>`)}</div>${body}</div>`}
+ReactDOM.createRoot(document.getElementById("root")).render(h`<${App}/>`);
+</script></body></html>
