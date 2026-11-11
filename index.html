@@ -5,7 +5,38 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/htm@3.1.1/dist/htm.umd.js"></script>
-<style>:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{background:#0f1419;color:#e2e8f0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.pre{white-space:pre-line}</style></head>
+<style>:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+body{background:#0f1419;color:#e2e8f0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-tap-highlight-color:transparent}
+.pre{white-space:pre-line}
+input,select,textarea{font-size:16px}
+button{touch-action:manipulation}
+.card{background:rgba(30,41,59,.65);border:1px solid #334155;border-radius:14px}
+.card-red{background:rgba(127,29,29,.35);border:1px solid #dc2626;border-radius:14px}
+.card-amb{background:rgba(120,53,15,.3);border:1px solid #d97706;border-radius:14px}
+.card-grn{background:rgba(20,83,45,.3);border:1px solid #16a34a;border-radius:14px}
+.lnk{color:#fbbf24;text-decoration:underline dotted;text-underline-offset:3px;cursor:pointer;background:none;border:0;padding:0;font:inherit;text-align:left}
+.btn{background:#d97706;color:#fff;border-radius:10px;padding:8px 14px;font-weight:600;min-height:40px}
+.btn2{background:#334155;color:#e2e8f0;border-radius:10px;padding:8px 14px;min-height:40px}
+.btn-s{width:38px;min-height:40px;border-radius:10px;background:#334155;font-size:20px;line-height:1}
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 12px;font-size:14px;background:#1e293b;border:1px solid #334155;position:relative;color:#e2e8f0}
+.chip.on{background:#d97706;border-color:#d97706;color:#fff}
+.tag{display:inline-block;border-radius:999px;padding:1px 8px;font-size:11px;background:#334155;color:#cbd5e1}
+.tag.red{background:#b91c1c;color:#fff}
+.tag.grn{background:#166534;color:#fff}
+.tag.amb{background:#b45309;color:#fff}
+.dot{position:absolute;top:-3px;right:-4px;width:11px;height:11px;border-radius:99px;background:#ef4444;border:2px solid #0f1419}
+.dot.a{background:#f59e0b}
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:40;background:#0b1017;border-top:1px solid #334155;padding-bottom:env(safe-area-inset-bottom,0px);display:flex;justify-content:center}
+.bnav-in{display:flex;width:100%;max-width:768px}
+.bnav button{flex:1;position:relative;padding:8px 2px 6px;font-size:11px;color:#94a3b8}
+.bnav button.on{color:#fbbf24}
+.bnav .ic{font-size:21px;display:block;line-height:1.1;position:relative;width:fit-content;margin:0 auto}
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:60;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:#111827;border:1px solid #334155;border-radius:18px 18px 0 0;width:100%;max-width:640px;max-height:88vh;overflow-y:auto;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:rgba(15,20,25,.97)}
+.row-pg{height:8px;background:#334155;border-radius:99px;overflow:hidden}
+.row-pg>div{height:8px;border-radius:99px;background:#f59e0b}</style></head>
 <body><div id="root"></div>
 <script>
 const h=htm.bind(React.createElement),{useState,useEffect}=React;
@@ -512,18 +543,18 @@ const DEX4=P(`181|Bronzong|Steel/Psychic|H,A|Celestica Ruins (Static Alpha), Sno
 const X=x=>x.replace(/~A/g,"Any time/weather").replace(/~F/g,"Final stage");
 const DEX=[DEX1,DEX2,DEX3,DEX4].flat().map(r=>({i:+r[0],n:r[1],ty:r[2].split("/"),rg:r[3].split(","),loc:r[4],cond:X(r[5]),evo:X(r[6]).replace("->","→"),sp:r[7]==="1"}));
 const DK=[["c","Caught"],["l","Lv. 10"],["p","Perfected"],["a","Alpha"]],DXM={"Pokédex Caught":"c","Research Lv. 10":"l","Perfected Entries":"p","Alpha Caught":"a"};
-function Dex({s,set}){
- const [q,sq]=useState(""),[rg,sr]=useState(""),[st,ss]=useState(""),c=s.c||{},on=(k,i)=>!!c["d"+k+i];
+function Dex({s,set,fo}){fo=fo||{};
+ const [q,sq]=useState(fo.q||""),[rg,sr]=useState(""),[st,ss]=useState(""),c=s.c||{},on=(k,i)=>!!c["d"+k+i];
  const F={nc:d=>!on("c",d.i),c:d=>on("c",d.i),sp:d=>d.sp,nl:d=>!on("l",d.i),np:d=>!on("p",d.i)};
- const rows=DEX.filter(d=>(!q||(d.n+" "+d.ty.join(" ")+" "+d.loc+" "+d.cond+" "+d.evo).toLowerCase().includes(q.toLowerCase()))&&(!rg||d.rg.includes(rg))&&(!st||F[st](d)));
+ const rows=DEX.filter(d=>(!q||(d.n+" "+d.ty.join(" ")+" "+d.loc+" "+d.cond+" "+d.evo).toLowerCase().includes(q.toLowerCase()))&&(!rg||d.rg.includes(rg))&&(!fo.i||d.i===fo.i)&&(!st||F[st](d)));
  const tg=(k,i)=>set(p=>({...p,c:{...p.c,["d"+k+i]:!(p.c||{})["d"+k+i]}}));
  const sel="bg-slate-900 border border-slate-700 rounded p-2 text-sm";
  return h`<div><${Bar} l=${"Caught ("+DEX.length+" of 242 entries loaded)"} v=${DEX.filter(d=>on("c",d.i)).length} m=${242}/>
  <input placeholder="Search name, type, location…" value=${q} onInput=${e=>sq(e.target.value)} className="w-full mb-2 bg-slate-900 border border-slate-700 rounded p-2"/>
  <div className="flex gap-2 mb-3"><select value=${rg} onChange=${e=>sr(e.target.value)} className=${sel}><option value="">All regions</option>${Object.entries(RGN).map(([k,v])=>h`<option key=${k} value=${k}>${v}</option>`)}</select>
  <select value=${st} onChange=${e=>ss(e.target.value)} className=${sel}><option value="">All entries</option><option value="nc">Not caught</option><option value="c">Caught</option><option value="nl">Not Lv. 10</option><option value="np">Not perfected</option><option value="sp">Rare / special</option></select></div>
- <p className="text-xs text-slate-400 mb-2">${rows.length} shown</p>
- ${rows.map(d=>h`<details key=${d.i} className="bg-slate-800/70 rounded-lg border border-slate-700 mb-2"><summary className="p-3 cursor-pointer">
+ ${fo.i?h`<button className="btn2 mb-2" onClick=${()=>GO("dex")}>Show all entries</button>`:null}<p className="text-xs text-slate-400 mb-2">${rows.length} shown</p>
+ ${rows.map(d=>h`<details key=${d.i} open=${!!fo.i} className="bg-slate-800/70 rounded-lg border border-slate-700 mb-2"><summary className="p-3 cursor-pointer">
   <div className=${"font-medium "+(on("c",d.i)?"opacity-60":"")}>#${d.i} ${d.n}${d.sp?" ★":""} <span className="text-xs text-slate-400 font-normal">${d.ty.join(" / ")}</span></div>
   <div className="flex gap-3 mt-1 flex-wrap">${DK.map(([k,l])=>h`<label key=${k} onClick=${e=>e.stopPropagation()} className="text-xs flex items-center gap-1"><input type="checkbox" checked=${on(k,d.i)} onChange=${()=>tg(k,d.i)} className="w-4 h-4 accent-amber-500"/>${l}</label>`)}</div></summary>
   <div className="px-4 pb-3 text-sm text-slate-300 space-y-1"><div>Regions: ${d.rg.map(x=>RGN[x]).join(", ")}</div><div>Where: ${d.loc}</div><div>When: ${d.cond}</div><div>Evolution: ${d.evo}</div>
@@ -676,23 +707,6 @@ function Roster({s,set}){
   ${team.length?miss.map(e=>h`<p key=${e} className="text-sm text-amber-400">Gap: nothing hits ${e} super-effectively. Catch a ${TYPES.filter(a=>TC[e].w.includes(a)).join("/")} attacker.</p>`):null}
   ${stack.length?h`<p className="text-sm text-red-400">Defensive risk: 3+ members are weak to ${stack.join(", ")}.</p>`:null}
   <p className="text-xs text-slate-500">Rule-based scoring (Effort Levels, Alpha, level, type coverage). Mode targets are simplified assumptions. No AI involved.</p></div></div>`}
-function Satchel({s,set}){
- const D={slots:20,used:0,cost:""},sa={...D,...s.sat},inv=s.inv||{};
- const up=(k,v)=>set(p=>({...p,sat:{...D,...p.sat,[k]:v}})),cs=(k,v)=>set(p=>({...p,inv:{...p.inv,[k]:Math.max(0,v||0)}}));
- const R=CR.map(r=>({n:r[0],c:r[1],t:+r[2],g:r[3]==="-"?[]:r[3].split(",").map(x=>x.split(":")),w:r[4]}));
- const mats=[...new Set(R.flatMap(r=>r.g.map(x=>x[0])))];
- const can=r=>r.g.length?Math.min(...r.g.map(([k,n])=>Math.floor((inv[k]||0)/n))):null;
- const low=R.filter(r=>r.n in inv&&inv[r.n]<r.t);
- const num=(v,f)=>h`<input type="number" min="0" value=${v} onInput=${e=>f(+e.target.value)} className=${IN+" w-24"}/>`;
- return h`<div className="space-y-3">
-  <div className="bg-slate-800/70 rounded-lg p-3"><h3 className="font-semibold text-amber-400 mb-2">Satchel</h3>
-   <div className="flex flex-wrap gap-4 text-sm items-center"><label>Slots (20–60) ${num(sa.slots,v=>up("slots",Math.min(60,Math.max(20,v||20))))}</label><label>Used ${num(sa.used,v=>up("used",v))}</label><span>Free: ${sa.slots-sa.used}</span><label>Next upgrade cost ${num(sa.cost,v=>up("cost",v))}</label></div>
-   <p className="text-xs text-slate-400 mt-2">Total cost 20→60 slots: 4,399,500. Suggested stop: 35–40 slots (costs escalate past 40, reaching 1,000,000 for slot 60). Per-slot prices weren’t in the data, so enter Bagin’s quoted price.</p></div>
-  ${low.length?h`<div className="bg-red-900/40 border border-red-700 rounded-lg p-3 text-sm">Low stock: ${low.map(r=>r.n).join(", ")}</div>`:null}
-  ${R.map(r=>{const n=inv[r.n]||0,lo=(r.n in inv)&&n<r.t,c=can(r);return h`<div key=${r.n} className=${"rounded-lg p-3 border "+(lo?"border-amber-600 bg-slate-800":"border-slate-700 bg-slate-800/70")}>
-   <div className="flex flex-wrap items-center gap-3"><b>${r.n}</b><span className="text-xs text-slate-400">${r.c} · restock below ${r.t}</span>${lo?h`<span className=${"text-xs px-2 rounded "+(n===0?"bg-red-600":"bg-amber-600")}>Low Stock Alert</span>`:null}<span className="ml-auto">${num(n,v=>cs(r.n,v))}</span></div>
-   <div className="text-xs text-slate-300 mt-1">${r.g.length?"Recipe: "+r.g.map(([k,q])=>q+" "+k).join(" + ")+" · can craft now: "+c:"Not craftable"}</div><div className="text-xs text-slate-400">${r.w}</div></div>`})}
-  <h3 className="font-semibold text-amber-400">Raw materials</h3><div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">${mats.map(k=>h`<label key=${k} className="flex justify-between items-center gap-2 bg-slate-800/70 rounded p-2"><span>${k}<span className="block text-xs text-slate-400">${MAT[k]||""}</span></span>${num(inv[k]||0,v=>cs(k,v))}</label>`)}</div></div>`}
 function Shiny(){const [o,so]=useState({r:0,p:0,c:0,x:0});
  const n=1+(o.p?3:o.r?1:0)+(o.c?3:0)+o.x,pr=1-Math.pow(1-1/4096,n);
  const cb=(k,l)=>h`<label className="flex gap-2 mb-2"><input type="checkbox" checked=${!!o[k]} onChange=${e=>so({...o,[k]:e.target.checked?1:0})} className="accent-amber-500"/>${l}</label>`;
@@ -700,9 +714,6 @@ function Shiny(){const [o,so]=useState({r:0,p:0,c:0,x:0});
  <select value=${o.x} onChange=${e=>so({...o,x:+e.target.value})} className=${IN+" mb-3"}><option value="0">No outbreak</option><option value="25">Mass Outbreak (+25)</option><option value="12">Massive Mass Outbreak (+12)</option></select>
  <div className="text-3xl font-bold text-amber-400">1 in ${(1/pr).toFixed(1)}</div><div className="text-sm text-slate-400">${n} rolls at 1/4096 each · ${(pr*100).toFixed(2)}% per encounter</div>
  <ul className="list-disc pl-5 text-sm mt-4 space-y-1"><li>Shinies chime and sparkle in the overworld before battle.</li><li>Keep Autosave off and save manually when you hear the chime; reloading keeps the same spawn.</li><li>Static Alphas reroll each time you return to Jubilife Village and re-enter the region.</li></ul></div>`}
-function Stars({s,set}){const pts=+((s.m||{}).pts)||0,i=SR.filter(r=>pts>=+r[1]).length-1,nx=SR[i+1];
- return h`<div><label className="text-sm">Research points <input type="number" min="0" value=${pts} onInput=${e=>{const v=+e.target.value;set(p=>({...p,m:{...p.m,pts:v}}))}} className=${IN+" w-28 ml-2"}/></label>
- <p className="my-3">${i<0?"Below 1 Star":SR[i][0]+" · obey up to Lv. "+SR[i][2]}${nx?" · "+(nx[1]-pts)+" pts to "+nx[0]:" · max rank"}</p><${Tbl} head=${["Rank","Points","Obey Lv.","Unlocks"]} rows=${SR}/></div>`}
 const Sec=({t,l})=>h`<div className="mb-4"><h3 className="font-semibold text-amber-400 mb-1">${t}</h3><ul className="list-disc pl-5 text-sm space-y-1">${l.map((x,i)=>h`<li key=${i}>${x}</li>`)}</ul></div>`;
 const Doc=S=>()=>h`<div>${S.map(([t,l])=>h`<${Sec} key=${t} t=${t} l=${l}/>`)}</div>`;
 const PATH=Doc([["Unlock",["Complete Request 102 (Daybreak), then talk to Gared at the Jubilife Village Training Grounds."]],["Rules",["1-on-1 single-species challenge against a fixed opponent.","Items cannot be used in battle.","Each cleared species gets a Pokédex mark (not needed for Shiny Charm or Arceus, needed for true 100%)."]],["Winning formula",["Raise HP, defenses and main attacking stat to Effort Level 9–10 with Grit.","Use Zisu’s tutor for coverage or healing (Recover, Roost, Rest, Drain Punch, Leech Life).","Weak babies (Magikarp, Wurmple, Abra, Kricketot, Unown, Burmy): Lv. 80–100, EL 10, Agile Style status/stat moves or Struggle."]],["Hardest trials",["Magikarp vs Lv. 50 Electrode: Lv. 90+, EL 10 HP/Def/SpDef; survive Self-Destruct or Splash until Struggle.","Wurmple vs Lv. 30 Staravia: Lv. 85+, EL 10 HP/Def/Atk; Poison Sting, outlast with Tackle.","Kricketot vs Lv. 40 Cherrim: Lv. 85+, EL 10; teach Struggle Bug and spam it.","Abra vs Lv. 45 Mr. Mime: Lv. 85+, EL 10; teach Shadow Ball.","Unown vs Lv. 55 Gastly, Haunter & Gengar (3v1): Lv. 90+, EL 10 SpA/Spe/HP; Hidden Power (Psychic)."]]]);
@@ -751,23 +762,6 @@ const wk=ty=>TYPES.filter(a=>mult(ty,a)>1).map(a=>a+(mult(ty,a)>2?" ×4":"")).jo
 const GU=GD.map(r=>({n:+r[0],st:r[1].split(";;")}));
 const BO=BOSS.map(r=>({n:r[0],ms:r[1].split(",").map(Number),tip:r[2],m:r[3].split(",").map(x=>{const a=x.split(":");return{n:a[0],t:a[1].split("/"),lv:a[2],mv:a[3]}})}));
 const tgl=(set,k)=>set(p=>({...p,c:{...p.c,[k]:!(p.c||{})[k]}}));
-function Boss({b}){return h`<details className="ml-2 mb-1 bg-slate-900/60 rounded p-2"><summary className="cursor-pointer text-sm text-amber-300">⚔ ${b.n}</summary><div className="text-xs text-slate-300 my-1">${b.tip}</div>${b.m.map(x=>h`<div key=${x.n} className="text-xs">${x.n}${x.lv?" Lv. "+x.lv:""} (${x.t.join("/")}): weak to ${wk(x.t)}${x.mv?" · moves: "+x.mv.replace(/\+/g,", "):""}</div>`)}</details>`}
-function Guide({s,set}){const c=s.c||{};
- return h`<div><p className="text-sm text-slate-400 mb-2">Tick each step as you go. Mission boxes sync with the Story tab and Dashboard.</p>${MIS.map(m=>{const n=+m[0],g=GU.find(x=>x.n===n),st=g?g.st:[m[4]],d=st.filter((_,i)=>c["g"+n+"_"+i]).length;
-  return h`<details key=${n} className="bg-slate-800/70 rounded-lg border border-slate-700 mb-2"><summary className="flex items-center gap-3 p-3 cursor-pointer"><input type="checkbox" checked=${!!c["s"+n]} onClick=${e=>e.stopPropagation()} onChange=${()=>tgl(set,"s"+n)} className="w-5 h-5 accent-amber-500"/><div className="flex-1"><div className=${c["s"+n]?"line-through opacity-60":"font-medium"}>Mission ${n}: ${m[1]}</div><div className="text-xs text-slate-400">${m[2]} · needs ${m[3]} · ${d}/${st.length} steps</div></div></summary>
-  <div className="px-4 pb-3 space-y-1">${st.map((t,i)=>h`<label key=${i} className="flex gap-2 text-sm"><input type="checkbox" checked=${!!c["g"+n+"_"+i]} onChange=${()=>tgl(set,"g"+n+"_"+i)} className="mt-1 accent-amber-500"/><span>${i+1}. ${t}</span></label>`)}${BO.filter(b=>b.ms.includes(n)).map(b=>h`<${Boss} key=${b.n} b=${b}/>`)}</div></details>`})}</div>`}
-function Plan({s,set}){const c=s.c||{},inv=s.inv||{},ro=s.ro||[],sv=s.sv||{},pts=+((s.m||{}).pts)||0,ty=m=>m.t2?[m.t1,m.t2]:[m.t1],el=m=>m.el.reduce((a,b)=>a+b,0);
- const nx=MIS.find(m=>!c["s"+m[0]]),need=nx?+((nx[3].match(/\d+/)||[0])[0]):0,rk=SR.filter(r=>pts>=+r[1]).length;
- const bs=nx?BO.filter(b=>b.ms.includes(+nx[0])):[],wT=[...new Set(bs.flatMap(b=>b.m.flatMap(x=>TYPES.filter(a=>mult(x.t,a)>1))))];
- const low=CR.filter(r=>r[0] in inv&&inv[r[0]]<+r[2]);
- const cats=[["Pokédex entries",DEX.filter(d=>c["dc"+d.i]).length,242],["Spiritomb Wisps",WL.filter(w=>c[w.id]).length,WL.length],["Unown",UNO.filter(u=>c["u"+u[0]]).length,UNO.length],["Old Verses",VER.filter((_,i)=>c["v"+i]).length,VER.length],["Legendaries",LEG.filter(r=>c["l"+r[0]]).length,LEG.length],["Key Requests",REQ.filter(r=>c["r"+r[0]]).length,REQ.length]].sort((a,b)=>a[1]/a[2]-b[1]/b[2]);
- const txt=["HISUI STATUS","Next mission: "+(nx?nx[0]+" "+nx[1]:"all done"),"Research points: "+pts+" (rank "+rk+")","Missions done: "+MIS.filter(m=>c["s"+m[0]]).map(m=>m[0]).join(", "),"Requests done: "+REQ.filter(r=>c["r"+r[0]]).map(r=>r[0]).join(", "),"Active/saved requests: "+Object.keys(sv).filter(k=>sv[k]).join(", "),"Roster: "+ro.map(m=>m.n+" Lv"+m.lv+" EL"+el(m)).join("; "),"Low stock: "+low.map(r=>r[0]+" "+(inv[r[0]]||0)+"/"+r[2]).join(", "),"Lowest categories: "+cats.slice(0,3).map(x=>x[0]+" "+x[1]+"/"+x[2]).join(", ")].join("\n");
- const bx="bg-slate-800/70 rounded-lg p-3";
- return h`<div className="space-y-3"><div className=${bx}><h3 className="font-semibold text-amber-400">Do this next</h3>${nx?h`<p className="text-sm">Mission ${nx[0]}: ${nx[1]} (${nx[2]}). ${nx[4]}</p>${need>rk?h`<p className="text-sm text-amber-400">You need ${need} Stars first: ${SR[need-1][1]-pts} more research points. Do research tasks in an unlocked area.</p>`:null}`:h`<p className="text-sm">Every story mission is ticked.</p>`}</div>
- ${bs.length?h`<div className=${bx}><h3 className="font-semibold text-amber-400">Team for this mission’s fights</h3><p className="text-sm">Hit these types: ${wT.join(", ")}</p>${wT.map(a=>{const m=ro.filter(x=>ty(x).includes(a)).map(x=>x.n);return h`<div key=${a} className="text-xs">${a}: ${m.length?m.join(", "):"nobody on your roster; catch or raise a "+a+" Pokémon (Pokédex tab shows where)"}</div>`})}<p className="text-xs text-slate-500 mt-1">Add Pokémon in the Roster tab for better answers.</p></div>`:null}
- <div className=${bx}><h3 className="font-semibold text-amber-400">Restock</h3>${low.length?low.map(r=>h`<div key=${r[0]} className="text-sm mb-1"><b>${r[0]}</b> ${(inv[r[0]]||0)}/${r[2]}. Recipe: ${r[3]==="-"?"not craftable":r[3].replace(/:/g," x").replace(/,/g,", ")}. <span className="text-slate-400">${r[4]}</span></div>`):h`<p className="text-sm">Nothing is low. Enter counts in the Satchel tab.</p>`}</div>
- <div className=${bx}><h3 className="font-semibold text-amber-400">Biggest gaps</h3>${cats.slice(0,3).map(x=>h`<div key=${x[0]} className="text-sm">${x[0]}: ${x[1]}/${x[2]}</div>`)}</div>
- <div className=${bx}><h3 className="font-semibold text-amber-400 mb-1">Copy and share</h3><textarea readOnly value=${txt} className="w-full h-40 bg-slate-900 border border-slate-700 rounded p-2 text-xs"/><p className="text-xs text-slate-400">Paste this into Claude for a deeper plan, or send it to anyone.</p></div></div>`}
 function Log({s,set}){const [n,sn]=useState(""),[lv,sl]=useState(5),lg=s.log||[],sv=s.sv||{},c=s.c||{};
  const add=()=>{const d=DEX.find(x=>x.n.toLowerCase()===n.trim().toLowerCase()),nm=d?d.n:n.trim();if(!nm)return;set(p=>({...p,log:[{n:nm,lv},...(p.log||[])],c:d?{...p.c,["dc"+d.i]:true}:p.c}));sn("")};
  const hits=nm=>REQ.filter(r=>(r[1]+" "+r[2]).toLowerCase().includes(nm.toLowerCase().split(" ").pop()));
@@ -786,17 +780,9 @@ Exp. Candy S|10|Requests #4, #10, #12, #26, #30; Alpha drops
 Exp. Candy L|5|Requests #72, #76, #79, #84; Alpha drops
 Rare Candy|5|Requests #8, #15, #39, #49, #85, #87, Star Rank 6 and 10`);
 const lowList=s=>{const a=s.inv||{},b=s.itm||{},t=s.tg||{};return[...CR.filter(r=>r[0] in a&&a[r[0]]<+r[2]).map(r=>r[0]),...ITM.filter(r=>r[0] in b&&b[r[0]]<(t[r[0]]??+r[1])).map(r=>r[0]),...(s.cu||[]).filter(x=>(x.c||0)<x.t).map(x=>x.n)]};
-function Items({s,set}){const it=s.itm||{},tg=s.tg||{},cu=s.cu||[],[f,sf]=useState({n:"",t:5,w:""}),lo=lowList(s);
- const R=[...ITM.map(r=>({n:r[0],t:tg[r[0]]??+r[1],w:r[2],c:it[r[0]]||0,e:r[0] in it,k:r[0]})),...cu.map((x,i)=>({n:x.n,t:x.t,w:x.w,c:x.c||0,e:true,i}))].sort((a,b)=>(lo.includes(b.n)?1:0)-(lo.includes(a.n)?1:0));
- const num=(v,fn)=>h`<input type="number" min="0" value=${v} onInput=${e=>fn(Math.max(0,+e.target.value||0))} className=${IN+" w-20"}/>`;
- const upC=(r,k,v)=>r.k?set(p=>({...p,[k==="c"?"itm":"tg"]:{...p[k==="c"?"itm":"tg"],[r.k]:v}})):set(p=>({...p,cu:p.cu.map((x,j)=>j===r.i?{...x,[k]:v}:x)}));
- return h`<div className="space-y-2"><p className="text-sm text-slate-400">Enter what you have. Anything under its target gets a Low Stock alert here and on the Dashboard. Targets are editable. Crafted balls, bombs and potions with recipes are in the Satchel tab.</p><button onClick=${()=>set(p=>({...p,inv:{...p.inv,...SI},itm:{...p.itm,"Grit Dust":7,"Exp. Candy S":1}}))} className="bg-amber-600 px-3 py-2 rounded text-sm">Load my current items (from chat)</button>
- ${lo.length?h`<div className="bg-red-900/40 border border-red-700 rounded p-2 text-sm">Low: ${lo.join(", ")}</div>`:null}
- ${R.map(r=>{const l=r.e&&r.c<r.t;return h`<div key=${r.n} className=${"rounded-lg p-3 border "+(l?"border-amber-600 bg-slate-800":"border-slate-700 bg-slate-800/70")}><div className="flex flex-wrap items-center gap-2"><b>${r.n}</b>${l?h`<span className="text-xs px-2 rounded bg-amber-600">Low Stock Alert</span>`:null}${r.e?null:h`<span className="text-xs text-slate-500">not counted yet</span>`}<span className="ml-auto text-xs">have ${num(r.c,v=>upC(r,"c",v))} target ${num(r.t,v=>upC(r,"t",v))}</span>${r.i!=null?h`<button onClick=${()=>set(p=>({...p,cu:p.cu.filter((_,j)=>j!==r.i)}))} className="text-red-400">✕</button>`:null}</div><div className="text-xs text-slate-400 mt-1">${r.w||"No source noted"}</div></div>`})}
- <div className="bg-slate-800/70 rounded-lg p-3 flex flex-wrap gap-2 items-center"><b className="text-amber-400 text-sm">Track another item</b><input placeholder="Item" value=${f.n} onInput=${e=>sf({...f,n:e.target.value})} className=${IN}/><input type="number" min="0" value=${f.t} onInput=${e=>sf({...f,t:+e.target.value})} className=${IN+" w-20"}/><input placeholder="Where to get it" value=${f.w} onInput=${e=>sf({...f,w:e.target.value})} className=${IN}/><button className="bg-amber-600 px-3 py-2 rounded" onClick=${()=>{if(f.n.trim()){set(p=>({...p,cu:[...(p.cu||[]),{...f,n:f.n.trim(),c:0}]}));sf({n:"",t:5,w:""})}}}>Add</button></div></div>`}
 const BT=[...BO.map(b=>({n:b.n+" (Mission "+b.ms[0]+")",tg:b.m.map(x=>x.t),lv:0})),...LEG.map(r=>({n:r[0]+" (legendary)",tg:[r[1].split("/")],lv:+r[2]})),...NOB.map(r=>({n:r[0].split(" (")[0]+" (noble)",tg:[r[3].split("/")],lv:+r[2]}))];
 const GR=v=>v<3?"Grit Dust":v<6?"Grit Gravel":v<9?"Grit Pebble":"Grit Rock";
-function Pick({s,set}){const ro=s.ro||[],[bi,sb]=useState(0),b=BT[bi],pts=+((s.m||{}).pts)||0,cap=+((SR.filter(r=>pts>=+r[1]).slice(-1)[0]||[0,0,0])[2]);
+function Pick({s,set,fo}){const ro=s.ro||[],[bi,sb]=useState(()=>{const i=BT.findIndex(x=>x.n===(fo&&fo.bt));return i<0?0:i}),b=BT[bi],pts=+((s.m||{}).pts)||0,cap=+((SR.filter(r=>pts>=+r[1]).slice(-1)[0]||[0,0,0])[2]);
  const ST=["HP","Atk","Def","SpA","SpD","Spe"],ty=m=>m.t2?[m.t1,m.t2]:[m.t1],mv=m=>(m.mv||"").split(/[ ,]+/).filter(x=>TYPES.includes(x)),at=m=>[...ty(m),...mv(m)],el=m=>m.el.reduce((a,x)=>a+x,0);
  const A=[...new Set(b.tg.flat())],se=m=>b.tg.filter(t=>at(m).some(a=>mult(t,a)>1)).length;
  const sc=m=>se(m)/b.tg.length*40+A.filter(a=>mult(ty(m),a)<1).length*6-A.filter(a=>mult(ty(m),a)>1).length*6+el(m)/60*20+(m.al?5:0)+m.lv/100*10-(cap&&m.lv>cap?30:0);
@@ -879,9 +865,6 @@ Balms and fight items|1|2|3 (balms plus Aux items)
 Training|2 (Grit Dust, Exp. Candy)|5 (all Grit, Seed of Mastery)|6 (add Rare Candy)
 Tools and keys|1 (Crafting Kit)|2|3 (evolution items as needed)
 Total slots|About 12 to 20|About 25 to 30|About 35 to 40`);
-function Gloss(){const [q,sq]=useState("");const r=GL.filter(x=>x.join(" ").toLowerCase().includes(q.toLowerCase()));
- return h`<div><h3 className="font-semibold text-amber-400 mb-1">Satchel slot guide (suggested)</h3><p className="text-xs text-slate-400 mb-2">Each different item uses one slot. Keep raw materials in storage and craft at a bench (benches use storage; the Crafting Kit only uses your satchel). Carry finished items. Upgrade costs climb after 40 slots, so 35 to 40 is a good stop.</p><${Tbl} head=${["Group","Early (20 slots)","Mid (30)","Late (35 to 40)"]} rows=${SLOT}/>
- <input placeholder="Search items…" value=${q} onInput=${e=>sq(e.target.value)} className="w-full mb-3 bg-slate-900 border border-slate-700 rounded p-2"/>${r.map(x=>h`<div key=${x[0]} className="bg-slate-800/70 rounded-lg p-3 mb-2 text-sm"><b>${x[0]}</b><div className="text-slate-300">${x[1]}</div><div className="text-xs text-slate-400">Get it: ${x[2]}</div></div>`)}</div>`}
 // ---------- V6: ALPHAS / TOOLBOX ----------
 const AL=P(`Rapidash|40|O|Horseshoe Plains
 Bibarel|16|O|Tidewater Dam
@@ -978,40 +961,455 @@ function Tool({s,set}){const [sec,ss]=useState("grit"),[f,sf]=useState({n:"",r:1
  else if(sec==="sol")b=h`<div><p className="text-xs text-slate-400 mb-2">Species from your request list. Tips for each are in the Solitude tab.</p>${SOL.map(n=>h`<label key=${n} className="flex gap-2 text-sm mb-1"><input type="checkbox" checked=${!!c["x"+n]} onChange=${()=>tgl(set,"x"+n)} className="accent-amber-500"/>${n}</label>`)}<${Bar} l="Cleared" v=${SOL.filter(n=>c["x"+n]).length} m=${SOL.length}/></div>`;
  else b=h`<div>${Object.keys(RGN).filter(k=>"OMBHA".includes(k)).map(k=>{const m=DEX.filter(d=>d.rg.includes(k)&&!c["dc"+d.i]);return h`<details key=${k} className="bg-slate-800/70 rounded-lg mb-2"><summary className="p-3 cursor-pointer">${RGN[k]}: ${m.length} not caught</summary><div className="px-4 pb-3 text-xs space-y-1">${m.map(d=>h`<div key=${d.i}>#${d.i} ${d.n}: ${d.loc}</div>`)}</div></details>`})}</div>`;
  return h`<div><div className="flex gap-2 flex-wrap mb-3">${S.map(([k,n])=>h`<button key=${k} onClick=${()=>ss(k)} className=${"px-3 py-1 rounded-full text-sm "+(sec===k?"bg-amber-600":"bg-slate-800")}>${n}</button>`)}</div>${b}</div>`}
-const NEW={tool:Tool,gloss:Gloss,items:Items,pick:Pick,guide:Guide,plan:Plan,log:Log,dex:Dex,types:TypesTab,roster:Roster,sat:Satchel,shiny:Shiny,stars:Stars,path:PATH,mech:MECH};
 // ---------- APP ----------
 const KEY="pla-companion-v1";
-function Row({r,s,set}){const on=!!(s.c||{})[r.id];
- return h`<details className="bg-slate-800/70 rounded-lg border border-slate-700 mb-2"><summary className="flex items-center gap-3 p-3 cursor-pointer">
- <input type="checkbox" checked=${on} onClick=${e=>e.stopPropagation()} onChange=${()=>set(p=>({...p,c:{...p.c,[r.id]:!(p.c||{})[r.id]}}))} className="w-5 h-5 accent-amber-500"/>
- <div className="flex-1 min-w-0"><div className=${on?"line-through opacity-60":"font-medium"}>${r.t}</div><div className="text-xs text-slate-400">${r.sub}</div></div></summary>
- <div className="px-4 pb-3 text-sm text-slate-300 space-y-2"><div className="pre">${r.body}</div>
- <input placeholder="Notes…" value=${(s.n||{})[r.id]||""} onInput=${e=>{const v=e.target.value;set(p=>({...p,n:{...p.n,[r.id]:v}}))}} className="w-full bg-slate-900 rounded p-2 border border-slate-700"/></div></details>`}
-function Bar({l,v,m}){return h`<div className="mb-3"><div className="flex justify-between text-sm"><span>${l}</span><span>${v}/${m}</span></div><div className="h-2 bg-slate-700 rounded"><div className="h-2 rounded bg-amber-500" style=${{width:(m?Math.min(100,v/m*100):0)+"%"}}></div></div></div>`}
 function Tbl({head,rows}){return h`<div className="overflow-x-auto mb-6"><table className="w-full text-sm"><thead><tr>${head.map(x=>h`<th key=${x} className="text-left p-2 text-amber-400 border-b border-slate-600">${x}</th>`)}</tr></thead><tbody>${rows.map((r,i)=>h`<tr key=${i} className="border-b border-slate-800">${r.map((c,j)=>h`<td key=${j} className="p-2">${c}</td>`)}</tr>`)}</tbody></table></div>`}
+// ---------- V7: UI PASS (grouped menu, item sheet, links, To Get) ----------
+let GO=()=>{},ITEM=()=>{},FN=1;
+const REGK=[["Obsidian Fieldlands",/obsidian|fieldlands/i],["Crimson Mirelands",/crimson|mirelands/i],["Cobalt Coastlands",/cobalt|coastlands/i],["Coronet Highlands",/coronet|highlands/i],["Alabaster Icelands",/alabaster|icelands/i]];
+const REGN=REGK.map(r=>r[0]);
+const regs=t=>REGK.filter(r=>r[1].test(t||"")).map(r=>r[0]);
+const IDBR=P(`Poké Ball|Balls|Standard ball. Catches most Pokémon you have weakened or snuck up on.|
+Great Ball|Balls|Standard ball with a better catch rate than a Poké Ball.|
+Ultra Ball|Balls|Standard ball with a better catch rate than a Great Ball.|
+Feather Ball|Balls|Light ball. Thrown farther and faster than a Poké Ball, good for sneaky catches from a distance.|
+Wing Ball|Balls|Stronger light ball. Flies farther and faster than a Feather Ball.|
+Jet Ball|Balls|Strongest light ball. Fastest and farthest throw.|
+Heavy Ball|Balls|Heavy ball. Shorter throw, but it hits harder. Best when you stand close to the target.|
+Leaden Ball|Balls|Stronger heavy ball. Short throw, big impact.|
+Gigaton Ball|Balls|Strongest heavy ball. Short throw, biggest impact.|
+Potion|Healing|Restores a small amount of HP to one Pokémon.|
+Super Potion|Healing|Restores more HP than a Potion.|
+Hyper Potion|Healing|Restores a large amount of HP.|
+Max Potion|Healing|Restores all of one Pokémon's HP.|
+Full Restore|Healing|Restores all HP and cures every status condition.|
+Full Heal|Healing|Cures every status condition (poison, burn, sleep, paralysis, freeze). Needs one Cheri, Pecha, Rawst and Aspear Berry to craft.|
+Revive|Healing|Brings a fainted Pokémon back with part of its HP.|
+Max Revive|Healing|Brings a fainted Pokémon back with all of its HP.|
+Remedy|Status & PP|First of three Remedy medicines (Remedy, Fine Remedy, Superb Remedy). Each tier is stronger. Check the in-game description for the exact effect.|
+Fine Remedy|Status & PP|Stronger Remedy. Made from a Remedy plus a Pep-Up Plant. Check the in-game description for the exact effect.|
+Superb Remedy|Status & PP|Strongest Remedy. Made from a Fine Remedy plus a Vivichoke. Check the in-game description for the exact effect.|
+Max Ether|Status & PP|Fully restores the PP of one move.|
+Max Elixir|Status & PP|Fully restores the PP of every move of one Pokémon.|
+Aux Power|Battle boosts|Used in battle to raise a Pokémon's Attack.|
+Aux Guard|Battle boosts|Used in battle to raise a Pokémon's Defense.|
+Aux Evasion|Battle boosts|Used in battle to raise a Pokémon's evasion so it is harder to hit.|
+Aux Powerguard|Battle boosts|Used in battle to raise Attack and Defense together.|
+Dire Hit|Battle boosts|Raises a Pokémon's critical-hit chance in battle.|
+Smoke Bomb|Stun & stealth|Throw it to cover yourself in smoke so Pokémon lose track of you. Helps you slip away or sneak close.|
+Scatter Bang|Stun & stealth|Startles Pokémon with a loud bang. Needed for some research tasks.|
+Sticky Glob|Stun & stealth|Thrown to slow or stun a Pokémon. Heatran's magma shield needs globs or mud.|
+Stealth Spray|Stun & stealth|Makes you harder to notice for a while so you can sneak up on Pokémon.|
+Mushroom Cake|Lures & food|Throw it to lure Pokémon that love mushrooms out into the open.|
+Honey Cake|Lures & food|Throw it to lure Pokémon that love honey.|
+Grain Cake|Lures & food|Throw it to lure Pokémon that love grain.|
+Bean Cake|Lures & food|Throw it to lure Pokémon that love beans.|
+Salt Cake|Lures & food|Throw it to lure Pokémon that love salt.|
+Old Gateau|Lures & food|A food item you craft at a bench. Check the in-game description for its effect.|
+Jubilife Muffin|Lures & food|A food item you craft at a bench. Check the in-game description for its effect.|
+Twice-Spiced Radish|Lures & food|A food item you craft at a bench. Check the in-game description for its effect.|
+Star Piece|Key & misc|A valuable item you can sell. Made from three each of the Red, Blue and Green Shards plus Stardust.|
+Apricorn|Craft materials|Main ingredient of every Poké Ball type.|
+Tumblestone|Craft materials|Ball ingredient for Poké, Great and Ultra Balls.|
+Sky Tumblestone|Craft materials|Ball ingredient for Feather, Wing and Jet Balls.|
+Black Tumblestone|Craft materials|Ball ingredient for Heavy, Leaden and Gigaton Balls.|
+Iron Chunk|Craft materials|Ball ingredient for Great, Ultra, Wing, Jet, Leaden and Gigaton Balls.|
+Spoiled Apricorn|Craft materials|Ingredient for Sticky Glob.|Wild Pokémon drops or near trees
+Ball of Mud|Craft materials|Ingredient for Sticky Glob.|
+Caster Fern|Craft materials|Ingredient for Smoke Bomb, Scatter Bang and Sticky Glob.|
+Sootfoot Root|Craft materials|Ingredient for Smoke Bomb and Old Gateau.|
+Pop Pod|Craft materials|Ingredient for Scatter Bang.|
+Cake-Lure Base|Craft materials|Base ingredient for every lure cake and several foods.|
+Plump Beans|Craft materials|Ingredient for Bean Cake and Old Gateau.|
+Hearty Grains|Craft materials|Ingredient for Grain Cake and Jubilife Muffin.|Field, Request 23
+Dazzling Honey|Craft materials|Ingredient for Honey Cake and Old Gateau.|Combee trees, field
+Crunchy Salt|Craft materials|Ingredient for Salt Cake and Twice-Spiced Radish.|
+Springy Mushroom|Craft materials|Ingredient for Mushroom Cake.|
+Sand Radish|Craft materials|Ingredient for Twice-Spiced Radish.|
+Direshroom|Craft materials|Ingredient for Dire Hit.|Field
+Swordcap|Craft materials|Ingredient for Aux Power.|Field
+Iron Barktongue|Craft materials|Ingredient for Aux Guard.|
+Doppel Bonnets|Craft materials|Ingredient for Aux Evasion.|
+Candy Truffle|Craft materials|Ingredient for Dire Hit and Aux Evasion.|
+Red Shard|Craft materials|Ingredient for Star Piece (three needed).|
+Blue Shard|Craft materials|Ingredient for Star Piece (three needed).|
+Green Shard|Craft materials|Ingredient for Star Piece (three needed).|
+Stardust|Craft materials|Ingredient for Star Piece.|Request rewards, field
+Pep-Up Plant|Berries & plants|Ingredient for Super Potion, Fine Remedy, Max Ether, Max Elixir and the Aux items.|Craftworks, field
+Bugwort|Berries & plants|Ingredient for Remedy and Stealth Spray.|
+Medicinal Leek|Berries & plants|Ingredient for Potion and Revive.|
+Vivichoke|Berries & plants|Ingredient for Hyper Potion, Revive and Superb Remedy.|
+King's Leaf|Berries & plants|Ingredient for Max Potion, Max Revive and Aux Powerguard.|
+Hopo Berry|Berries & plants|Ingredient for Stealth Spray and Jubilife Muffin.|
+Oran Berry|Berries & plants|Ingredient for Potion.|Berry trees
+Sitrus Berry|Berries & plants|Ingredient for Max Potion.|Berry trees
+Leppa Berry|Berries & plants|Ingredient for Max Ether (restores PP).|Berry trees
+Razz Berry|Berries & plants|Ingredient for Jubilife Muffin.|Berry trees
+Cheri Berry|Berries & plants|One of the four berries needed for a Full Heal.|Berry trees
+Pecha Berry|Berries & plants|One of the four berries needed for a Full Heal.|Berry trees
+Rawst Berry|Berries & plants|One of the four berries needed for a Full Heal.|Berry trees
+Aspear Berry|Berries & plants|One of the four berries needed for a Full Heal.|Berry trees
+Grit Dust|Training|Raises one stat's Effort Level (EL) by 1. EL is a permanent stat boost, 0 to 10 per stat. Dust is for stats at EL 0 to 2.|
+Grit Gravel|Training|Same as Dust, for stats at EL 3 to 5.|
+Grit Pebble|Training|Same as Dust, for stats at EL 6 to 8.|
+Grit Rock|Training|Same as Dust, for a stat at EL 9 (takes it to 10).|
+Seed of Mastery|Training|Masters a move so you can use Agile and Strong Style without grinding levels.|
+Exp. Candy S|Training|Gives a small amount of experience to one Pokémon.|Requests, Alpha drops
+Exp. Candy M|Training|Gives a medium amount of experience to one Pokémon.|Requests, Alpha drops
+Exp. Candy L|Training|Gives a large amount of experience to one Pokémon.|
+Exp. Candy XL|Training|Gives a huge amount of experience to one Pokémon.|Requests, Alpha drops
+Rare Candy|Training|Raises one Pokémon by a level (up to your obedience cap).|
+Black Augurite|Evolution items|Evolves Scyther into Kleavor. Use it directly from the satchel.|Dropped by Graveler or dug up by Ursaluna
+Peat Block|Evolution items|Evolves Ursaring into Ursaluna when used during a Full Moon.|
+Razor Claw|Evolution items|Evolves Hisuian Sneasel into Sneasler in the daytime, or Johtonian Sneasel into Weavile at night.|
+Razor Fang|Evolution items|Evolves Gligar into Gliscor.|
+Metal Coat|Evolution items|Evolves Scyther into Scizor and Onix into Steelix.|
+Protector|Evolution items|Evolves Rhydon into Rhyperior.|
+Electirizer|Evolution items|Evolves Electabuzz into Electivire.|
+Magmarizer|Evolution items|Evolves Magmar into Magmortar.|
+Reaper Cloth|Evolution items|Evolves Dusclops into Dusknoir.|
+Dubious Disc|Evolution items|Evolves Porygon2 into Porygon-Z.|
+Upgrade|Evolution items|Evolves Porygon into Porygon2.|
+Linking Cord|Evolution items|Evolves Kadabra, Machoke, Graveler and Haunter. No trading needed.|Simona's Trading Post, Space-Time Distortions
+Sun Stone|Evolution items|Evolution stone. Evolves Petilil into Hisuian Lilligant.|
+Leaf Stone|Evolution items|Evolution stone. Evolves Eevee into Leafeon and Hisuian Voltorb into Hisuian Electrode.|
+Ice Stone|Evolution items|Evolution stone. Evolves Eevee into Glaceon.|
+Thunder Stone|Evolution items|Evolution stone. Evolves Magneton into Magnezone and Nosepass into Probopass.|
+Moon Stone|Evolution items|Evolution stone.|
+Shiny Stone|Evolution items|Evolution stone.|
+Dawn Stone|Evolution items|Evolution stone.|
+Dusk Stone|Evolution items|Evolution stone.|
+Water Stone|Evolution items|Evolution stone.|
+Fire Stone|Evolution items|Evolution stone.|
+Crafting Kit|Key & misc|Portable crafting bench. Only uses items in your satchel. Benches at camps use storage too.|Story
+Plates|Key & misc|Story keys. Plates are collected toward Arceus. Do not discard them.|Story, legendaries
+Celestica Flute|Key & misc|Story key. The Flute calls ride Pokémon. Do not discard it.|Story
+Odd Keystone|Key & misc|Spiritomb-related item tied to the wisp hunt (Request 22). Check its in-game description.|Wisps`);
+const IDB=[...IDBR.map(r=>({n:r[0],c:r[1],d:r[2],w:r[3]||""})),...GIN.map(r=>({n:r[0],c:"Ginter finds",d:"Mystery item sold by Ginter at the Ginkgo Guild. Buying it reveals: "+r[1]+".",w:"Ginter (Ginkgo Guild), cost "+r[2]}))];
+const IDM={};IDB.forEach(x=>{IDM[x.n]=x});
+const ITMM={};ITM.forEach(r=>{ITMM[r[0]]=r[2]});
+const ITMK=new Set(ITM.map(r=>r[0]));
+const CRR={},CRM={};CR.forEach(r=>{CRR[r[0]]=r;CRM[r[0]]={g:r[3]==="-"?[]:r[3].split(",").map(x=>{const a=x.split(":");return[a[0],+a[1]]})}});
+const WH=k=>MAT[k]||ITMM[k]||(IDM[k]&&IDM[k].w)||"";
+const DX=n=>{const d=DEX.find(x=>x.n===n);return d?{i:d.i}:{q:n}};
+const GROUPS=[["home","Home","🏠",[["dash","Dashboard"],["setup","Setup"]]],["play","Play","🧭",[["plan","Next Steps"],["story","Story"],["guide","Guide"],["req","Requests"],["log","Quick Log"],["stars","Stars"]]],["stuff","Items","🎒",[["need","To Get"],["items","Stock"],["sat","Satchel"],["gloss","Item Guide"],["shop","Shops"]]],["team","Team","⚔️",[["pick","Battle Picker"],["roster","Roster"],["leg","Legendaries"],["nob","Nobles"],["evo","Evolutions"],["types","Types"]]],["coll","Collect","📖",[["dex","Pokédex"],["alp","Alphas"],["wisp","Wisps"],["uno","Unown"],["ver","Verses"],["path","Solitude"]]],["tools","Tools","🧰",[["tool","Toolbox"],["shiny","Shiny odds"],["mech","Mechanics"],["bk","Backup"]]]];
+const TABG={},TABN={};GROUPS.forEach(g=>g[3].forEach(t=>{TABG[t[0]]=g[0];TABN[t[0]]=t[1]}));
+// ----- links on list rows
+const ITN=IDB.map(x=>x.n).filter(n=>/Augurite|Peat|Razor|Metal Coat|Protector|Electirizer|Magmarizer|Reaper|Dubious|Upgrade|Linking|Stone/.test(n));
+LISTS.evo.rows.forEach((x,i)=>{const e=EVO[i];x.links=[["Pokédex: "+e[0],"dex",DX(e[0])],["Pokédex: "+e[1],"dex",DX(e[1])],...ITN.filter(n=>e[2].includes(n)).map(n=>["Item: "+n,"_item",n])]});
+LISTS.leg.rows.forEach((x,i)=>{const r=LEG[i];x.links=[["Plan this fight","pick",{bt:r[0]+" (legendary)"}],["Pokédex: "+r[0],"dex",DX(r[0])]]});
+LISTS.nob.rows.forEach((x,i)=>{const nm=NOB[i][0].split(" (")[0];x.links=[["Plan this fight","pick",{bt:nm+" (noble)"}],["Pokédex: "+nm,"dex",DX(nm)]]});
+LISTS.story.rows.forEach((x,i)=>{const n=+MIS[i][0];x.links=[["Step-by-step guide","guide",{m:n}],...BO.filter(b=>b.ms.includes(n)).map(b=>["Plan: "+b.n,"pick",{bt:b.n+" (Mission "+b.ms[0]+")"}])]});
+LISTS.alp.rows.forEach((x,i)=>{x.links=[["Pokédex: "+AL[i][0],"dex",DX(AL[i][0])]]});
+// ----- progress, unlocks, availability
+const prog=s=>{const c=s.c||{},nx=MIS.find(m=>!c["s"+m[0]]),hi=Math.max(0,...MIS.filter(m=>c["s"+m[0]]).map(m=>+m[0])),gate=nx?Math.max(+nx[0],hi+1):28,pts=+((s.m||{}).pts)||0,rk=SR.filter(r=>pts>=+r[1]).length,ra=s.ra||{},open={};
+ REGN.forEach(r=>{const f=MIS.find(m=>m[2].includes(r)),au=!!f&&gate>=+f[0];open[r]=r in ra?!!ra[r]:au});
+ return{c,nx,gate,pts,rk,open}};
+const unl=(r,PG,s)=>{const n=r[4]||"",nm=r[0];let m;
+ if((s.rcp||{})[nm])return{ok:true,why:"You marked this recipe as known"};
+ if(m=n.match(/Unlock: Mission (\d+)/))return{ok:PG.gate>=+m[1],why:"Unlocks at Mission "+m[1],to:["guide",{m:+m[1]}]};
+ if(m=n.match(/Unlock: (\d+) Stars?/))return{ok:PG.rk>=+m[1],why:"Unlocks at "+m[1]+(+m[1]>1?" Stars":" Star"),to:["stars",{}]};
+ if(/Craftworks/.test(n))return{ok:false,why:"Buy the recipe at Craftworks (opens at Mission 3), then tick it in Setup",to:["setup",{}]};
+ if(m=n.match(/Mission (\d+)/))return{ok:PG.gate>=+m[1],why:"Recipe comes at Mission "+m[1],to:["guide",{m:+m[1]}]};
+ if(m=n.match(/Request (\d+)/))return{ok:!!PG.c["r"+m[1]],why:"Finish Request "+m[1],to:["req",{id:"r"+m[1]}]};
+ if(/Taeko/.test(n))return{ok:false,why:"Taeko at Brava Arena teaches it",to:null};
+ return{ok:true,why:""}};
+const avail=(k,PG)=>{const t=WH(k),rs=regs(t),op=rs.filter(r=>PG.open[r]),any=!rs.length||/buy|anvin|craftworks|jubilife|farm|every region|wild|drop|shake/i.test(t);
+ return{t,rs,op,any,ok:any||op.length>0,first:op[0]||null,lk:rs.length&&!op.length&&!any?MIS.find(m=>m[2].includes(rs[0])):null}};
+// ----- counts
+const cntOf=(s,k)=>{if(ITMK.has(k))return (s.itm||{})[k]||0;const cu=(s.cu||[]).find(x=>x.n===k);if(cu)return cu.c||0;return (s.inv||{})[k]||0};
+const isCnt=(s,k)=>ITMK.has(k)?k in (s.itm||{}):((s.cu||[]).some(x=>x.n===k)||k in (s.inv||{}));
+const setCnt=(set,k,v)=>set(p=>{v=Math.max(0,v||0);if(ITMK.has(k))return{...p,itm:{...p.itm,[k]:v}};if((p.cu||[]).some(x=>x.n===k))return{...p,cu:p.cu.map(x=>x.n===k?{...x,c:v}:x)};return{...p,inv:{...p.inv,[k]:v}}});
+const lowN=(s,n)=>{const r=CRR[n];if(r)return(n in (s.inv||{}))&&s.inv[n]<+r[2];if(ITMK.has(n)){const t=(s.tg||{})[n]??+ITM.find(x=>x[0]===n)[1];return(n in (s.itm||{}))&&s.itm[n]<t}return false};
+const craft1=(set,r)=>set(p=>{const inv={...p.inv},g=CRM[r[0]].g;if(!g.length)return p;for(let i=0;i<g.length;i++){if((inv[g[i][0]]||0)<g[i][1])return p}g.forEach(([k,q])=>{inv[k]=(inv[k]||0)-q});inv[r[0]]=(inv[r[0]]||0)+1;return{...p,inv}});
+const canN=(inv,r)=>{const g=CRM[r[0]].g;return g.length?Math.min(...g.map(([k,q])=>Math.floor((inv[k]||0)/q))):0};
+// ----- what to get
+function needs(s){
+ const PG=prog(s),inv=s.inv||{},stock={...inv},gross={},fm={},low=[],oth=[];
+ const expand=(k,q,root,d)=>{const r=CRR[k];
+  if(r&&CRM[k].g.length&&d>0&&d<5&&unl(r,PG,s).ok){const take=Math.min(stock[k]||0,q);stock[k]=(stock[k]||0)-take;q-=take;if(q<=0)return;CRM[k].g.forEach(([m,n])=>expand(m,n*q,root,d+1));return}
+  gross[k]=(gross[k]||0)+q;if(!fm[k])fm[k]=[];if(!fm[k].includes(root))fm[k].push(root)};
+ CR.forEach(r=>{if(!(r[0] in inv)||inv[r[0]]>=+r[2])return;const have=inv[r[0]],sh=+r[2]-have,u=unl(r,PG,s);low.push({n:r[0],have,t:+r[2],sh,u,can:Math.min(sh,canN(inv,r))});if(u.ok)CRM[r[0]].g.forEach(([m,n])=>expand(m,n*sh,r[0],1))});
+ ITM.forEach(r=>{const k=r[0];if(!(k in (s.itm||{})))return;const t=(s.tg||{})[k]??+r[1],have=s.itm[k];if(have<t)oth.push({n:k,have,t,w:r[2]})});
+ (s.cu||[]).forEach(x=>{if((x.c||0)<x.t)oth.push({n:x.n,have:x.c||0,t:x.t,w:x.w||""})});
+ return{PG,low,oth,gross,fm}}
+const DOTS=s=>{const a=s.inv||{},b=s.itm||{},t=s.tg||{},PG=prog(s),d={};
+ const lc=CR.filter(r=>r[0] in a&&a[r[0]]<+r[2]).length,li=ITM.filter(r=>r[0] in b&&b[r[0]]<(t[r[0]]??+r[1])).length+(s.cu||[]).filter(x=>(x.c||0)<x.t).length;
+ if(lc+li)d.need="r";if(lc)d.sat="r";if(li)d.items="r";
+ if(setupGaps(s).length)d.setup="a";
+ const ns=PG.nx?+((PG.nx[3].match(/\d+/)||[0])[0]):0;if(ns>PG.rk){d.stars="a";d.plan="a"}
+ GROUPS.forEach(g=>{const v=g[3].map(x=>d[x[0]]);if(v.includes("r"))d[g[0]]="r";else if(v.includes("a"))d[g[0]]="a"});
+ return d};
+// ----- small UI pieces
+const INAMES=[...new Set(IDB.map(x=>x.n).concat(CR.map(r=>r[0])))].filter(n=>n.length>3).sort((a,b)=>b.length-a.length);
+const INRE=new RegExp("("+INAMES.map(n=>n.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|")+")","g");
+const IL=({n,t})=>h`<button className="lnk" onClick=${e=>{e.preventDefault();e.stopPropagation();ITEM(n)}}>${t||n}</button>`;
+const LK=t=>{if(!t)return t;return String(t).split(INRE).map((x,i)=>i%2?h`<${IL} key=${i} n=${x}/>`:x)};
+const RQ=(t,c)=>[...new Set((String(t||"").match(/#\d+/g)||[]).map(x=>+x.slice(1)))].map(n=>h`<button key=${n} className=${"chip "+(c["r"+n]?"opacity-50":"")} onClick=${()=>GO("req",{id:"r"+n})}>Request #${n}${c["r"+n]?" ✓":""}</button>`);
+function Num({v,set,min=0,max=1000000000,w="w-20"}){
+ const [d,sd]=useState(null);
+ return h`<input type="text" inputMode="numeric" value=${d!==null?d:String(v==null?0:v)} onFocus=${e=>e.target.select()}
+  onInput=${e=>{const t=e.target.value.replace(/[^0-9]/g,"");sd(t);if(t!==""){const n=+t;if(n>=min&&n<=max)set(n)}}}
+  onBlur=${()=>{if(d!==null){const n=d===""?min:Math.min(max,Math.max(min,+d));set(n);sd(null)}}}
+  className=${IN+" text-center "+w}/>`}
+const Step=({v,set,min=0,max=1000000000,w="w-16"})=>h`<span className="inline-flex items-center gap-1"><button className="btn-s" onClick=${()=>set(Math.max(min,(+v||0)-1))}>−</button><${Num} v=${v} set=${set} min=${min} max=${max} w=${w}/><button className="btn-s" onClick=${()=>set(Math.min(max,(+v||0)+1))}>+</button></span>`;
+function Bar({l,v,m,to}){const inner=h`<div className="mb-3"><div className="flex justify-between text-sm"><span>${l}${to?" ›":""}</span><span>${v}/${m}</span></div><div className="row-pg"><div style=${{width:(m?Math.min(100,v/m*100):0)+"%"}}></div></div></div>`;return to?h`<button className="block w-full text-left" onClick=${()=>GO(to)}>${inner}</button>`:inner}
+
+// ----- item pop-up
+function Sheet({n,s,set,close,back}){
+ const it=IDM[n]||{n,c:"Item",d:"No description saved for this one yet. You can add your own note below.",w:""},r=CRR[n],PG=prog(s),inv=s.inv||{},c=s.c||{};
+ const u=r?unl(r,PG,s):null,av=r?null:avail(n,PG),have=cntOf(s,n),cnd=isCnt(s,n),lo=lowN(s,n);
+ const used=CR.filter(x=>x[3]!=="-"&&x[3].split(",").some(g=>g.split(":")[0]===n)).map(x=>x[0]);
+ const evo=EVO.map((e,i)=>[e,i]).filter(([e])=>e[2].includes(n)),shS=SIM.filter(x=>x[0].split(" / ").includes(n)),shG=GIN.filter(x=>x[1].includes(n));
+ const tgt=r?+r[2]:ITMK.has(n)?((s.tg||{})[n]??+ITM.find(x=>x[0]===n)[1]):null;
+ const ing=r&&r[3]!=="-"?CRM[n].g:[];
+ const can=r?canN(inv,r):0;
+ const wh=WH(n),known=!!(s.rcp||{})[n];
+ return h`<div className="sheet-bg" onClick=${close}><div className="sheet" onClick=${e=>e.stopPropagation()}>
+  <div className="flex items-start gap-2 mb-2">${back?h`<button className="btn2" onClick=${back}>←</button>`:null}
+   <div className="flex-1"><div className="text-xl font-bold text-amber-400">${n}</div><span className="tag">${it.c}</span>${lo?h`<span className="tag red ml-2">Low stock</span>`:null}</div>
+   <button className="btn2" onClick=${close}>✕</button></div>
+  <p className="text-sm mb-3">${LK(it.d)}</p>
+  <div className="card p-3 mb-3"><div className="flex items-center gap-2 flex-wrap"><b>You have</b><${Step} v=${have} set=${v=>setCnt(set,n,v)}/>
+   ${tgt!=null?h`<span className="text-sm text-slate-400 flex items-center gap-1">restock below ${ITMK.has(n)?h`<${Num} v=${tgt} set=${v=>set(p=>({...p,tg:{...p.tg,[n]:v}}))} w="w-16"/>`:tgt}</span>`:null}</div>
+   ${cnd?null:h`<div className="text-xs text-slate-500 mt-1">Not counted yet, so it will not raise a low-stock alert until you enter a number.</div>`}</div>
+  ${r?h`<div className="card p-3 mb-3"><b>How to make it</b>
+   <div className="mt-1">${ing.map(([k,q])=>h`<div key=${k} className="text-sm"><${IL} n=${k}/> × ${q} <span className=${(inv[k]||0)>=q?"text-green-400":"text-amber-400"}>(you have ${inv[k]||0})</span></div>`)}</div>
+   <div className="text-sm mt-2">${u.ok?"✓ Recipe unlocked":"🔒 "+u.why}${u.to?h` <button className="lnk" onClick=${()=>{close();GO(u.to[0],u.to[1])}}>open ›</button>`:null}</div>
+   ${u.ok&&can>0?h`<button className="btn mt-2" onClick=${()=>craft1(set,r)}>Craft 1 (you can make ${can})</button>`:null}
+   ${!u.ok||known?h`<label className="flex items-center gap-2 text-sm mt-2"><input type="checkbox" checked=${known} onChange=${()=>set(p=>({...p,rcp:{...p.rcp,[n]:!(p.rcp||{})[n]}}))} className="w-5 h-5 accent-amber-500"/>I already have this recipe</label>`:null}</div>`
+  :h`<div className="card p-3 mb-3"><b>Where to get it</b><div className="text-sm mt-1">${wh?LK(wh):"Source not loaded yet. Add a note below when you find it."}</div>
+   <div className="flex flex-wrap gap-2 mt-2">${RQ(wh,c)}</div>
+   ${av&&av.t?h`<div className=${"text-xs mt-2 "+(av.ok?"text-green-400":"text-amber-400")}>${av.ok?"✓ You should be able to get this now":"🔒 Opens at Mission "+(av.lk?av.lk[0]:"?")+" ("+av.rs[0]+")"}</div>`:null}</div>`}
+  ${used.length?h`<div className="card p-3 mb-3"><b>Used to make</b><div className="flex flex-wrap gap-2 mt-2">${used.map(x=>h`<button key=${x} className="chip" onClick=${()=>ITEM(x)}>${x}</button>`)}</div></div>`:null}
+  ${evo.length||shS.length||shG.length?h`<div className="card p-3 mb-3"><b>Evolutions and shops</b>
+   <div className="flex flex-wrap gap-2 mt-2">${evo.map(([e,i])=>h`<button key=${i} className="chip" onClick=${()=>{close();GO("evo",{id:"e"+i})}}>${e[0]} → ${e[1]} ›</button>`)}</div>
+   ${shS.map(x=>h`<div key=${x[0]} className="text-sm mt-1">Simona's Trading Post: ${x[1]} MP</div>`)}${shG.map(x=>h`<div key=${x[0]} className="text-sm mt-1">Ginter sells it disguised as ${x[0]} (${x[2]})</div>`)}
+   ${shS.length||shG.length?h`<button className="lnk text-sm mt-1" onClick=${()=>{close();GO("shop")}}>Open Shops ›</button>`:null}</div>`:null}
+  <input placeholder="My notes about this item…" value=${(s.n||{})["i:"+n]||""} onInput=${e=>{const v=e.target.value;set(p=>({...p,n:{...p.n,["i:"+n]:v}}))}} className=${IN+" w-full mb-3"}/>
+  <div className="flex gap-2 flex-wrap"><button className="btn2" onClick=${()=>{close();GO("need")}}>To Get list</button><button className="btn2" onClick=${()=>{close();GO("gloss")}}>Item Guide</button>${r?h`<button className="btn2" onClick=${()=>{close();GO("sat")}}>Satchel</button>`:null}</div>
+ </div></div>`}
+// ----- To Get
+function Need({s,set}){
+ const N=needs(s),PG=N.PG,inv=s.inv||{},c=s.c||{};
+ const setRank=k=>set(p=>{const cur=SR.filter(r=>(+((p.m||{}).pts)||0)>=+r[1]).length;if(cur===k)return p;return{...p,m:{...p.m,pts:k?+SR[k-1][1]:0}}});
+ const togR=r=>set(p=>({...p,ra:{...p.ra,[r]:!prog(p).open[r]}}));
+ const G={};Object.keys(N.gross).forEach(k=>{const need=N.gross[k],have=inv[k]||0;if(have>=need)return;const av=avail(k,PG),g=av.first||(av.any?"Anywhere":"Locked");(G[g]=G[g]||[]).push({k,need,have,av})});
+ const order=["Anywhere",...REGN.filter(r=>PG.open[r]),"Locked"].filter(g=>G[g]);
+ const craftNow=N.low.filter(x=>x.u.ok&&x.can>0),locked=N.low.filter(x=>!x.u.ok),nLow=N.low.length+N.oth.length;
+ const sub={Anywhere:"No trip needed: shake trees, buy, or use drops and your farm.",Locked:"Not reachable yet. These need an area you have not opened."};
+ const gather=g=>h`<div key=${g} className="card p-3"><div className="font-semibold text-amber-400">${g==="Anywhere"?"🏘 Anywhere":g==="Locked"?"🔒 Not reachable yet":"📍 "+g}</div><div className="text-xs text-slate-400 mb-1">${sub[g]||"You can go here now."}</div>
+  ${G[g].map(x=>h`<div key=${x.k} className="flex items-center gap-2 py-2 border-t border-slate-800"><div className="flex-1 min-w-0"><div><${IL} n=${x.k}/> <span className="text-sm text-amber-300">need ${x.need-x.have} more</span></div>
+   <div className="text-xs text-slate-500">for ${(N.fm[x.k]||[]).join(", ")} · ${x.av.t||"source not loaded yet"}${x.av.lk?" · opens at Mission "+x.av.lk[0]:""}</div></div>
+   <${Step} v=${x.have} set=${v=>setCnt(set,x.k,v)}/></div>`)}</div>`;
+ return h`<div className="space-y-3">
+  <div className="card p-3 space-y-2"><div className="flex flex-wrap items-center gap-2"><b className="text-amber-400">Where you are</b>
+   <span className="text-sm">Mission ${PG.gate>27?"all done":PG.gate}${PG.nx?" · next: "+PG.nx[1]:""}</span>
+   <label className="text-sm ml-auto flex items-center gap-2">Star Rank<select value=${PG.rk} onChange=${e=>setRank(+e.target.value)} className=${IN}>${[0,1,2,3,4,5,6,7,8,9,10].map(k=>h`<option key=${k} value=${k}>${k?"★ "+k:"None"}</option>`)}</select></label></div>
+   <div className="text-xs text-slate-400">Areas you can visit (tap one to change it):</div>
+   <div className="flex flex-wrap gap-2">${REGN.map(r=>h`<button key=${r} className=${"chip "+(PG.open[r]?"on":"")} onClick=${()=>togR(r)}>${PG.open[r]?"✓ ":"🔒 "}${r}</button>`)}</div>
+   <div className="text-xs text-slate-500">Worked out from your Story ticks. Recipes unlock by Story mission, Star Rank and Requests. Fix anything the app guessed wrong.</div></div>
+  ${nLow?h`<div className="card-red p-3"><b>${nLow} thing${nLow>1?"s are":" is"} below target.</b> <span className="text-sm text-slate-300">Below is what you can do about it right now.</span></div>`
+   :h`<div className="card-grn p-3 text-sm"><b>Nothing is low.</b> Items only raise alerts after you count them. Enter counts in <button className="lnk" onClick=${()=>GO("items")}>Stock</button> or <button className="lnk" onClick=${()=>GO("sat")}>Satchel</button>.</div>`}
+  ${craftNow.length?h`<div className="card p-3"><div className="font-semibold text-green-400 mb-1">🔨 Craft now (you have the materials)</div>${craftNow.map(x=>h`<div key=${x.n} className="flex items-center gap-2 py-2 border-t border-slate-800"><div className="flex-1"><${IL} n=${x.n}/><div className="text-xs text-slate-400">have ${x.have} of ${x.t} · can make up to ${x.can}</div></div><button className="btn" onClick=${()=>craft1(set,CRR[x.n])}>Craft 1</button></div>`)}</div>`:null}
+  ${order.length?h`<div><div className="font-semibold text-amber-400 mb-1">🧺 Gather list</div><div className="space-y-2">${order.map(gather)}</div></div>`:null}
+  ${N.oth.length?h`<div className="card p-3"><div className="font-semibold text-amber-400 mb-1">🎁 Rewards and drops to chase</div>${N.oth.map(x=>h`<div key=${x.n} className="py-2 border-t border-slate-800"><div className="flex items-center gap-2"><div className="flex-1"><${IL} n=${x.n}/> <span className="text-sm text-amber-300">have ${x.have} of ${x.t}</span></div><${Step} v=${x.have} set=${v=>setCnt(set,x.n,v)}/></div>
+    <div className="text-xs text-slate-400 mt-1">${LK(x.w)||"No source noted"}</div><div className="flex flex-wrap gap-2 mt-1">${RQ(x.w,c)}</div></div>`)}</div>`:null}
+  ${locked.length?h`<div className="card p-3"><div className="font-semibold text-slate-300 mb-1">🔒 Recipes not unlocked yet</div>${locked.map(x=>h`<div key=${x.n} className="py-2 border-t border-slate-800 text-sm"><${IL} n=${x.n}/> <span className="text-slate-400">have ${x.have} of ${x.t}</span><div className="text-xs text-amber-300">${x.u.why}${x.u.to?h` <button className="lnk" onClick=${()=>GO(x.u.to[0],x.u.to[1])}>open ›</button>`:null}</div></div>`)}</div>`:null}
+ </div>`}
+
+// ----- Satchel (slots you can type, unlock status, links)
+function Satchel({s,set}){
+ const D={slots:20,used:0,cost:""},sa={...D,...s.sat},inv=s.inv||{},PG=prog(s),[fl,sfl]=useState("all"),[cat,sc]=useState("");
+ const up=(k,v)=>set(p=>({...p,sat:{...D,...p.sat,[k]:v}}));
+ const R=CR.map(r=>({n:r[0],c:r[1],t:+r[2],g:CRM[r[0]].g,w:r[4],u:unl(r,PG,s),r}));
+ const mats=[...new Set(R.flatMap(r=>r.g.map(x=>x[0])))].filter(k=>!CRR[k]);
+ const can=r=>canN(inv,r.r);
+ const low=R.filter(r=>r.n in inv&&inv[r.n]<r.t);
+ const carry=CR.filter(r=>(inv[r[0]]||0)>0).length+ITM.filter(r=>((s.itm||{})[r[0]]||0)>0).length;
+ const tier=sa.slots<=24?0:sa.slots<=33?1:2,free=sa.slots-sa.used,pct=Math.min(100,sa.slots?sa.used/sa.slots*100:0);
+ const cats=[...new Set(CR.map(r=>r[1]))];
+ const show=R.filter(r=>(!cat||r.c===cat)&&(fl==="all"||(fl==="low"&&low.includes(r))||(fl==="can"&&r.u.ok&&can(r)>0)||(fl==="locked"&&!r.u.ok)||(fl==="open"&&r.u.ok)));
+ const lab=(t,x)=>h`<div><div className="text-xs text-slate-400 mb-1">${t}</div>${x}</div>`;
+ return h`<div className="space-y-3">
+  <div className="card p-3"><h3 className="font-semibold text-amber-400 mb-2">Satchel slots</h3>
+   <div className="flex flex-wrap gap-x-5 gap-y-3 items-end">${lab("Total slots (20 to 60)",h`<${Step} v=${sa.slots} set=${v=>up("slots",v)} min=${20} max=${60} w="w-16"/>`)}${lab("Slots used",h`<${Step} v=${sa.used} set=${v=>up("used",v)} min=${0} max=${99} w="w-16"/>`)}${lab("Next upgrade cost",h`<${Num} v=${+sa.cost||0} set=${v=>up("cost",v)} w="w-28"/>`)}</div>
+   <div className="mt-3"><div className="flex justify-between text-xs mb-1"><span>${sa.used} of ${sa.slots} used</span><span className=${free<0?"text-red-400":free<=3?"text-amber-400":"text-green-400"}>${free>=0?free+" free":"over by "+(-free)}</span></div><div className="row-pg"><div style=${{width:pct+"%"}}></div></div></div>
+   <div className="text-xs text-slate-400 mt-2">You have counted ${carry} different carry items (crafted and training items). ${carry!==sa.used?h`<button className="lnk" onClick=${()=>up("used",carry)}>Use ${carry} as slots used</button>`:null}</div>
+   <p className="text-xs text-slate-500 mt-2">Total cost 20→60 slots: 4,399,500. Suggested stop: 35–40 slots (costs escalate past 40, reaching 1,000,000 for slot 60). Per-slot prices are not in the data, so type in the price Bagin quotes.</p></div>
+  <div className="card p-3"><div className="font-semibold text-amber-400 mb-1">Suggested layout at ${sa.slots} slots <span className="tag">${["Early","Mid","Late"][tier]}</span></div>
+   ${SLOT.map(r=>h`<div key=${r[0]} className="flex justify-between gap-3 text-sm py-1 border-t border-slate-800"><span className="text-slate-300">${r[0]}</span><span className="text-right">${r[tier+1]}</span></div>`)}
+   <div className="text-xs text-slate-500 mt-1">A suggestion, not official. Each different item uses one slot.</div></div>
+  <div className="flex flex-wrap gap-2">${[["all","All"],["low","Low"],["can","Can craft now"],["open","Unlocked"],["locked","Locked"]].map(([k,l])=>h`<button key=${k} className=${"chip "+(fl===k?"on":"")} onClick=${()=>sfl(k)}>${l}${k==="low"&&low.length?" ("+low.length+")":""}</button>`)}</div>
+  <div className="flex flex-wrap gap-2"><button className=${"chip "+(!cat?"on":"")} onClick=${()=>sc("")}>All types</button>${cats.map(k=>h`<button key=${k} className=${"chip "+(cat===k?"on":"")} onClick=${()=>sc(k)}>${k}</button>`)}</div>
+  ${show.length?null:h`<p className="text-sm text-slate-400">Nothing matches this filter.</p>`}
+  ${show.map(r=>{const n=inv[r.n]||0,lo=low.includes(r),cc=can(r);return h`<div key=${r.n} className=${(lo?"card-amb":"card")+" p-3"}>
+   <div className="flex flex-wrap items-center gap-2"><b><${IL} n=${r.n}/></b><span className="tag">${r.c}</span>${lo?h`<span className=${"tag "+(n===0?"red":"amb")}>Low stock</span>`:null}${r.u.ok?null:h`<span className="tag">🔒 locked</span>`}<span className="ml-auto"><${Step} v=${n} set=${v=>setCnt(set,r.n,v)}/></span></div>
+   <div className="text-xs text-slate-400 mt-1">${(IDM[r.n]||{}).d||""}</div>
+   <div className="text-xs mt-1">Recipe: ${r.g.map(([k,q],i)=>h`<span key=${k}>${i?" + ":""}${q} <${IL} n=${k}/><span className=${(inv[k]||0)>=q?"text-green-400":"text-amber-400"}> (${inv[k]||0})</span></span>`)}</div>
+   <div className="text-xs text-slate-400 mt-1">Restock below ${r.t} · ${r.w}${r.u.ok&&cc>0?" · can craft now: "+cc:""}${!r.u.ok&&r.u.to?h` · <button className="lnk" onClick=${()=>GO(r.u.to[0],r.u.to[1])}>${r.u.why} ›</button>`:""}</div>
+   ${r.u.ok&&cc>0?h`<button className="btn mt-2" onClick=${()=>craft1(set,r.r)}>Craft 1</button>`:null}</div>`})}
+  <h3 className="font-semibold text-amber-400 pt-2">Raw materials</h3><div className="grid grid-cols-1 sm:grid-cols-2 gap-2">${mats.map(k=>{const av=avail(k,PG);return h`<div key=${k} className="card p-2 flex items-center gap-2"><div className="flex-1 min-w-0"><${IL} n=${k}/><div className="text-xs text-slate-400">${WH(k)||"source not loaded yet"}</div>${av.ok?null:h`<div className="text-xs text-amber-300">🔒 opens at Mission ${av.lk?av.lk[0]:"?"}</div>`}</div><${Step} v=${inv[k]||0} set=${v=>setCnt(set,k,v)}/></div>`})}</div></div>`}
+// ----- Items & Stock
+function Items({s,set}){const it=s.itm||{},tg=s.tg||{},cu=s.cu||[],c=s.c||{},[f,sf]=useState({n:"",t:5,w:""}),[fl,sfl]=useState("all"),lo=lowList(s);
+ const R=[...ITM.map(r=>({n:r[0],t:tg[r[0]]??+r[1],w:r[2],cn:it[r[0]]||0,e:r[0] in it,k:r[0]})),...cu.map((x,i)=>({n:x.n,t:x.t,w:x.w,cn:x.c||0,e:true,i}))].sort((a,b)=>(lo.includes(b.n)?1:0)-(lo.includes(a.n)?1:0)).filter(r=>fl==="all"||(fl==="low"&&lo.includes(r.n))||(fl==="new"&&!r.e));
+ const upC=(r,k,v)=>r.k?set(p=>({...p,[k==="c"?"itm":"tg"]:{...p[k==="c"?"itm":"tg"],[r.k]:v}})):set(p=>({...p,cu:p.cu.map((x,j)=>j===r.i?{...x,[k]:v}:x)}));
+ return h`<div className="space-y-3"><p className="text-sm text-slate-400">Training items and rewards. Enter what you have; anything under its target raises a red alert. Crafted balls and potions live in <button className="lnk" onClick=${()=>GO("sat")}>Satchel</button>. The list of what to go get is in <button className="lnk" onClick=${()=>GO("need")}>To Get</button>.</p>
+  <div className="flex flex-wrap gap-2">${[["all","All"],["low","Low"],["new","Not counted yet"]].map(([k,l])=>h`<button key=${k} className=${"chip "+(fl===k?"on":"")} onClick=${()=>sfl(k)}>${l}${k==="low"&&lo.length?" ("+lo.length+")":""}</button>`)}</div>
+  ${R.map(r=>{const l=r.e&&r.cn<r.t;return h`<div key=${r.n} className=${(l?"card-amb":"card")+" p-3"}><div className="flex flex-wrap items-center gap-2"><b><${IL} n=${r.n}/></b>${l?h`<span className=${"tag "+(r.cn===0?"red":"amb")}>Low stock</span>`:null}${r.e?null:h`<span className="text-xs text-slate-500">not counted yet</span>`}${r.i!=null?h`<button onClick=${()=>set(p=>({...p,cu:p.cu.filter((_,j)=>j!==r.i)}))} className="ml-auto text-red-400 px-2">✕</button>`:null}</div>
+   <div className="text-xs text-slate-300 mt-1">${(IDM[r.n]||{}).d||"Your own tracked item."}</div>
+   <div className="flex flex-wrap items-center gap-3 mt-2"><span className="flex items-center gap-2 text-sm">Have <${Step} v=${r.cn} set=${v=>upC(r,"c",v)}/></span><span className="flex items-center gap-2 text-sm">Target <${Num} v=${r.t} set=${v=>upC(r,"t",v)} w="w-16"/></span></div>
+   <div className="text-xs text-slate-400 mt-2">${LK(r.w)||"No source noted"}</div><div className="flex flex-wrap gap-2 mt-1">${RQ(r.w,c)}</div></div>`})}
+  <div className="card p-3 flex flex-wrap gap-2 items-center"><b className="text-amber-400 text-sm w-full">Track another item</b><input placeholder="Item" value=${f.n} onInput=${e=>sf({...f,n:e.target.value})} className=${IN+" flex-1"}/><${Num} v=${f.t} set=${v=>sf({...f,t:v})} w="w-16"/><input placeholder="Where to get it" value=${f.w} onInput=${e=>sf({...f,w:e.target.value})} className=${IN+" w-full"}/><button className="btn" onClick=${()=>{if(f.n.trim()){set(p=>({...p,cu:[...(p.cu||[]),{...f,n:f.n.trim(),c:0}]}));sf({n:"",t:5,w:""})}}}>Add</button></div>
+  <details className="card p-3"><summary className="cursor-pointer text-sm text-slate-300">Quick start</summary><p className="text-xs text-slate-400 my-2">Fills in the item counts from your earlier chat so you do not have to type them all.</p><button onClick=${()=>set(p=>({...p,inv:{...p.inv,...SI},itm:{...p.itm,"Grit Dust":7,"Exp. Candy S":1}}))} className="btn">Load my current items (from chat)</button></details></div>`}
+// ----- Item Guide
+function Gloss({s,set}){const [q,sq]=useState(""),[cat,sc]=useState(""),cats=[...new Set(IDB.map(x=>x.c))];
+ const r=IDB.filter(x=>(!cat||x.c===cat)&&(x.n+" "+x.d+" "+x.c).toLowerCase().includes(q.toLowerCase()));
+ return h`<div className="space-y-3"><p className="text-sm text-slate-400">Every item in the app. Tap one to see what it does, where to get it, how to craft it and what it is used for.</p>
+  <input placeholder="Search items…" value=${q} onInput=${e=>sq(e.target.value)} className=${IN+" w-full"}/>
+  <div className="flex flex-wrap gap-2"><button className=${"chip "+(!cat?"on":"")} onClick=${()=>sc("")}>All</button>${cats.map(k=>h`<button key=${k} className=${"chip "+(cat===k?"on":"")} onClick=${()=>sc(k)}>${k}</button>`)}</div>
+  <p className="text-xs text-slate-500">${r.length} items</p>
+  ${r.flatMap((x,i)=>{const lo=lowN(s,x.n),cn=isCnt(s,x.n),out=[];if(!cat&&(i===0||r[i-1].c!==x.c))out.push(h`<div key=${"h"+x.c} className="text-amber-400 font-semibold pt-2">${x.c}</div>`);out.push(h`<button key=${x.n} onClick=${()=>ITEM(x.n)} className="card p-3 w-full text-left block"><div className="flex items-center gap-2"><b>${x.n}</b>${lo?h`<span className="tag red">Low</span>`:null}${cn?h`<span className="ml-auto text-sm text-slate-300">have ${cntOf(s,x.n)}</span>`:null}</div><div className="text-sm text-slate-300 mt-1">${x.d}</div></button>`);return out})}
+  <details className="card p-3"><summary className="cursor-pointer text-amber-400 font-semibold">Satchel slot guide (suggested)</summary><p className="text-xs text-slate-400 my-2">Each different item uses one slot. Keep raw materials in storage and craft at a bench (benches use storage; the Crafting Kit only uses your satchel). Carry finished items. Upgrade costs climb after 40 slots, so 35 to 40 is a good stop.</p><${Tbl} head=${["Group","Early (20 slots)","Mid (30)","Late (35 to 40)"]} rows=${SLOT}/></details></div>`}
+// ----- Guide, Boss, Stars, Next Steps
+function Boss({b}){return h`<details className="ml-2 mb-1 bg-slate-900/60 rounded p-2"><summary className="cursor-pointer text-sm text-amber-300">⚔ ${b.n}</summary><div className="text-xs text-slate-300 my-1">${b.tip}</div>${b.m.map(x=>h`<div key=${x.n} className="text-xs">${x.n}${x.lv?" Lv. "+x.lv:""} (${x.t.join("/")}): weak to ${wk(x.t)}${x.mv?" · moves: "+x.mv.replace(/\+/g,", "):""}</div>`)}<button className="chip mt-2" onClick=${()=>GO("pick",{bt:b.n+" (Mission "+b.ms[0]+")"})}>Plan this battle ›</button></details>`}
+function Guide({s,set,fo}){const c=s.c||{},PG=prog(s),f0=(fo||{}).m,[fl,sf]=useState(f0?"all":"todo"),cur=PG.nx?+PG.nx[0]:0;
+ const rows=MIS.filter(m=>fl==="all"||(fl==="done")===!!c["s"+m[0]]);
+ return h`<div><p className="text-sm text-slate-400 mb-2">Tick each step as you go. Mission boxes sync with the Story tab and Dashboard. Your next mission opens by itself.</p>
+  <div className="flex gap-2 mb-3">${[["todo","To do"],["all","All"],["done","Done"]].map(([k,l])=>h`<button key=${k} className=${"chip "+(fl===k?"on":"")} onClick=${()=>sf(k)}>${l}</button>`)}</div>
+  ${rows.map(m=>{const n=+m[0],g=GU.find(x=>x.n===n),st=g?g.st:[m[4]],d=st.filter((_,i)=>c["g"+n+"_"+i]).length,need=+((m[3].match(/\d+/)||[0])[0]),op=f0?n===f0:n===cur;
+   return h`<details key=${n} open=${op} className=${"card mb-2 "+(op?"border-amber-500":"")}><summary className="flex items-center gap-3 p-3 cursor-pointer"><input type="checkbox" checked=${!!c["s"+n]} onClick=${e=>e.stopPropagation()} onChange=${()=>tgl(set,"s"+n)} className="w-5 h-5 accent-amber-500"/><div className="flex-1"><div className=${c["s"+n]?"line-through opacity-60":"font-medium"}>Mission ${n}: ${m[1]}${n===cur?h` <span className="tag amb">next</span>`:null}</div><div className="text-xs text-slate-400">${m[2]} · needs ${m[3]}${need>PG.rk&&!c["s"+n]?" (you are at ★"+PG.rk+")":""} · ${d}/${st.length} steps</div></div></summary>
+   <div className="px-4 pb-3 space-y-1">${st.map((t,i)=>h`<label key=${i} className="flex gap-2 text-sm"><input type="checkbox" checked=${!!c["g"+n+"_"+i]} onChange=${()=>tgl(set,"g"+n+"_"+i)} className="mt-1 accent-amber-500"/><span>${i+1}. ${t}</span></label>`)}${BO.filter(b=>b.ms.includes(n)).map(b=>h`<${Boss} key=${b.n} b=${b}/>`)}</div></details>`})}</div>`}
+function Stars({s,set}){const pts=+((s.m||{}).pts)||0,i=SR.filter(r=>pts>=+r[1]).length-1,nx=SR[i+1],base=i>=0?+SR[i][1]:0;
+ return h`<div className="space-y-3"><label className="text-sm flex items-center gap-2 flex-wrap">Research points <${Num} v=${pts} set=${v=>set(p=>({...p,m:{...p.m,pts:v}}))} w="w-28"/></label>
+  <div className="card p-3"><div className="text-lg font-semibold">${i<0?"Below 1 Star":SR[i][0]}</div><div className="text-sm text-slate-300">${i<0?"":"Pokémon obey up to Lv. "+SR[i][2]+". "}${nx?(nx[1]-pts)+" points to "+nx[0]:"Max rank"}</div>${nx?h`<div className="row-pg mt-2"><div style=${{width:Math.min(100,(pts-base)/(nx[1]-base)*100)+"%"}}></div></div>`:null}</div>
+  <${Tbl} head=${["Rank","Points","Obey Lv.","Unlocks"]} rows=${SR.map(r=>[r[0],r[1],r[2],LK(r[3])])}/></div>`}
+function Plan({s,set}){const c=s.c||{},inv=s.inv||{},ro=s.ro||[],sv=s.sv||{},PG=prog(s),pts=PG.pts,ty=m=>m.t2?[m.t1,m.t2]:[m.t1],el=m=>m.el.reduce((a,b)=>a+b,0);
+ const nx=MIS.find(m=>!c["s"+m[0]]),need=nx?+((nx[3].match(/\d+/)||[0])[0]):0,rk=PG.rk;
+ const bs=nx?BO.filter(b=>b.ms.includes(+nx[0])):[],wT=[...new Set(bs.flatMap(b=>b.m.flatMap(x=>TYPES.filter(a=>mult(x.t,a)>1))))];
+ const low=CR.filter(r=>r[0] in inv&&inv[r[0]]<+r[2]),lo=lowList(s);
+ const cats=[["Pokédex entries",DEX.filter(d=>c["dc"+d.i]).length,242,"dex"],["Spiritomb Wisps",WL.filter(w=>c[w.id]).length,WL.length,"wisp"],["Unown",UNO.filter(u=>c["u"+u[0]]).length,UNO.length,"uno"],["Old Verses",VER.filter((_,i)=>c["v"+i]).length,VER.length,"ver"],["Legendaries",LEG.filter(r=>c["l"+r[0]]).length,LEG.length,"leg"],["Key Requests",REQ.filter(r=>c["r"+r[0]]).length,REQ.length,"req"]].sort((a,b)=>a[1]/a[2]-b[1]/b[2]);
+ const txt=["HISUI STATUS","Next mission: "+(nx?nx[0]+" "+nx[1]:"all done"),"Research points: "+pts+" (rank "+rk+")","Missions done: "+MIS.filter(m=>c["s"+m[0]]).map(m=>m[0]).join(", "),"Requests done: "+REQ.filter(r=>c["r"+r[0]]).map(r=>r[0]).join(", "),"Active/saved requests: "+Object.keys(sv).filter(k=>sv[k]).join(", "),"Roster: "+ro.map(m=>m.n+" Lv"+m.lv+" EL"+el(m)).join("; "),"Low stock: "+low.map(r=>r[0]+" "+(inv[r[0]]||0)+"/"+r[2]).join(", "),"Lowest categories: "+cats.slice(0,3).map(x=>x[0]+" "+x[1]+"/"+x[2]).join(", ")].join("\n");
+ const bx="card p-3";
+ return h`<div className="space-y-3"><div className=${bx}><h3 className="font-semibold text-amber-400">Do this next</h3>${nx?h`<p className="text-sm mt-1"><b>Mission ${nx[0]}: ${nx[1]}</b> (${nx[2]}). ${nx[4]}</p>${need>rk?h`<p className="text-sm text-amber-400 mt-1">You need ${need} Stars first: ${SR[need-1][1]-pts} more research points. Do research tasks in an unlocked area. <button className="lnk" onClick=${()=>GO("stars")}>Stars ›</button></p>`:null}<div className="flex gap-2 mt-2 flex-wrap"><button className="btn" onClick=${()=>GO("guide",{m:+nx[0]})}>Open step-by-step guide</button><button className="btn2" onClick=${()=>GO("story",{id:"s"+nx[0]})}>Story entry</button></div>`:h`<p className="text-sm">Every story mission is ticked.</p>`}</div>
+ ${bs.length?h`<div className=${bx}><h3 className="font-semibold text-amber-400">Team for this mission’s fights</h3><p className="text-sm">Hit these types: ${wT.join(", ")}</p>${wT.map(a=>{const m=ro.filter(x=>ty(x).includes(a)).map(x=>x.n);return h`<div key=${a} className="text-xs">${a}: ${m.length?m.join(", "):"nobody on your roster; catch or raise a "+a+" Pokémon (Pokédex tab shows where)"}</div>`})}<div className="flex gap-2 mt-2 flex-wrap">${bs.map(b=>h`<button key=${b.n} className="chip" onClick=${()=>GO("pick",{bt:b.n+" (Mission "+b.ms[0]+")"})}>Plan: ${b.n} ›</button>`)}</div><p className="text-xs text-slate-500 mt-1">Add Pokémon in the <button className="lnk" onClick=${()=>GO("roster")}>Roster</button> tab for better answers.</p></div>`:null}
+ <div className=${lo.length?"card-red p-3":bx}><h3 className="font-semibold text-amber-400">Restock</h3>${lo.length?h`<p className="text-sm">${lo.length} item${lo.length>1?"s are":" is"} low: ${lo.slice(0,8).join(", ")}${lo.length>8?"…":""}</p><button className="btn mt-2" onClick=${()=>GO("need")}>Open To Get list</button>`:h`<p className="text-sm">Nothing is low. Enter counts in the Satchel or Stock tab.</p>`}</div>
+ <div className=${bx}><h3 className="font-semibold text-amber-400 mb-1">Biggest gaps</h3>${cats.slice(0,3).map(x=>h`<button key=${x[0]} onClick=${()=>GO(x[3])} className="block w-full text-left text-sm py-1">${x[0]}: ${x[1]}/${x[2]} ›</button>`)}</div>
+ <div className=${bx}><h3 className="font-semibold text-amber-400 mb-1">Copy and share</h3><textarea readOnly value=${txt} className="w-full h-40 bg-slate-900 border border-slate-700 rounded p-2 text-xs"/><p className="text-xs text-slate-400">Paste this into Claude for a deeper plan, or send it to anyone.</p></div></div>`}
+// ----- rows for list tabs
+function Row({r,s,set,fo}){const on=!!(s.c||{})[r.id],op=!!fo&&fo.id===r.id;
+ return h`<details open=${op} className=${"card mb-2 "+(op?"border-amber-500":"")}><summary className="flex items-center gap-3 p-3 cursor-pointer">
+  <input type="checkbox" checked=${on} onClick=${e=>e.stopPropagation()} onChange=${()=>set(p=>({...p,c:{...p.c,[r.id]:!(p.c||{})[r.id]}}))} className="w-5 h-5 accent-amber-500"/>
+  <div className="flex-1 min-w-0"><div className=${on?"line-through opacity-60":"font-medium"}>${r.t}</div><div className="text-xs text-slate-400">${r.sub}</div></div></summary>
+  <div className="px-4 pb-3 text-sm text-slate-300 space-y-2"><div className="pre">${r.body}</div>
+  ${(r.links||[]).length?h`<div className="flex flex-wrap gap-2">${r.links.map(([l,t,o],i)=>h`<button key=${i} className="chip" onClick=${()=>t==="_item"?ITEM(o):GO(t,o)}>${l} ›</button>`)}</div>`:null}
+  <input placeholder="Notes…" value=${(s.n||{})[r.id]||""} onInput=${e=>{const v=e.target.value;set(p=>({...p,n:{...p.n,[r.id]:v}}))}} className="w-full bg-slate-900 rounded p-2 border border-slate-700"/></div></details>`}
+
+// ----- Dashboard
+const GT={"Pokédex Caught":"dex","Research Lv. 10":"dex","Perfected Entries":"dex","Alpha Caught":"alp","Side Requests":"req"};
+function Dash({s,set}){
+ const PG=prog(s),lo=lowList(s),c=s.c||{},dots=DOTS(s),cn=p=>Object.keys(c).filter(k=>c[k]&&k[0]===p).length,nx=PG.nx,need=nx?+((nx[3].match(/\d+/)||[0])[0]):0,nr=SR[PG.rk];
+ return h`<div className="space-y-4">
+  ${lo.length?h`<button className="card-red w-full text-left p-3 flex items-center gap-3" onClick=${()=>GO("need")}><span className="text-2xl">🔴</span><span className="flex-1"><b>${lo.length} item${lo.length>1?"s":""} low on stock</b><span className="block text-xs text-slate-300">${lo.slice(0,6).join(", ")}${lo.length>6?"…":""}</span></span><span className="text-amber-300 text-sm">To Get ›</span></button>`:null}
+  ${setupGaps(s).length?h`<button className="card-amb w-full text-left p-3" onClick=${()=>GO("setup")}><b>Finish setup (${setupGaps(s).length} left)</b><span className="block text-xs text-slate-300">${setupGaps(s).join(" · ")}</span><span className="text-amber-300 text-sm">Open Setup ›</span></button>`:null}
+  <div className="card p-3"><div className="text-xs text-slate-400">Do this next</div>${nx?h`<div className="font-semibold">Mission ${nx[0]}: ${nx[1]}</div><div className="text-sm text-slate-300">${nx[2]} · needs ${nx[3]}</div>${need>PG.rk?h`<div className="text-sm text-amber-400 mt-1">You need ★${need} first: ${SR[need-1][1]-PG.pts} more research points.</div>`:null}<div className="flex gap-2 mt-2 flex-wrap"><button className="btn" onClick=${()=>GO("guide",{m:+nx[0]})}>Open guide</button><button className="btn2" onClick=${()=>GO("plan")}>Next Steps</button></div>`:h`<div className="font-semibold">All story missions are ticked 🎉</div>`}</div>
+  <div className="card p-3"><${Bar} l=${"Star Rank ★"+PG.rk+(nr?" → "+nr[0]:" (max)")} v=${PG.pts} m=${nr?+nr[1]:PG.pts||1} to="stars"/>
+   <div className="grid grid-cols-2 gap-2">${[["Log a catch","log"],["Satchel","sat"],["Battle Picker","pick"],["Roster","roster"]].map(([l,t])=>h`<button key=${t} className="btn2" onClick=${()=>GO(t)}>${l}</button>`)}</div></div>
+  <div className="card p-3"><h2 className="font-semibold text-amber-400 mb-1">Completion</h2><p className="text-xs text-slate-400 mb-3">Arceus unlocks at 239 caught entries (237 standard + Manaphy + Phione) out of 242. Type your own totals here, or open the tab and tick entries.</p>
+   ${GOALS.map(([l,m])=>{const v=(s.m||{})[l]||0;return h`<div key=${l}><${Bar} l=${l} v=${v} m=${m||242} to=${GT[l]}/><div className="flex items-center gap-2 -mt-1 mb-3"><${Num} v=${v} set=${x=>set(p=>({...p,m:{...p.m,[l]:x}}))} w="w-20"/>${DXM[l]?h`<span className="text-xs text-slate-400">Pokédex tab: ${Object.keys(c).filter(x=>c[x]&&x.startsWith("d"+DXM[l])).length}</span>`:null}</div></div>`})}</div>
+  <div className="card p-3"><h2 className="font-semibold text-amber-400 mb-2">Collections</h2><div className="grid sm:grid-cols-2 gap-x-4">
+   <${Bar} l="Legendary/Mythical (18)" v=${cn("l")} m=${LEG.length} to="leg"/><${Bar} l="Spiritomb Wisps" v=${cn("w")} m=${WL.length} to="wisp"/><${Bar} l="Unown Forms" v=${cn("u")} m=${UNO.length} to="uno"/><${Bar} l="Old Verses" v=${cn("v")} m=${VER.length} to="ver"/><${Bar} l="Static Alphas (75)" v=${cn("a")} m=${LISTS.alp.rows.length} to="alp"/><${Bar} l="Key Requests (of 122)" v=${cn("r")} m=${REQ.length} to="req"/><${Bar} l="Story Missions (27)" v=${cn("s")} m=${MIS.length} to="story"/><${Bar} l="Noble Pokémon (5)" v=${cn("n")} m=${NOB.length} to="nob"/><${Bar} l="Evolutions Done" v=${cn("e")} m=${EVO.length} to="evo"/></div></div>
+  <div className="card p-3"><h2 className="font-semibold text-amber-400 mb-2">All pages</h2>${GROUPS.filter(g=>g[0]!=="home").map(g=>h`<div key=${g[0]} className="mb-3"><div className="text-sm text-slate-300 mb-1">${g[2]} ${g[1]}</div><div className="flex flex-wrap gap-2">${g[3].map(([k,n])=>h`<button key=${k} className="chip" onClick=${()=>GO(k)}>${n}${dots[k]?h`<span className=${"dot "+(dots[k]==="a"?"a":"")}></span>`:null}</button>`)}</div></div>`)}</div></div>`}
+const NEW={setup:Setup,tool:Tool,gloss:Gloss,items:Items,pick:Pick,guide:Guide,plan:Plan,log:Log,dex:Dex,types:TypesTab,roster:Roster,sat:Satchel,shiny:Shiny,stars:Stars,path:PATH,mech:MECH,need:Need,dash:Dash};
+
+// ----- Setup page
+const setupGaps=s=>{const c=s.c||{},g=[];
+ if(!MIS.some(m=>c["s"+m[0]]))g.push("Say which Story mission you are on");
+ if(!(+((s.m||{}).pts)))g.push("Set your Star Rank");
+ if(!s.sat)g.push("Enter your satchel size");
+ if(!Object.keys(s.inv||{}).length&&!Object.keys(s.itm||{}).length)g.push("Enter what you are carrying");
+ if(!CR.some(r=>/Craftworks/.test(r[4])&&(s.rcp||{})[r[0]]))g.push("Tick the Craftworks recipes you have bought");
+ if(!(s.ro||[]).length)g.push("Add your team in Roster");
+ return g};
+function Cnt({s,set,k,w="w-16"}){const [d,sd]=useState(null),has=isCnt(s,k);
+ return h`<input type="text" inputMode="numeric" placeholder="–" value=${d!==null?d:(has?String(cntOf(s,k)):"")} onFocus=${e=>e.target.select()} onInput=${e=>{const t=e.target.value.replace(/[^0-9]/g,"");sd(t);if(t!=="")setCnt(set,k,+t)}} onBlur=${()=>sd(null)} className=${IN+" text-center "+w}/>`}
+function Setup({s,set}){
+ const PG=prog(s),c=s.c||{},sa={slots:20,used:0,cost:"",...s.sat},gaps=setupGaps(s),done=Math.min(27,PG.gate-1);
+ const up=(k,v)=>set(p=>({...p,sat:{slots:20,used:0,cost:"",...p.sat,[k]:v}}));
+ const setM=N=>set(p=>{const cc={...p.c};MIS.forEach(m=>{cc["s"+m[0]]=+m[0]<=N});return{...p,c:cc}});
+ const setRank=k=>set(p=>{const cur=SR.filter(r=>(+((p.m||{}).pts)||0)>=+r[1]).length;if(cur===k)return p;return{...p,m:{...p.m,pts:k?+SR[k-1][1]:0}}});
+ const togR=r=>set(p=>({...p,ra:{...p.ra,[r]:!prog(p).open[r]}}));
+ const rc=CR.filter(r=>/Craftworks|Request|Taeko/.test(r[4])),cw=rc.filter(r=>/Craftworks/.test(r[4]));
+ const setRcp=(list,v)=>set(p=>{const x={...p.rcp};list.forEach(r=>{x[r[0]]=v});return{...p,rcp:x}});
+ const cats=[...new Set(CR.map(r=>r[1]))];
+ const mats=[...new Set(CR.flatMap(r=>CRM[r[0]].g.map(x=>x[0])))].filter(k=>!CRR[k]);
+ const groups=[...cats.map(k=>[k,CR.filter(r=>r[1]===k).map(r=>r[0])]),["Training and rewards",ITM.map(r=>r[0])],["Raw materials",mats]];
+ const sec=(n,t,body,open)=>h`<details open=${!!open} className="card p-3"><summary className="cursor-pointer font-semibold text-amber-400">${n}. ${t}</summary><div className="mt-3 space-y-3">${body}</div></details>`;
+ const tick=ok=>ok?"✓":"○";
+ return h`<div className="space-y-3">
+  <div className=${gaps.length?"card-amb p-3":"card-grn p-3"}><b>${gaps.length?"Still to set up":"Setup is complete 🎉"}</b>
+   ${gaps.length?h`<ul className="text-sm mt-1 space-y-1">${gaps.map(x=>h`<li key=${x}>○ ${x}</li>`)}</ul>`:h`<div className="text-sm text-slate-300 mt-1">Everything the app needs is filled in. You can change any of it later.</div>`}
+   <div className="text-xs text-slate-400 mt-2">The To Get list, red dots and recipe locks only work well once these are filled in. Nothing here is permanent.</div></div>
+  ${sec("1","Where you are in the story",h`<div className="text-sm text-slate-300">Pick the last mission you have finished. This ticks every earlier mission in Story and Guide for you.</div>
+   <select value=${done} onChange=${e=>setM(+e.target.value)} className=${IN+" w-full"}><option value="0">Not started (no missions finished)</option>${MIS.map(m=>h`<option key=${m[0]} value=${m[0]}>Finished Mission ${m[0]}: ${m[1]}</option>`)}</select>
+   <div className="text-xs text-slate-500">Now showing: ${PG.nx?"next mission is "+PG.nx[0]+", "+PG.nx[1]:"all missions finished"}.</div>`,true)}
+  ${sec("2","Star Rank and areas",h`<label className="text-sm flex items-center gap-2">Star Rank<select value=${PG.rk} onChange=${e=>setRank(+e.target.value)} className=${IN}>${[0,1,2,3,4,5,6,7,8,9,10].map(k=>h`<option key=${k} value=${k}>${k?"★ "+k:"None"}</option>`)}</select></label>
+   <div className="text-xs text-slate-400">Areas you can visit. The app guesses from your story progress; tap to correct it.</div>
+   <div className="flex flex-wrap gap-2">${REGN.map(r=>h`<button key=${r} className=${"chip "+(PG.open[r]?"on":"")} onClick=${()=>togR(r)}>${PG.open[r]?"✓ ":"🔒 "}${r}</button>`)}</div>
+   ${Object.keys(s.ra||{}).length?h`<button className="btn2" onClick=${()=>set(p=>({...p,ra:{}}))}>Go back to automatic</button>`:null}`,true)}
+  ${sec("3","Satchel",h`<div className="flex flex-wrap gap-x-5 gap-y-3 items-end"><div><div className="text-xs text-slate-400 mb-1">Total slots (20 to 60)</div><${Step} v=${sa.slots} set=${v=>up("slots",v)} min=${20} max=${60} w="w-16"/></div><div><div className="text-xs text-slate-400 mb-1">Slots used</div><${Step} v=${sa.used} set=${v=>up("used",v)} min=${0} max=${99} w="w-16"/></div></div>${s.sat?null:h`<button className="btn2" onClick=${()=>up("slots",sa.slots)}>These numbers are right</button>`}`,true)}
+  ${sec("4","Recipes you have",h`<div className="text-sm text-slate-300">Recipes bought at Craftworks or earned from requests only count once you tick them. Tick the ones you already have.</div>
+   <div className="flex gap-2 flex-wrap"><button className="btn2" onClick=${()=>setRcp(cw,true)}>I have all Craftworks recipes</button><button className="btn2" onClick=${()=>setRcp(rc,false)}>Clear all</button></div>
+   <div className="grid sm:grid-cols-2 gap-1">${rc.map(r=>h`<label key=${r[0]} className="flex items-start gap-2 text-sm py-1"><input type="checkbox" checked=${!!(s.rcp||{})[r[0]]} onChange=${()=>set(p=>({...p,rcp:{...p.rcp,[r[0]]:!(p.rcp||{})[r[0]]}}))} className="w-5 h-5 mt-0.5 accent-amber-500"/><span>${r[0]}<span className="block text-xs text-slate-500">${r[4]}</span></span></label>`)}</div>`)}
+  ${sec("5","What you are carrying",h`<div className="text-sm text-slate-300">Fill in only what you want tracked. A blank box (–) is ignored; a number, even 0, switches on low-stock alerts for that item.</div>
+   <button className="btn2" onClick=${()=>set(p=>({...p,inv:{...p.inv,...SI},itm:{...p.itm,"Grit Dust":7,"Exp. Candy S":1}}))}>Load my current items (from chat)</button>
+   ${groups.map(([n,ks])=>h`<details key=${n} className="bg-slate-900/50 rounded-lg p-2"><summary className="cursor-pointer text-sm">${n} <span className="text-xs text-slate-500">${ks.filter(k=>isCnt(s,k)).length}/${ks.length} entered</span></summary><div className="mt-2 space-y-1">${ks.map(k=>h`<div key=${k} className="flex items-center gap-2 text-sm"><span className="flex-1 min-w-0"><${IL} n=${k}/></span><${Cnt} s=${s} set=${set} k=${k}/></div>`)}</div></details>`)}`)}
+  ${sec("6","Your team",h`<div className="text-sm text-slate-300">Add the Pokémon you use so Battle Picker and Next Steps can suggest teams. ${(s.ro||[]).length?"You have "+s.ro.length+" on your roster.":"Your roster is empty."}</div><button className="btn" onClick=${()=>GO("roster")}>Open Roster ›</button>`)}
+ </div>`}
+
 function App(){
  const [s,set]=useState(()=>{try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}});
- const [tab,setTab]=useState("dash"),[q,setQ]=useState(""),[imp,setImp]=useState(""),[gq,setGq]=useState(""),[rs,setRs]=useState(false);
+ const [tab,setTab]=useState("dash"),[q,setQ]=useState(""),[imp,setImp]=useState(""),[gq,setGq]=useState(""),[rs,setRs]=useState(false),[foc,setFoc]=useState({tab:"dash",n:0}),[hist,setHist]=useState([]),[sheets,setSheets]=useState([]),[last,setLast]=useState({});
  useEffect(()=>{try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}},[s]);
+ useEffect(()=>{const g=TABG[tab];if(g)setLast(l=>({...l,[g]:tab}))},[tab]);
  const cnt=p=>Object.keys(s.c||{}).filter(k=>s.c[k]&&k[0]===p).length;
- const tabs=[["dash","Dashboard"],["story","Story"],["guide","Guide"],["plan","Next Steps"],["items","Items & Stock"],["gloss","Item Guide"],["pick","Battle Picker"],["log","Quick Log"],["nob","Nobles"],["leg","Legendaries"],["dex","Pokédex"],["evo","Evolutions"],["roster","Roster"],["sat","Satchel"],["shiny","Shiny"],["types","Types"],["stars","Stars"],["shop","Shops"],["req","Requests"],["wisp","Wisps"],["uno","Unown"],["ver","Verses"],["alp","Alphas"],["tool","Toolbox"],["path","Solitude"],["mech","Mechanics"],["bk","Backup"]];
+ const dots=DOTS(s),PG=prog(s),top=()=>{try{window.scrollTo(0,0)}catch(e){}};
+ const go=(t,o)=>{setHist(a=>[...a.slice(-6),{tab,foc}]);setTab(t);setFoc({...(o||{}),tab:t,n:FN++});setQ("");setSheets([]);setGq("");top()};
+ const nav=t=>{setHist([]);setTab(t);setFoc({tab:t,n:FN++});setQ("");setSheets([]);setGq("");top()};
+ const back=()=>{const l=hist[hist.length-1];if(!l)return;setHist(a=>a.slice(0,-1));setTab(l.tab);setFoc({...l.foc,n:FN++});setSheets([]);top()};
+ const openItem=n=>setSheets(a=>a[a.length-1]===n?a:[...a,n]);
+ GO=go;ITEM=openItem;
+ const ql=gq.toLowerCase();
+ const res=gq.length>1?[
+  ...IDB.filter(x=>x.n.toLowerCase().includes(ql)).slice(0,4).map(x=>({k:"_item",l:"Item",t:x.n,n:x.n})),
+  ...Object.entries(LISTS).flatMap(([k,L])=>L.rows.filter(r=>(r.t+" "+r.sub+" "+r.body).toLowerCase().includes(ql)).slice(0,3).map(r=>({k,l:L.n,t:r.t,id:r.id}))),
+  ...DEX.filter(d=>d.n.toLowerCase().includes(ql)).slice(0,3).map(d=>({k:"dex",l:"Pokédex",t:"#"+d.i+" "+d.n,i:d.i}))].slice(0,14):[];
+ const pick=r=>{setGq("");if(r.k==="_item")openItem(r.n);else if(r.k==="dex")go("dex",{i:r.i});else go(r.k,{id:r.id})};
+ const fo=foc.tab===tab?foc:{};
  let body;
- const res=gq.length>1?Object.entries(LISTS).flatMap(([k,L])=>L.rows.filter(r=>(r.t+" "+r.sub+" "+r.body).toLowerCase().includes(gq.toLowerCase())).slice(0,4).map(r=>[k,L.n,r.t])).slice(0,12):[];
- const omni=h`<div className="mb-3"><input placeholder="Search everything…" value=${gq} onInput=${e=>setGq(e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded p-2"/>${res.map(([k,n,t],i)=>h`<button key=${i} onClick=${()=>{setTab(k);setQ(gq);setGq("")}} className="block w-full text-left text-sm p-2 border-b border-slate-800">${t} <span className="text-slate-400">· ${n}</span></button>`)}</div>`;
- if(tab==="dash")body=h`<div>${lowList(s).length?h`<button onClick=${()=>setTab("items")} className="w-full text-left bg-red-900/40 border border-red-700 rounded p-2 mb-3 text-sm">Low stock: ${lowList(s).slice(0,8).join(", ")}</button>`:null}<h2 className="text-lg font-semibold mb-1 text-amber-400">Completion</h2><p className="text-xs text-slate-400 mb-3">Arceus unlocks at 239 caught entries (237 standard + Manaphy + Phione) out of 242.</p>
-  ${GOALS.map(([l,m],i)=>{const v=(s.m||{})[l]||0;return h`<div key=${l}><${Bar} l=${l} v=${v} m=${m||242}/><input type="number" min="0" value=${v} onInput=${e=>{const x=+e.target.value;set(p=>({...p,m:{...p.m,[l]:x}}))}} className="w-24 bg-slate-900 border border-slate-700 rounded p-1 mb-3 text-sm"/>${DXM[l]?h`<span className="text-xs text-slate-400 ml-2">Pokédex tab: ${Object.keys(s.c||{}).filter(x=>s.c[x]&&x.startsWith("d"+DXM[l])).length}</span>`:null}</div>`})}
-  <${Bar} l="Legendary/Mythical (18)" v=${cnt("l")} m=${LEG.length}/><${Bar} l="Spiritomb Wisps" v=${cnt("w")} m=${WL.length}/><${Bar} l="Unown Forms" v=${cnt("u")} m=${UNO.length}/><${Bar} l="Old Verses" v=${cnt("v")} m=${VER.length}/><${Bar} l="Static Alphas (75)" v=${cnt("a")} m=${LISTS.alp.rows.length}/><${Bar} l="Key Requests (of 122)" v=${cnt("r")} m=${REQ.length}/><${Bar} l="Story Missions (27)" v=${cnt("s")} m=${MIS.length}/><${Bar} l="Noble Pokémon (5)" v=${cnt("n")} m=${NOB.length}/><${Bar} l="Evolutions Done" v=${cnt("e")} m=${EVO.length}/></div>`;
- else if(tab==="shop")body=h`<div><h2 className="font-semibold text-amber-400 mb-2">Ginter (Ginkgo Guild)</h2><${Tbl} head=${["Disguised","Real item","Cost"]} rows=${GIN}/>
-  <h2 className="font-semibold text-amber-400 mb-2">Simona’s Trading Post (Merit Points)</h2><${Tbl} head=${["Item","MP","Evolves"]} rows=${SIM}/>
+ if(tab==="shop")body=h`<div><h2 className="font-semibold text-amber-400 mb-2">Ginter (Ginkgo Guild)</h2><${Tbl} head=${["Disguised","Real item","Cost"]} rows=${GIN.map(r=>[r[0],LK(r[1]),r[2]])}/>
+  <h2 className="font-semibold text-amber-400 mb-2">Simona’s Trading Post (Merit Points)</h2><${Tbl} head=${["Item","MP","Evolves"]} rows=${SIM.map(r=>[LK(r[0]),r[1],r[2]])}/>
   <h2 className="font-semibold text-amber-400 mb-2">Zisu’s Move Tutor</h2><${Tbl} head=${["Move","Type","Priority","Why"]} rows=${ZIS}/></div>`;
- else if(NEW[tab]){const C=NEW[tab];body=h`<${C} s=${s} set=${set}/>`}
- else if(tab==="bk")body=h`<div className="space-y-3"><p className="text-sm text-slate-300">Copy this text somewhere safe. To restore, paste a backup below and press Import.</p>
+ else if(NEW[tab]){const C=NEW[tab];body=h`<${C} key=${foc.n} s=${s} set=${set} fo=${fo}/>`}
+ else if(tab==="bk")body=h`<div className="space-y-3"><p className="text-sm text-slate-300">Your progress is saved in this browser only. Copy or download a backup now and then. To restore, paste a backup below and press Import.</p>
+  <div className="flex gap-2 flex-wrap"><button className="btn" onClick=${()=>{try{navigator.clipboard.writeText(JSON.stringify(s)).then(()=>alert("Backup copied.")).catch(()=>alert("Could not copy. Select the text below and copy it by hand."))}catch(e){alert("Could not copy. Select the text below and copy it by hand.")}}}>Copy backup</button><button className="btn2" onClick=${()=>{try{const b=new Blob([JSON.stringify(s)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="hisui-backup.json";a.click()}catch(e){alert("Could not download. Use Copy backup instead.")}}}>Download file</button></div>
   <textarea readOnly value=${JSON.stringify(s)} className="w-full h-32 bg-slate-900 border border-slate-700 rounded p-2 text-xs"/>
   <textarea value=${imp} onInput=${e=>setImp(e.target.value)} placeholder="Paste backup JSON here" className="w-full h-32 bg-slate-900 border border-slate-700 rounded p-2 text-xs"/>
-  <button className="bg-amber-600 px-4 py-2 rounded" onClick=${()=>{try{set(JSON.parse(imp));setImp("")}catch(e){alert("That isn’t valid backup JSON.")}}}>Import</button><button className="bg-red-700 px-4 py-2 rounded ml-2" onClick=${()=>{if(rs){set({});setRs(false)}else setRs(true)}}>${rs?"Click again to confirm reset":"Reset all progress"}</button></div>`;
- else{const L=LISTS[tab],rows=L.rows.filter(r=>(r.t+r.sub+r.body).toLowerCase().includes(q.toLowerCase()));
-  body=h`<div><${Bar} l=${L.n} v=${cnt(L.p)} m=${L.rows.length}/><input placeholder="Search…" value=${q} onInput=${e=>setQ(e.target.value)} className="w-full mb-3 bg-slate-900 border border-slate-700 rounded p-2"/>${rows.map(r=>h`<${Row} key=${r.id} r=${r} s=${s} set=${set}/>`)}</div>`}
- return h`<div className="max-w-3xl mx-auto p-4"><h1 className="text-2xl font-bold text-amber-400 mb-1">Hisui Completionist Companion</h1>${omni}
- <div className="flex gap-2 overflow-x-auto pb-2 mb-4">${tabs.map(([k,n])=>h`<button key=${k} onClick=${()=>{setTab(k);setQ("")}} className=${"px-3 py-1 rounded-full text-sm whitespace-nowrap "+(tab===k?"bg-amber-600":"bg-slate-800")}>${n}</button>`)}</div>${body}</div>`}
+  <div className="flex gap-2"><button className="btn" onClick=${()=>{try{set(JSON.parse(imp));setImp("")}catch(e){alert("That isn’t valid backup JSON.")}}}>Import</button><button className="px-4 py-2 rounded-lg bg-red-700 font-semibold" onClick=${()=>{if(rs){set({});setRs(false)}else setRs(true)}}>${rs?"Click again to confirm reset":"Reset all progress"}</button></div></div>`;
+ else{const L=LISTS[tab],f1=fo.id,rows=f1?L.rows.filter(r=>r.id===f1):L.rows.filter(r=>(r.t+r.sub+r.body).toLowerCase().includes(q.toLowerCase()));
+  body=h`<div><${Bar} l=${L.n} v=${cnt(L.p)} m=${L.rows.length}/>${f1?h`<div className="card-amb p-2 mb-2 flex items-center gap-2 text-sm"><span>Showing 1 entry</span><button className="btn2 ml-auto" onClick=${()=>setFoc({tab,n:FN++})}>Show all ${L.rows.length}</button></div>`:h`<input placeholder="Search this list…" value=${q} onInput=${e=>setQ(e.target.value)} className=${IN+" w-full mb-3"}/>`}${rows.map(r=>h`<${Row} key=${r.id} r=${r} s=${s} set=${set} fo=${f1?{id:f1}:null}/>`)}</div>`}
+ const gk=TABG[tab]||"home",G0=GROUPS.find(g=>g[0]===gk)||GROUPS[0],dt=k=>dots[k]?h`<span className=${"dot "+(dots[k]==="a"?"a":"")}></span>`:null;
+ return h`<div><div className="hdr px-3 py-2"><div className="max-w-3xl mx-auto flex items-center gap-2">
+   ${hist.length?h`<button className="btn2 px-3" onClick=${back}>←</button>`:null}
+   <div className="relative flex-1 min-w-0"><input placeholder="Search items, Pokémon, missions…" value=${gq} onInput=${e=>setGq(e.target.value)} className=${IN+" w-full"}/>
+    ${res.length?h`<div className="absolute left-0 right-0 top-full mt-1 card max-h-[60vh] overflow-y-auto z-50" style=${{background:"#111827"}}>${res.map((r,i)=>h`<button key=${i} onClick=${()=>pick(r)} className="block w-full text-left text-sm p-3 border-b border-slate-800">${r.t} <span className="text-slate-400">· ${r.l}</span></button>`)}</div>`:null}</div>
+   <button className="chip shrink-0" onClick=${()=>go("need")}>${PG.gate>27?"Done":"M"+PG.gate} · ★${PG.rk}</button></div></div>
+  <div className="max-w-3xl mx-auto px-3 pb-28">
+   <div className="pt-2 pb-1 text-xs text-slate-500">${G0[2]} ${G0[1]}${TABN[tab]&&G0[3].length>1?" › "+TABN[tab]:""}</div>
+   ${G0[3].length>1?h`<div className="flex flex-wrap gap-2 pb-3">${G0[3].map(([k,n])=>h`<button key=${k} className=${"chip "+(tab===k?"on":"")} onClick=${()=>nav(k)}>${n}${dt(k)}</button>`)}</div>`:null}
+   ${body}</div>
+  <div className="bnav"><div className="bnav-in">${GROUPS.map(g=>h`<button key=${g[0]} className=${gk===g[0]?"on":""} onClick=${()=>nav(gk===g[0]?g[3][0][0]:(last[g[0]]||g[3][0][0]))}><span className="ic">${g[2]}${dt(g[0])}</span>${g[1]}</button>`)}</div></div>
+  ${sheets.length?h`<${Sheet} n=${sheets[sheets.length-1]} s=${s} set=${set} close=${()=>setSheets([])} back=${sheets.length>1?()=>setSheets(a=>a.slice(0,-1)):null}/>`:null}</div>`}
+
 ReactDOM.createRoot(document.getElementById("root")).render(h`<${App}/>`);
 </script></body></html>
