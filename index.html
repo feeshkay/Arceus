@@ -98,7 +98,7 @@ Thunder / Ice / Fire Punch|Electric/Ice/Fire|High|Cheap early coverage for Noble
 Recover / Roost|Normal/Flying|High|Self-healing saves Potions during long Alpha runs.
 Calm Mind / Bulk Up|Psychic/Fighting|Medium|Agile Style boosts stats while often granting an immediate follow-up turn.
 Earth Power / Flamethrower / Ice Beam / Thunderbolt|Special|Post-Game|High-accuracy special coverage for Volo and Arceus.`);
-const REQ=P(`22|Eerie Apparitions in the Night|Collect all 107 Spiritomb Wisps across Hisui.
+const REQ0=P(`22|Eerie Apparitions in the Night|Collect all 107 Spiritomb Wisps across Hisui.
 27|Help Wanted: Plowing the Fields|Expands Jubilife Farm plot #1.
 42|Help Wanted: Watering the Fields|Expands Jubilife Farm plot #2.
 60|Help Wanted: Rock Smashing in the Fields|Expands Jubilife Farm plot #3 (unlocks Mint harvests for Nature changing).
@@ -107,6 +107,9 @@ const REQ=P(`22|Eerie Apparitions in the Night|Collect all 107 Spiritomb Wisps a
 61|Even More New Wares|Expands Choy’s General Store inventory (tier 3).
 71|New Wares Yet Again|Unlocks full General Store inventory including Ultra Ball & Sticky Glob ingredients.
 95|A New Anomaly|Starts the Massive Mass Outbreak questline (Requests 95-102).`);
+const RN=['Wurmple Can Evolve', 'Adorable Starly', 'What Shinx’s Gleaming Eyes See', 'Big Buizel, Little Buizel', 'What It Takes to Be Awesome', 'Mushroom Cake Marketing', 'Playing with Drifloon', 'Bothersome Bidoof', 'Zubat’s Eyes', 'Wurmple’s Evolved!', 'The Timbre of the Fields', 'The Perfect Pickling Stone', 'Trees That Bear Berries', 'Berry Helpful', 'Balloon Race in the Fieldlands', 'Strange Happenings at Midnight', 'To Bloom or Not to Bloom', 'Please! Make Me a Pokeshi Doll!', 'A Peculiar Ponyta', 'The Mysterious Will-o’-the-Wisp', 'Back-Alley Mr. Mime', 'Eerie Apparitions in the Night', 'Getting Ahold of New Wares', 'Inspiration from Hippopotas', 'The Pokemon in the Photograph', 'Clever Caps for Clever Kids', 'Help Wanted: Plowing the Fields', 'Measuring Your Compatibility', 'The Search for Bitter Leaves', 'A Beautiful Rose...', 'Setting Up the Bogbound Camp', 'The Headache-Stricken Psyduck', 'What a Massive Mushroom!', 'Croagunk’s Curative Poison', 'Battling with Pachirisu', 'Ingenious Ideas', 'The Fragrance of Nostalgic Herbs', 'Gone Astray...in the Mirelands', 'All about Magikarp', 'The Charm Lost in the Swamp', 'An Elegant Tail', 'Help Wanted: Watering the Fields', 'More New Wares', 'The Pokemon in the Nighttime Photo', 'Shellos of the East and West', 'Setting Up the Coastlands Camp', 'Balloon Race in the Coastlands', 'The Taste of Home', 'A Token of Gratitude', 'Double the Tails, Double the Fun', 'Scyther’s Sharp Scythes', 'Eevee’s Evolutions', 'Octillery’s Ink', 'Serving Up Sandwich Ingredients', 'Poor, Pitiful Happiny', 'Getting Help from Machoke', 'The Taste of Honey', 'Gone Astray...in the Coastlands', 'Misdreavus the Hairstyle Muse', 'Help Wanted: Rock Smashing in the Fields', 'Even More New Wares', 'The Pokemon in the River Photo', 'Fancy, Fashionable Wormadam', 'Getting to Know Ghosts', 'Setting Up the Mountain Camp', 'The Sea’s Legend', 'The Clefairy’s Moonlit Dance', 'A Nosepass to Guide the Way', 'Gone Astray...in the Highlands', 'Colorful New Looks', 'New Wares Yet Again', 'Pesselle’s Easy Errand', 'Which Is the Real Burmy?', 'A Bit of Help from Blissey', 'Kirlia the Hairstyle Muse', 'Mushroom Hunting with Swinub', 'Gone Astray...in the Icelands', 'Setting Up the Icepeak Camp', 'Balloon Race in the Icelands', 'The Perfect Pickle Recipe', 'In Search of a Fiery Pokemon', 'Traces of a Lost Village', 'Snow-White Vulpix in the Snow', 'The Bergmite Enthusiast', 'At Home under the Eaves', 'Gone Astray...in the Fieldlands', 'Rolling with Spheal', 'Steely Lucario', 'The Diamond Clan’s Treasure', 'The Pearl Clan’s Treasure', 'On the Trail of Giratina', 'A Token of Gratitude (Shaymin)', 'The Darksome Nightmare', 'Incarnate Forces of Hisui', 'A New Anomaly', 'Massive Mass Outbreak in the Mirelands', 'Massive Mass Outbreak in the Coastlands', 'Massive Mass Outbreak in the Highlands', 'Tricky Harvest', 'Massive Mass Outbreak in the Icelands', 'Massive Mass Outbreak in the Fieldlands', 'Daybreak', 'Digging for Treasure', 'Battling the Security Corps', 'The Ultimate Kitchen Tools', 'Adaman’s Hope', 'Irida’s Wish', 'Bidoof’s Path of Solitude', 'Eevee’s Path of Solitude', 'Wormadam’s Path of Solitude', 'Abra’s Path of Solitude', 'Blissey’s Path of Solitude', 'Sneasel’s Path of Solitude', 'Rotom’s Path of Solitude', 'Bastiodon’s Path of Solitude', 'Roselia’s Path of Solitude', 'Magikarp’s Path of Solitude', 'Ingo’s Path of Tenacity', 'Rematch with the Pearl Clan', 'Rematch with the Diamond Clan', 'Rematch with the Galaxy Team', 'The Eternal Battle Reverie'];
+const REQ=RN.map((n,i)=>{const o=REQ0.find(r=>+r[0]===i+1);return[String(i+1),n,o?o[2]:"Reward and details: see the request in your in-game log."]});
+
 const WISP={"Jubilife Village (7)":`Automatically given by Vessa when accepting Request 22.
 Behind the houses near the Training Grounds.
 Behind the southern houses near the Pasture.
@@ -589,25 +592,56 @@ Hisuian Lilligant (Lady of the Ridge)|Crimson Mirelands (Brava Arena)|30|Grass/F
 Hisuian Arcanine (Lord of the Isles)|Cobalt Coastlands (Molten Arena)|36|Fire/Rock|Hit its floating fireballs with Coast Balms to cancel the arena-wide explosion (five fireballs, one lost per balm).|When it splits the arena with lava, dodge its charge to open a long balm window.|Gastrodon, Gyarados, Whiscash, Hisuian Samurott|Earth Power, Water Pulse, Aqua Tail, Bulldoze
 Hisuian Electrode (Lord of the Hollow)|Coronet Highlands (Moonview Arena)|46|Electric/Grass|Sprint in a wide circle to outrun falling Voltorb and homing orbs.|Dodge Self-Destruct (red expanding circle) at the last second, then throw Mountain Balms while it is dazed.|Hisuian Typhlosion, Mamoswine, Crobat, Hisuian Goodra|Flamethrower, Infernal Parade, Ice Fang, Sludge Bomb
 Hisuian Avalugg (Lord of the Tundra)|Alabaster Icelands (Icepeak Arena)|56|Ice/Rock|Stay on a far edge during icicle barrages; dodge sideways from the central ice beam.|Throw Snow Balms continuously between patterns. Its Defense is huge but Sp. Def is tiny, so bulky physical attackers or resisted special hits work.|Lucario, Hisuian Decidueye, Hisuian Goodra, Machamp|Aura Sphere, Close Combat, Triple Arrows, Flash Cannon`);
-const SR=P(`1 Star|500|20|Heavy Ball recipe, Obsidian Fieldlands
-2 Stars|1800|30|Great Ball, Feather Ball, Super Potion recipes, Crimson Mirelands
-3 Stars|3500|40|Cobalt Coastlands
-4 Stars|6000|50|Leaden Ball, Hyper Potion recipes, Coronet Highlands
+const SR=P(`1 Star|500|20|Heavy Ball and Revive recipes, Obsidian Fieldlands
+2 Stars|1800|30|Feather Ball and Super Potion recipes, Crimson Mirelands
+3 Stars|3500|40|Great Ball recipe, Cobalt Coastlands
+4 Stars|6000|50|Leaden Ball and Hyper Potion recipes, Coronet Highlands
 5 Stars|8500|65|Wing Ball recipe, Alabaster Icelands
-6 Stars|12000|80|10x Rare Candy, 5x Grit Gravel
-7 Stars|16000|100|Full obedience (Lv. 100), 10x Grit Gravel, 3x Grit Pebble
-8 Stars|25000|100|10x Ultra Ball, 5x Grit Pebble
+6 Stars|12000|80|Ultra Ball and Max Potion recipes, 10x Rare Candy, 5x Grit Gravel
+7 Stars|16000|100|Gigaton Ball recipe, full obedience (Lv. 100), 10x Grit Gravel, 3x Grit Pebble
+8 Stars|25000|100|Jet Ball and Full Restore recipes, 10x Ultra Ball, 5x Grit Pebble
 9 Stars|38000|100|10x Grit Pebble, 3x Grit Rock
 10 Stars (Full)|60000|100|20x Rare Candy, 10x Grit Rock`);
-const CR=P(`Ultra Ball|Poké Balls|20|Apricorn:1,Tumblestone:2,Iron Chunk:2|Apricorns/Tumblestones: shake trees/ores in all regions. Iron Chunks: black ore in Cobalt Coastlands, Coronet Highlands, Alabaster Icelands, or buy from Anvin (Craftworks).
-Jet Ball|Poké Balls|15|Apricorn:1,Sky Tumblestone:2,Iron Chunk:2|Sky Tumblestones: blue crystal deposits in Coronet Highlands (Celestica Ruins, Wayward Wood) and Cobalt Coastlands cliffs.
-Gigaton Ball|Poké Balls|10|Apricorn:1,Black Tumblestone:2,Iron Chunk:2|Black Tumblestones: dark ore in Crimson Mirelands (Ursa’s Ring, Holm of Trials) and Alabaster Icelands.
-Sticky Glob|Stun Items|15|Ball of Mud:1,Spoiled Apricorn:1,Caster Fern:1|Mud: Crimson Mirelands ground/swamps. Spoiled Apricorn: wild drops or near trees. Caster Fern: Crimson Mirelands & Cobalt Coastlands grass. Or buy from Choy after Request 71.
-Smoke Bomb|Stealth Items|10|Sootfoot Root:1,Caster Fern:1|Sootfoot Root: Crimson Mirelands (Scarlet Bog, Golden Lowlands) & Coronet Highlands. Caster Fern: Crimson Mirelands.
-Stealth Spray|Stealth Items|5|Hopo Berry:1,Bugwort:3,Caster Fern:1|Bugwort: Obsidian Fieldlands (Grueling Grove, The Heartwood). Hopo Berry: shaking berry trees everywhere.
-Full Restore / Max Potion|Healing|10|Hyper Potion:1,Full Heal:1|Full Heal can be swapped for 1 King’s Leaf + 1 Medicinal Leek. King’s Leaf: Alabaster Icelands & Coronet Highlands. Medicinal Leek: Obsidian Fieldlands & Crimson Mirelands, or Jubilife Farm.
-Max Revive|Healing|5|Revive:1,King’s Leaf:1|Vivichoke (for Revives): Crimson Mirelands & Coronet Highlands, or Jubilife Farm.
-Aguav Berry (MMO Scouting)|Outbreak Scouting|15|-|Not craftable. Berry trees in Coronet Highlands & Alabaster Icelands, or grow at Jubilife Farm.`);
+const CR=P(`Poké Ball|Balls|30|Apricorn:1,Tumblestone:1|Unlock: Mission 2
+Great Ball|Balls|25|Apricorn:1,Iron Chunk:1,Tumblestone:1|Unlock: 3 Stars
+Ultra Ball|Balls|20|Apricorn:1,Iron Chunk:2,Tumblestone:2|Unlock: 6 Stars
+Feather Ball|Balls|15|Apricorn:1,Sky Tumblestone:1|Unlock: 2 Stars
+Wing Ball|Balls|15|Apricorn:1,Sky Tumblestone:1,Iron Chunk:1|Unlock: 5 Stars
+Jet Ball|Balls|10|Apricorn:1,Sky Tumblestone:2,Iron Chunk:2|Unlock: 8 Stars
+Heavy Ball|Balls|10|Apricorn:1,Black Tumblestone:1|Unlock: 1 Star
+Leaden Ball|Balls|10|Apricorn:1,Black Tumblestone:1,Iron Chunk:1|Unlock: 4 Stars
+Gigaton Ball|Balls|10|Apricorn:1,Black Tumblestone:2,Iron Chunk:2|Unlock: 7 Stars
+Smoke Bomb|Stun and Stealth|10|Caster Fern:1,Sootfoot Root:1|Unlock: Mission 7
+Scatter Bang|Stun and Stealth|10|Pop Pod:1,Caster Fern:1|Unlock: Mission 8
+Sticky Glob|Stun and Stealth|15|Spoiled Apricorn:1,Ball of Mud:1,Caster Fern:1|Recipe: buy at Craftworks (or buy globs after Request 71)
+Stealth Spray|Stun and Stealth|5|Hopo Berry:1,Bugwort:3|Recipe: Rei/Akari after Mission 7
+Potion|Healing|10|Oran Berry:1,Medicinal Leek:1|Recipe: Rei/Akari in Mission 4
+Super Potion|Healing|10|Potion:1,Pep-Up Plant:1|Unlock: 2 Stars
+Hyper Potion|Healing|10|Super Potion:1,Vivichoke:1|Unlock: 4 Stars
+Max Potion|Healing|10|Sitrus Berry:1,King's Leaf:1|Unlock: 6 Stars
+Full Restore|Healing|5|Max Potion:1,Full Heal:1|Unlock: 8 Stars
+Full Heal|Healing|5|Cheri Berry:1,Pecha Berry:1,Rawst Berry:1,Aspear Berry:1|Recipe: buy at Craftworks
+Revive|Healing|10|Vivichoke:1,Medicinal Leek:2|Unlock: 1 Star
+Max Revive|Healing|5|Revive:1,King's Leaf:2|Recipe: buy at Craftworks
+Remedy|Status|5|Bugwort:2|Recipe: buy at Craftworks
+Fine Remedy|Status|5|Remedy:1,Pep-Up Plant:1|Recipe: buy at Craftworks
+Superb Remedy|Status|5|Fine Remedy:1,Vivichoke:1|Recipe: buy at Craftworks
+Max Ether|PP|3|Leppa Berry:1,Pep-Up Plant:2|Recipe: buy at Craftworks
+Max Elixir|PP|3|Max Ether:1,Pep-Up Plant:2|Recipe: buy at Craftworks
+Aux Power|Battle Boosts|5|Swordcap:2,Pep-Up Plant:1|Recipe: buy at Craftworks
+Aux Guard|Battle Boosts|5|Iron Barktongue:2,Pep-Up Plant:1|Recipe: buy at Craftworks
+Dire Hit|Battle Boosts|5|Direshroom:2,Candy Truffle:1|Recipe: buy at Craftworks
+Aux Evasion|Battle Boosts|5|Doppel Bonnets:2,Candy Truffle:1|Recipe: buy at Craftworks
+Aux Powerguard|Battle Boosts|5|Aux Power:1,Aux Guard:1,King's Leaf:1|Recipe: buy at Craftworks
+Star Piece|Valuables|3|Red Shard:3,Blue Shard:3,Green Shard:3,Stardust:1|Recipe: buy at Craftworks
+Mushroom Cake|Lures|5|Springy Mushroom:1,Cake-Lure Base:1|Recipe: Request 6
+Honey Cake|Lures|5|Dazzling Honey:1,Cake-Lure Base:1|Recipe: buy at Craftworks
+Grain Cake|Lures|5|Hearty Grains:1,Cake-Lure Base:1|Recipe: buy at Craftworks
+Bean Cake|Lures|5|Plump Beans:1,Cake-Lure Base:1|Recipe: buy at Craftworks
+Salt Cake|Lures|5|Crunchy Salt:1,Cake-Lure Base:1|Recipe: buy at Craftworks
+Old Gateau|Food|1|Plump Beans:1,Dazzling Honey:1,Sootfoot Root:1,Cake-Lure Base:1|Recipe: Taeko at Brava Arena
+Jubilife Muffin|Food|1|Hearty Grains:2,Hopo Berry:2,Razz Berry:1,Cake-Lure Base:1|Recipe: Request 48
+Twice-Spiced Radish|Food|1|Sand Radish:2,Crunchy Salt:2,Plump Beans:2,King's Leaf:2|Recipe: Request 80`);
 LISTS.story={n:"Story",p:"s",rows:MIS.map(r=>({id:"s"+r[0],t:"Mission "+r[0]+": "+r[1],sub:r[2]+" · "+r[3],body:r[4]}))};
 LISTS.nob={n:"Nobles",p:"n",rows:NOB.map((r,i)=>({id:"n"+i,t:(i+1)+". "+r[0],sub:r[1]+" · Lv. "+r[2]+" · "+r[3],body:"Balm phase:\n• "+r[4]+"\n• "+r[5]+"\nCounters: "+r[6]+"\nBest moves: "+r[7]}))};
 // ---------- V2 COMPONENTS ----------
@@ -648,17 +682,17 @@ function Satchel({s,set}){
  const R=CR.map(r=>({n:r[0],c:r[1],t:+r[2],g:r[3]==="-"?[]:r[3].split(",").map(x=>x.split(":")),w:r[4]}));
  const mats=[...new Set(R.flatMap(r=>r.g.map(x=>x[0])))];
  const can=r=>r.g.length?Math.min(...r.g.map(([k,n])=>Math.floor((inv[k]||0)/n))):null;
- const low=R.filter(r=>(inv[r.n]||0)<r.t);
+ const low=R.filter(r=>r.n in inv&&inv[r.n]<r.t);
  const num=(v,f)=>h`<input type="number" min="0" value=${v} onInput=${e=>f(+e.target.value)} className=${IN+" w-24"}/>`;
  return h`<div className="space-y-3">
   <div className="bg-slate-800/70 rounded-lg p-3"><h3 className="font-semibold text-amber-400 mb-2">Satchel</h3>
    <div className="flex flex-wrap gap-4 text-sm items-center"><label>Slots (20–60) ${num(sa.slots,v=>up("slots",Math.min(60,Math.max(20,v||20))))}</label><label>Used ${num(sa.used,v=>up("used",v))}</label><span>Free: ${sa.slots-sa.used}</span><label>Next upgrade cost ${num(sa.cost,v=>up("cost",v))}</label></div>
    <p className="text-xs text-slate-400 mt-2">Total cost 20→60 slots: 4,399,500. Suggested stop: 35–40 slots (costs escalate past 40, reaching 1,000,000 for slot 60). Per-slot prices weren’t in the data, so enter Bagin’s quoted price.</p></div>
   ${low.length?h`<div className="bg-red-900/40 border border-red-700 rounded-lg p-3 text-sm">Low stock: ${low.map(r=>r.n).join(", ")}</div>`:null}
-  ${R.map(r=>{const n=inv[r.n]||0,lo=n<r.t,c=can(r);return h`<div key=${r.n} className=${"rounded-lg p-3 border "+(lo?"border-amber-600 bg-slate-800":"border-slate-700 bg-slate-800/70")}>
+  ${R.map(r=>{const n=inv[r.n]||0,lo=(r.n in inv)&&n<r.t,c=can(r);return h`<div key=${r.n} className=${"rounded-lg p-3 border "+(lo?"border-amber-600 bg-slate-800":"border-slate-700 bg-slate-800/70")}>
    <div className="flex flex-wrap items-center gap-3"><b>${r.n}</b><span className="text-xs text-slate-400">${r.c} · restock below ${r.t}</span>${lo?h`<span className=${"text-xs px-2 rounded "+(n===0?"bg-red-600":"bg-amber-600")}>Low Stock Alert</span>`:null}<span className="ml-auto">${num(n,v=>cs(r.n,v))}</span></div>
    <div className="text-xs text-slate-300 mt-1">${r.g.length?"Recipe: "+r.g.map(([k,q])=>q+" "+k).join(" + ")+" · can craft now: "+c:"Not craftable"}</div><div className="text-xs text-slate-400">${r.w}</div></div>`})}
-  <h3 className="font-semibold text-amber-400">Raw materials</h3><div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">${mats.map(k=>h`<label key=${k} className="flex justify-between items-center gap-2 bg-slate-800/70 rounded p-2">${k}${num(inv[k]||0,v=>cs(k,v))}</label>`)}</div></div>`}
+  <h3 className="font-semibold text-amber-400">Raw materials</h3><div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">${mats.map(k=>h`<label key=${k} className="flex justify-between items-center gap-2 bg-slate-800/70 rounded p-2"><span>${k}<span className="block text-xs text-slate-400">${MAT[k]||""}</span></span>${num(inv[k]||0,v=>cs(k,v))}</label>`)}</div></div>`}
 function Shiny(){const [o,so]=useState({r:0,p:0,c:0,x:0});
  const n=1+(o.p?3:o.r?1:0)+(o.c?3:0)+o.x,pr=1-Math.pow(1-1/4096,n);
  const cb=(k,l)=>h`<label className="flex gap-2 mb-2"><input type="checkbox" checked=${!!o[k]} onChange=${e=>so({...o,[k]:e.target.checked?1:0})} className="accent-amber-500"/>${l}</label>`;
@@ -673,7 +707,278 @@ const Sec=({t,l})=>h`<div className="mb-4"><h3 className="font-semibold text-amb
 const Doc=S=>()=>h`<div>${S.map(([t,l])=>h`<${Sec} key=${t} t=${t} l=${l}/>`)}</div>`;
 const PATH=Doc([["Unlock",["Complete Request 102 (Daybreak), then talk to Gared at the Jubilife Village Training Grounds."]],["Rules",["1-on-1 single-species challenge against a fixed opponent.","Items cannot be used in battle.","Each cleared species gets a Pokédex mark (not needed for Shiny Charm or Arceus, needed for true 100%)."]],["Winning formula",["Raise HP, defenses and main attacking stat to Effort Level 9–10 with Grit.","Use Zisu’s tutor for coverage or healing (Recover, Roost, Rest, Drain Punch, Leech Life).","Weak babies (Magikarp, Wurmple, Abra, Kricketot, Unown, Burmy): Lv. 80–100, EL 10, Agile Style status/stat moves or Struggle."]],["Hardest trials",["Magikarp vs Lv. 50 Electrode: Lv. 90+, EL 10 HP/Def/SpDef; survive Self-Destruct or Splash until Struggle.","Wurmple vs Lv. 30 Staravia: Lv. 85+, EL 10 HP/Def/Atk; Poison Sting, outlast with Tackle.","Kricketot vs Lv. 40 Cherrim: Lv. 85+, EL 10; teach Struggle Bug and spam it.","Abra vs Lv. 45 Mr. Mime: Lv. 85+, EL 10; teach Shadow Ball.","Unown vs Lv. 55 Gastly, Haunter & Gengar (3v1): Lv. 90+, EL 10 SpA/Spe/HP; Hidden Power (Psychic)."]]]);
 const MECH=Doc([["Differences from mainline",["No breeding or eggs.","No held items or abilities in battle (exceptions: Regigigas’s Slow Start, Cherrim’s Flower Gift).","Effort Levels 0–10 via Grit replace EVs/IVs (IVs set the starting EL).","Evolution is triggered manually from the satchel/party menu."]],["Action speed",["Hidden Action Time counter decides turn order; higher Speed shortens recovery so fast Pokémon can act repeatedly.","Standard moves cost 8; priority moves (Quick Attack, Aqua Jet, Ice Shard, Bullet Punch, Mach Punch) cost 5; heavy moves (Hyper Beam, Giga Impact, Roar of Time, Self-Destruct) cost 11–12."]],["Move mastery",["Master a move by leveling roughly 10 past its learn level, or feed a Seed of Mastery at Zisu’s Training Grounds.","Agile Style: 0.8× power, recovery −3 (often an immediate extra turn), 2 PP.","Strong Style: 1.2× power (1.25× on weak moves), +10–20% accuracy and secondary chance, recovery +5, 2 PP."]],["Research",["Each task is 1 point toward Level 10; double-arrow tasks give 2.","Lv. 10 on all 239 required species unlocks the Shiny Charm.","Finishing every task on a species marks it Perfect and adds shiny rolls for it."]],["Alphas",["At least three 31-IV stats (start at EL 3+ in those).","Spawn with a mastered tutor move.","Drop Seeds of Mastery, Exp. Candy and Grit.","Static Alphas respawn when you return to Jubilife Village and re-enter the region."]],["Ride unlocks",["Wyrdeer (M5), Ursaluna (M8), Basculegion (M10), Sneasler (M11), Braviary (M12)."]]]);
-const NEW={dex:Dex,types:TypesTab,roster:Roster,sat:Satchel,shiny:Shiny,stars:Stars,path:PATH,mech:MECH};
+// ---------- V3: GUIDE / NEXT STEPS / QUICK LOG ----------
+const GD=P(`1|Choose Rowlet, Cyndaquil or Oshawott;;Catch Bidoof, Starly and Shinx at Prelude Beach;;Get the Arc Phone
+2|Head to the Obsidian Fieldlands;;Finish research tasks until you hit 500 points (1 Star);;Report to Cyllene
+3|Visit Anvin at the Craftworks;;Learn crafting and make your first items
+4|Go to Heights Camp;;Battle Mai’s Munchlax (Lv. 10);;Investigate the raging Alpha Kricketune
+5|Beat or catch Alpha Kricketune (Lv. 12) at Nature’s Pantry;;Receive the Celestica Flute and unlock Wyrdeer
+6|Go to Galaxy Hall;;Battle Commander Kamado’s Snorlax (Lv. 14)
+7|Battle Lian (Lv. 15 Goomy) at Grandtree Arena;;Craft Forest Balms;;Quell Noble Kleavor (Lv. 18): dodge its charge, throw balms while it recovers
+8|Reach 2 Stars (1,800 pts);;Enter the Crimson Mirelands;;Recover the Wall Fragment from the Miss Fortune sisters;;Unlock Ursaluna
+9|Report to Galaxy Hall;;Prepare Marsh Balms and a team for the frenzied Noble (Hisuian Lilligant, Brava Arena, Lv. 30): Flying, Psychic, Fire and Ice attackers work well
+10|Talk to Kamado, then Cyllene (needs 3 Stars, 3,500 pts); Lian at the gate gives Grit;;Enter the Cobalt Coastlands and battle Irida (winning is optional);;Ride Wyrdeer to Veilstone Cape and meet Palina; the smaller, quieter Growlithe is the heir;;Go to Aipom Hill; Iscan needs a Dusclops, so catch one at night in Deadwood Haunt;;Give Iscan the Dusclops, meet him at Ginkgo Landing, feed Basculegion and play the Celestica Flute (Splash Plate);;Ride Basculegion to Firespit Island and beat the three Miss Fortune Sisters at Molten Arena;;Quell frenzied Hisuian Arcanine (Lv. 36): dodge the straight charge and the jump slam, hit its five fireballs with balms, send a Water or Ground Pokémon when its guard breaks (Flame Plate);;Report to Laventon at a camp, then to Kamado
+11|Talk to Kamado, then battle Adaman outside Galaxy Hall (kill Leafeon first);;Reach 4 Stars (6,000 pts) and show Cyllene;;Meet Ingo at the Training Grounds, then go to the Coronet Highlands;;Follow Ingo through Wayward Cave (torches are out);;Beat Melli’s Skuntank (Lv. 41, only weak to Ground);;Walk the Ancient Quarry, then meet Ingo at Clamberclaw Cliffs;;Beat Ingo (Machoke, then Gliscor or Tangela; Ice moves are great) for the Toxic Plate and Sneasler;;Climb the cliffs and quell Electrode (Moonview Arena, Lv. 46): circle wide, dodge Self-Destruct at the last second
+12|Talk to Kamado and show Cyllene 5 Stars (8,500 pts);;Beat Rei/Akari at the front gate (Mr. Mime leads; Pikachu and Staravia are not fully evolved);;Go to Avalugg’s Legacy and battle Gaeric (hit Glalie first, it is twice the level of Froslass);;Chase Sabi south, then to Snowpoint Temple in the far north;;Door 1: press rock, steel, ice. Door 2: ice, rock, steel, rock, ice. Door 3: steel, ice, rock, ice, steel, rock;;Beat Sabi (Rhyperior first; Ground types do well against all three);;Beat Braviary on the roof for the Sky Plate and ride Braviary;;Glide to Avalugg’s Legacy and touch the ice spears for Eternal Ice, then bring it to Gaeric at Icepeak Arena;;Quell Hisuian Avalugg (Lv. 56): Water, Grass, Ground, Rock hit it; Fighting and Steel hit it ×4; use bulky physical Pokémon (Icicle Plate)
+13|Return to Galaxy Hall; the sky turns and Kamado exiles you;;Walk to the Fieldlands Camp, then see Lian at Grandtree Arena and Mai at Worn Bridge (both turn you down);;Volo takes you to the Ancient Retreat to meet Cogita;;Choose Adaman (Dialga first) or Irida (Palkia first); you can still finish the Pokédex either way
+14|Go to Lake Verity (fly in, or run up through Sandgem Flats);;Hold up the Arc Phone to open the cave;;Beat or catch Alpha Hisuian Goodra (Lv. 58, never shiny);;Answer Mesprit’s questions for Mesprit’s Plume
+15|Fast travel to Diamond Settlement, climb east to Lake Valor and cross to the island;;Beat or catch Alpha Overqwil (Lv. 58); catching it adds a Pokédex entry;;Throw Marsh Balms at Azelf and refuse to give up each time for Azelf’s Fang
+16|Fly to Icepeak Camp or Pearl Settlement, go to Lake Acuity island;;Beat or catch Alpha Hisuian Zoroark (Lv. 58); a Dark attacker is its only weakness;;Answer Uxie’s riddle with 60131 for Uxie’s Claw
+17|Go to the Shrouded Ruins; the guardians forge the Red Chain;;In Jubilife, see Cyllene; you are reinstated;;Fly to Summit Camp (Volo gives 3 Max Potions) and ride to the Stone Portal;;Beat Beni (Mismagius first; Ghost and Psychic attackers work well);;Beat Kamado at the Temple of Sinnoh (Braviary first; Esper Wing crits);;Catch Dialga or Palkia (Lv. 65): chip it down, use sleep or paralysis; you get 10 Ultra Balls
+18|Talk to Laventon, then go to the Primeval Grotto;;Beat Charm (Rhydon, then Gengar; beware Hypnosis);;Return to Galaxy Hall to receive the Origin Ball;;Talk to Cogita and keep your captured legend in your party;;At the Temple of Sinnoh quell the Origin Forme (Lv. 65) with Space/Time Balms only; its guard never breaks;;Credits roll; the phone says Seek out all Pokémon
+19|Return to Jubilife Village after the credits;;Speak with Volo and Cogita to start hunting the Plates
+20|Visit Cogita at the Ancient Retreat;;She unlocks Missions 21 to 24
+21|Catch Mesprit, Azelf and Uxie at their lakes (Uxie answer 60131);;Receive the Draco, Splash and Mind Plates
+22|Go to Lava Dome Sanctum on Firespit Island;;Throw Mud Balls or Sticky Globs to break Heatran’s magma shield;;Weaken and catch Heatran (Lv. 70); Ground attackers are best
+23|Go to Moonview Arena at night;;Controls are reversed; stun Cresselia and catch it (Lv. 70)
+24|Solve Snowpoint Temple’s statue doors (codes in Mission 12);;Catch Regigigas (Lv. 70)
+25|Go to Prelude Beach;;Beat Commander Kamado: Golem, Clefable, Hisuian Braviary, Heracross (all Lv. 65) and Snorlax (Lv. 66); you can rematch him later at the Training Grounds
+26|Go to the Temple of Sinnoh;;Beat Volo’s six Pokémon (Lv. 68); he has one Full Restore, used on Garchomp;;Giratina Altered (Lv. 70) comes out at once, no healing between;;When it faints it returns as Origin Forme at full health; beat it too;;Receive the Spooky Plate and Azure Flute
+27|Catch 239 required entries (237 standard + Manaphy + Phione);;Play the Azure Flute at the Temple of Sinnoh;;Beat or catch Arceus (Lv. 75) for the Legend Plate`);
+const BOSS=P(`Adaman|11|Leafeon is the real threat; Eevee second.|Leafeon:Grass,Eevee:Normal
+Melli|11|Only one Pokémon; bring Ground attackers.|Skuntank:Poison/Dark
+Ingo|11|Ice attackers clean up Gliscor and Tangela.|Machoke:Fighting,Gliscor:Ground/Flying,Tangela:Grass
+Rei/Akari|12|Mr. Mime always leads; use Agile Style for extra turns.|Mr. Mime:Psychic/Fairy,Pikachu:Electric,Staravia:Normal/Flying
+Gaeric|12|Both out at once; Froslass can freeze (frostbite) to boost Hex.|Glalie:Ice,Froslass:Ice/Ghost
+Sabi|12|Ground-types or Ground moves beat all three; Rhyperior first.|Rhyperior:Ground/Rock,Magmortar:Fire,Electivire:Electric
+Beni|17|Mismagius leads; later order depends on your active Pokémon. He can use Max Potions.|Mismagius:Ghost,Sneasler:Fighting/Poison,Gardevoir:Psychic/Fairy,Gallade:Psychic/Fighting
+Commander Kamado|17|Hisuian Braviary leads; your lake Alphas (Overqwil, Zoroark, Goodra) match up well. Beware High Horsepower from Snorlax.|Hisuian Braviary:Psychic/Flying,Golem:Rock/Ground,Clefable:Fairy,Snorlax:Normal
+Charm|18|Rhydon first (Water or Grass), then a physical attacker on frail Gengar.|Rhydon:Ground/Rock,Gengar:Ghost/Poison
+Commander Kamado (Prelude Beach and Training Grounds rematches)|25|One-time fight at Prelude Beach, same team in later rematches. Snorlax is Lv. 66, the rest Lv. 65.|Golem:Rock/Ground:65:Iron Head+Stone Edge+Thunder Punch+Bulldoze,Clefable:Fairy:65:Draining Kiss+Psychic+Calm Mind+Water Pulse,Hisuian Braviary:Psychic/Flying:65:Esper Wing+Air Slash+Quick Attack,Heracross:Bug/Fighting:65:Close Combat+Swords Dance+Pin Missile+Aerial Ace,Snorlax:Normal:66:Zen Headbutt+High Horsepower+Giga Impact+Fire Punch
+Volo|26|Six Pokémon first (one Full Restore, saved for Garchomp). You do not get to heal before Giratina appears.|Spiritomb:Ghost/Dark:68:Hypnosis+Dark Pulse+Extrasensory+Shadow Ball,Roserade:Grass/Poison:68:Poison Jab+Petal Dance+Spikes,Togekiss:Fairy/Flying:68:Calm Mind+Moonblast+Extrasensory+Air Slash,Hisuian Arcanine:Fire/Rock:68:Raging Fury+Crunch+Rock Slide,Lucario:Fighting/Steel:68:Close Combat+Crunch+Bulk Up+Bullet Punch,Garchomp:Dragon/Ground:68:Dragon Claw+Earth Power+Slash+Iron Head
+Giratina (Altered then Origin)|26|Appears right after Volo’s team. Its stats are boosted and it takes less poison damage. When Altered Forme faints it turns into Origin Forme at full health, so plan for two fights in a row. If you lose you redo Volo’s team.|Giratina Altered:Ghost/Dragon:70:Aura Sphere+Dragon Claw+Earth Power+Shadow Force,Giratina Origin:Ghost/Dragon:70:Aura Sphere+Dragon Claw+Earth Power+Shadow Force`);
+const wk=ty=>TYPES.filter(a=>mult(ty,a)>1).map(a=>a+(mult(ty,a)>2?" ×4":"")).join(", ")||"none";
+const GU=GD.map(r=>({n:+r[0],st:r[1].split(";;")}));
+const BO=BOSS.map(r=>({n:r[0],ms:r[1].split(",").map(Number),tip:r[2],m:r[3].split(",").map(x=>{const a=x.split(":");return{n:a[0],t:a[1].split("/"),lv:a[2],mv:a[3]}})}));
+const tgl=(set,k)=>set(p=>({...p,c:{...p.c,[k]:!(p.c||{})[k]}}));
+function Boss({b}){return h`<details className="ml-2 mb-1 bg-slate-900/60 rounded p-2"><summary className="cursor-pointer text-sm text-amber-300">⚔ ${b.n}</summary><div className="text-xs text-slate-300 my-1">${b.tip}</div>${b.m.map(x=>h`<div key=${x.n} className="text-xs">${x.n}${x.lv?" Lv. "+x.lv:""} (${x.t.join("/")}): weak to ${wk(x.t)}${x.mv?" · moves: "+x.mv.replace(/\+/g,", "):""}</div>`)}</details>`}
+function Guide({s,set}){const c=s.c||{};
+ return h`<div><p className="text-sm text-slate-400 mb-2">Tick each step as you go. Mission boxes sync with the Story tab and Dashboard.</p>${MIS.map(m=>{const n=+m[0],g=GU.find(x=>x.n===n),st=g?g.st:[m[4]],d=st.filter((_,i)=>c["g"+n+"_"+i]).length;
+  return h`<details key=${n} className="bg-slate-800/70 rounded-lg border border-slate-700 mb-2"><summary className="flex items-center gap-3 p-3 cursor-pointer"><input type="checkbox" checked=${!!c["s"+n]} onClick=${e=>e.stopPropagation()} onChange=${()=>tgl(set,"s"+n)} className="w-5 h-5 accent-amber-500"/><div className="flex-1"><div className=${c["s"+n]?"line-through opacity-60":"font-medium"}>Mission ${n}: ${m[1]}</div><div className="text-xs text-slate-400">${m[2]} · needs ${m[3]} · ${d}/${st.length} steps</div></div></summary>
+  <div className="px-4 pb-3 space-y-1">${st.map((t,i)=>h`<label key=${i} className="flex gap-2 text-sm"><input type="checkbox" checked=${!!c["g"+n+"_"+i]} onChange=${()=>tgl(set,"g"+n+"_"+i)} className="mt-1 accent-amber-500"/><span>${i+1}. ${t}</span></label>`)}${BO.filter(b=>b.ms.includes(n)).map(b=>h`<${Boss} key=${b.n} b=${b}/>`)}</div></details>`})}</div>`}
+function Plan({s,set}){const c=s.c||{},inv=s.inv||{},ro=s.ro||[],sv=s.sv||{},pts=+((s.m||{}).pts)||0,ty=m=>m.t2?[m.t1,m.t2]:[m.t1],el=m=>m.el.reduce((a,b)=>a+b,0);
+ const nx=MIS.find(m=>!c["s"+m[0]]),need=nx?+((nx[3].match(/\d+/)||[0])[0]):0,rk=SR.filter(r=>pts>=+r[1]).length;
+ const bs=nx?BO.filter(b=>b.ms.includes(+nx[0])):[],wT=[...new Set(bs.flatMap(b=>b.m.flatMap(x=>TYPES.filter(a=>mult(x.t,a)>1))))];
+ const low=CR.filter(r=>r[0] in inv&&inv[r[0]]<+r[2]);
+ const cats=[["Pokédex entries",DEX.filter(d=>c["dc"+d.i]).length,242],["Spiritomb Wisps",WL.filter(w=>c[w.id]).length,WL.length],["Unown",UNO.filter(u=>c["u"+u[0]]).length,UNO.length],["Old Verses",VER.filter((_,i)=>c["v"+i]).length,VER.length],["Legendaries",LEG.filter(r=>c["l"+r[0]]).length,LEG.length],["Key Requests",REQ.filter(r=>c["r"+r[0]]).length,REQ.length]].sort((a,b)=>a[1]/a[2]-b[1]/b[2]);
+ const txt=["HISUI STATUS","Next mission: "+(nx?nx[0]+" "+nx[1]:"all done"),"Research points: "+pts+" (rank "+rk+")","Missions done: "+MIS.filter(m=>c["s"+m[0]]).map(m=>m[0]).join(", "),"Requests done: "+REQ.filter(r=>c["r"+r[0]]).map(r=>r[0]).join(", "),"Active/saved requests: "+Object.keys(sv).filter(k=>sv[k]).join(", "),"Roster: "+ro.map(m=>m.n+" Lv"+m.lv+" EL"+el(m)).join("; "),"Low stock: "+low.map(r=>r[0]+" "+(inv[r[0]]||0)+"/"+r[2]).join(", "),"Lowest categories: "+cats.slice(0,3).map(x=>x[0]+" "+x[1]+"/"+x[2]).join(", ")].join("\n");
+ const bx="bg-slate-800/70 rounded-lg p-3";
+ return h`<div className="space-y-3"><div className=${bx}><h3 className="font-semibold text-amber-400">Do this next</h3>${nx?h`<p className="text-sm">Mission ${nx[0]}: ${nx[1]} (${nx[2]}). ${nx[4]}</p>${need>rk?h`<p className="text-sm text-amber-400">You need ${need} Stars first: ${SR[need-1][1]-pts} more research points. Do research tasks in an unlocked area.</p>`:null}`:h`<p className="text-sm">Every story mission is ticked.</p>`}</div>
+ ${bs.length?h`<div className=${bx}><h3 className="font-semibold text-amber-400">Team for this mission’s fights</h3><p className="text-sm">Hit these types: ${wT.join(", ")}</p>${wT.map(a=>{const m=ro.filter(x=>ty(x).includes(a)).map(x=>x.n);return h`<div key=${a} className="text-xs">${a}: ${m.length?m.join(", "):"nobody on your roster; catch or raise a "+a+" Pokémon (Pokédex tab shows where)"}</div>`})}<p className="text-xs text-slate-500 mt-1">Add Pokémon in the Roster tab for better answers.</p></div>`:null}
+ <div className=${bx}><h3 className="font-semibold text-amber-400">Restock</h3>${low.length?low.map(r=>h`<div key=${r[0]} className="text-sm mb-1"><b>${r[0]}</b> ${(inv[r[0]]||0)}/${r[2]}. Recipe: ${r[3]==="-"?"not craftable":r[3].replace(/:/g," x").replace(/,/g,", ")}. <span className="text-slate-400">${r[4]}</span></div>`):h`<p className="text-sm">Nothing is low. Enter counts in the Satchel tab.</p>`}</div>
+ <div className=${bx}><h3 className="font-semibold text-amber-400">Biggest gaps</h3>${cats.slice(0,3).map(x=>h`<div key=${x[0]} className="text-sm">${x[0]}: ${x[1]}/${x[2]}</div>`)}</div>
+ <div className=${bx}><h3 className="font-semibold text-amber-400 mb-1">Copy and share</h3><textarea readOnly value=${txt} className="w-full h-40 bg-slate-900 border border-slate-700 rounded p-2 text-xs"/><p className="text-xs text-slate-400">Paste this into Claude for a deeper plan, or send it to anyone.</p></div></div>`}
+function Log({s,set}){const [n,sn]=useState(""),[lv,sl]=useState(5),lg=s.log||[],sv=s.sv||{},c=s.c||{};
+ const add=()=>{const d=DEX.find(x=>x.n.toLowerCase()===n.trim().toLowerCase()),nm=d?d.n:n.trim();if(!nm)return;set(p=>({...p,log:[{n:nm,lv},...(p.log||[])],c:d?{...p.c,["dc"+d.i]:true}:p.c}));sn("")};
+ const hits=nm=>REQ.filter(r=>(r[1]+" "+r[2]).toLowerCase().includes(nm.toLowerCase().split(" ").pop()));
+ const bt="px-2 py-1 rounded text-xs ";
+ return h`<div className="space-y-3"><div className="flex flex-wrap gap-2"><input list="dxn" placeholder="Pokémon you just caught" value=${n} onInput=${e=>sn(e.target.value)} className=${IN}/><datalist id="dxn">${DEX.map(d=>h`<option key=${d.i} value=${d.n}/>`)}</datalist><input type="number" min="1" max="100" value=${lv} onInput=${e=>sl(+e.target.value)} className=${IN+" w-20"}/><button onClick=${add} className="bg-amber-600 px-4 py-2 rounded">Log catch</button></div>
+ <p className="text-xs text-slate-400">Logging also ticks it as Caught in the Pokédex. Request matches below come from the Key Requests list.</p>
+ ${lg.map((e,i)=>{const hs=hits(e.n);return h`<div key=${i} className="bg-slate-800/70 rounded-lg p-3 text-sm"><div className="flex"><b>${e.n}</b><span className="ml-2 text-slate-400">Lv. ${e.lv}${e.lv>=10?" · Lv. 10+":""}</span><button onClick=${()=>set(p=>({...p,log:p.log.filter((_,j)=>j!==i)}))} className="ml-auto text-red-400">✕</button></div>
+ ${hs.length?hs.map(r=>h`<div key=${r[0]} className="mt-1 text-amber-300">Could help Request #${r[0]} (${r[1]}) <button onClick=${()=>tgl(set,"r"+r[0])} className=${bt+(c["r"+r[0]]?"bg-green-700":"bg-slate-700")}>${c["r"+r[0]]?"Done":"Mark done"}</button> <button onClick=${()=>set(p=>({...p,sv:{...p.sv,[r[0]]:!(p.sv||{})[r[0]]}}))} className=${bt+(sv[r[0]]?"bg-amber-700":"bg-slate-700")}>${sv[r[0]]?"Saved":"Save for later"}</button></div>`):h`<div className="text-xs text-slate-500 mt-1">No matching request in your list.</div>`}</div>`})}</div>`}
+// ---------- V4: ITEMS & STOCK / BATTLE PICKER ----------
+const ITM=P(`Grit Dust|20|Alpha drops, Star Rank rewards, Request #41; for stats at EL 0 to 2
+Grit Gravel|10|Alpha drops, Requests #35, #40, #56, Star Rank 6 and 7; for EL 3 to 5
+Grit Pebble|10|Requests #74, #81, #84, #103, Star Rank 7 to 9; for EL 6 to 8
+Grit Rock|5|Requests #86, #88, #102, #104, #106, #107, Star Rank 9 and 10; for EL 9
+Seed of Mastery|5|Alpha drops, Requests #96 and #108 to #117
+Exp. Candy S|10|Requests #4, #10, #12, #26, #30; Alpha drops
+Exp. Candy L|5|Requests #72, #76, #79, #84; Alpha drops
+Rare Candy|5|Requests #8, #15, #39, #49, #85, #87, Star Rank 6 and 10`);
+const lowList=s=>{const a=s.inv||{},b=s.itm||{},t=s.tg||{};return[...CR.filter(r=>r[0] in a&&a[r[0]]<+r[2]).map(r=>r[0]),...ITM.filter(r=>r[0] in b&&b[r[0]]<(t[r[0]]??+r[1])).map(r=>r[0]),...(s.cu||[]).filter(x=>(x.c||0)<x.t).map(x=>x.n)]};
+function Items({s,set}){const it=s.itm||{},tg=s.tg||{},cu=s.cu||[],[f,sf]=useState({n:"",t:5,w:""}),lo=lowList(s);
+ const R=[...ITM.map(r=>({n:r[0],t:tg[r[0]]??+r[1],w:r[2],c:it[r[0]]||0,e:r[0] in it,k:r[0]})),...cu.map((x,i)=>({n:x.n,t:x.t,w:x.w,c:x.c||0,e:true,i}))].sort((a,b)=>(lo.includes(b.n)?1:0)-(lo.includes(a.n)?1:0));
+ const num=(v,fn)=>h`<input type="number" min="0" value=${v} onInput=${e=>fn(Math.max(0,+e.target.value||0))} className=${IN+" w-20"}/>`;
+ const upC=(r,k,v)=>r.k?set(p=>({...p,[k==="c"?"itm":"tg"]:{...p[k==="c"?"itm":"tg"],[r.k]:v}})):set(p=>({...p,cu:p.cu.map((x,j)=>j===r.i?{...x,[k]:v}:x)}));
+ return h`<div className="space-y-2"><p className="text-sm text-slate-400">Enter what you have. Anything under its target gets a Low Stock alert here and on the Dashboard. Targets are editable. Crafted balls, bombs and potions with recipes are in the Satchel tab.</p><button onClick=${()=>set(p=>({...p,inv:{...p.inv,...SI},itm:{...p.itm,"Grit Dust":7,"Exp. Candy S":1}}))} className="bg-amber-600 px-3 py-2 rounded text-sm">Load my current items (from chat)</button>
+ ${lo.length?h`<div className="bg-red-900/40 border border-red-700 rounded p-2 text-sm">Low: ${lo.join(", ")}</div>`:null}
+ ${R.map(r=>{const l=r.e&&r.c<r.t;return h`<div key=${r.n} className=${"rounded-lg p-3 border "+(l?"border-amber-600 bg-slate-800":"border-slate-700 bg-slate-800/70")}><div className="flex flex-wrap items-center gap-2"><b>${r.n}</b>${l?h`<span className="text-xs px-2 rounded bg-amber-600">Low Stock Alert</span>`:null}${r.e?null:h`<span className="text-xs text-slate-500">not counted yet</span>`}<span className="ml-auto text-xs">have ${num(r.c,v=>upC(r,"c",v))} target ${num(r.t,v=>upC(r,"t",v))}</span>${r.i!=null?h`<button onClick=${()=>set(p=>({...p,cu:p.cu.filter((_,j)=>j!==r.i)}))} className="text-red-400">✕</button>`:null}</div><div className="text-xs text-slate-400 mt-1">${r.w||"No source noted"}</div></div>`})}
+ <div className="bg-slate-800/70 rounded-lg p-3 flex flex-wrap gap-2 items-center"><b className="text-amber-400 text-sm">Track another item</b><input placeholder="Item" value=${f.n} onInput=${e=>sf({...f,n:e.target.value})} className=${IN}/><input type="number" min="0" value=${f.t} onInput=${e=>sf({...f,t:+e.target.value})} className=${IN+" w-20"}/><input placeholder="Where to get it" value=${f.w} onInput=${e=>sf({...f,w:e.target.value})} className=${IN}/><button className="bg-amber-600 px-3 py-2 rounded" onClick=${()=>{if(f.n.trim()){set(p=>({...p,cu:[...(p.cu||[]),{...f,n:f.n.trim(),c:0}]}));sf({n:"",t:5,w:""})}}}>Add</button></div></div>`}
+const BT=[...BO.map(b=>({n:b.n+" (Mission "+b.ms[0]+")",tg:b.m.map(x=>x.t),lv:0})),...LEG.map(r=>({n:r[0]+" (legendary)",tg:[r[1].split("/")],lv:+r[2]})),...NOB.map(r=>({n:r[0].split(" (")[0]+" (noble)",tg:[r[3].split("/")],lv:+r[2]}))];
+const GR=v=>v<3?"Grit Dust":v<6?"Grit Gravel":v<9?"Grit Pebble":"Grit Rock";
+function Pick({s,set}){const ro=s.ro||[],[bi,sb]=useState(0),b=BT[bi],pts=+((s.m||{}).pts)||0,cap=+((SR.filter(r=>pts>=+r[1]).slice(-1)[0]||[0,0,0])[2]);
+ const ST=["HP","Atk","Def","SpA","SpD","Spe"],ty=m=>m.t2?[m.t1,m.t2]:[m.t1],mv=m=>(m.mv||"").split(/[ ,]+/).filter(x=>TYPES.includes(x)),at=m=>[...ty(m),...mv(m)],el=m=>m.el.reduce((a,x)=>a+x,0);
+ const A=[...new Set(b.tg.flat())],se=m=>b.tg.filter(t=>at(m).some(a=>mult(t,a)>1)).length;
+ const sc=m=>se(m)/b.tg.length*40+A.filter(a=>mult(ty(m),a)<1).length*6-A.filter(a=>mult(ty(m),a)>1).length*6+el(m)/60*20+(m.al?5:0)+m.lv/100*10-(cap&&m.lv>cap?30:0);
+ const top=ro.map((m,i)=>({m,i})).sort((x,y)=>sc(y.m)-sc(x.m)).slice(0,6),gap=b.tg.filter(t=>!top.some(x=>at(x.m).some(a=>mult(t,a)>1)));
+ const ed=(i,k,v)=>set(p=>({...p,ro:p.ro.map((x,j)=>j===i?{...x,[k]:v}:x)}));
+ return h`<div className="space-y-3"><select value=${bi} onChange=${e=>sb(+e.target.value)} className=${IN+" w-full"}>${BT.map((x,i)=>h`<option key=${i} value=${i}>${x.n}</option>`)}</select>
+ <p className="text-xs text-slate-400">Their types: ${A.join(", ")}.${b.lv?" Level "+b.lv+".":""}${cap?" Your Star Rank makes Pokémon obey up to Lv. "+cap+".":" Enter research points in the Stars tab to check the obedience level."}</p>
+ ${ro.length?null:h`<p className="text-sm text-amber-400">Add Pokémon in the Roster tab first.</p>`}
+ ${top.map(({m,i},n)=>{const w=m.el.map((v,j)=>[v,j]).filter(x=>x[0]<10).sort((a,b)=>a[0]-b[0])[0];return h`<div key=${i} className="bg-slate-800/70 rounded-lg p-3 text-sm"><b>${n+1}. ${m.n}</b> <span className="text-slate-400">${ty(m).join("/")} · EL ${el(m)}/60${m.al?" · Alpha":""}</span>
+ <div className="text-xs">Hits ${se(m)}/${b.tg.length} of their Pokémon super-effectively · resists ${A.filter(a=>mult(ty(m),a)<1).length} of their ${A.length} types · weak to ${A.filter(a=>mult(ty(m),a)>1).length}</div>
+ ${cap&&m.lv>cap?h`<div className="text-xs text-red-400">Level ${m.lv} is above your obedience cap of ${cap}; raise your Star Rank.</div>`:null}${b.lv&&m.lv<b.lv-5?h`<div className="text-xs text-amber-400">Under-leveled vs Lv. ${b.lv}; use Exp. Candy or Rare Candy.</div>`:null}
+ ${w?h`<div className="text-xs text-amber-300">Train next: ${ST[w[1]]} (EL ${w[0]}) with ${GR(w[0])}.</div>`:null}
+ <div className="flex gap-2 mt-1 items-center text-xs">Lv<input type="number" min="1" max="100" value=${m.lv} onInput=${e=>ed(i,"lv",+e.target.value)} className=${IN+" w-16"}/>Move types<input placeholder="e.g. Ground, Ice" value=${m.mv||""} onInput=${e=>ed(i,"mv",e.target.value)} className=${IN+" flex-1"}/></div></div>`})}
+ ${ro.length&&gap.length?h`<p className="text-sm text-amber-400">Nobody in this lineup hits ${gap.map(t=>t.join("/")).join(", ")} super-effectively. Catch or teach a move of type: ${[...new Set(gap.flatMap(t=>TYPES.filter(a=>mult(t,a)>1)))].join(", ")}.</p>`:null}
+ ${ro.length?h`<div className="bg-slate-800/70 rounded-lg p-3 text-sm"><b className="text-amber-400">Before you start</b>${[[top.length===6,"Six Pokémon chosen"],[!gap.length,"Every enemy Pokémon is hit super-effectively"],[!cap||top.every(x=>x.m.lv<=cap),"Everyone obeys at your Star Rank"],[!b.lv||top.every(x=>x.m.lv>=b.lv-5),"Levels are close to the enemy"],[(s.inv||{}).Revive>=5,"5 or more Revives"],[((s.inv||{})["Max Potion"]||0)+((s.inv||{})["Hyper Potion"]||0)>=5,"5 or more Max or Hyper Potions"]].map(([o,x],i)=>h`<div key=${i} className=${o?"text-green-400":"text-amber-400"}>${o?"✓":"✗"} ${x}</div>`)}<textarea readOnly value=${b.n+": "+top.map(x=>x.m.n+" Lv"+x.m.lv).join(", ")} className="w-full h-14 mt-2 bg-slate-900 border border-slate-700 rounded p-2 text-xs"/></div>`:null}
+ <p className="text-xs text-slate-500">Rule-based. Type the types of your moves so coverage counts them. Roster edits here save to the Roster tab.</p></div>`}
+// ---------- V5: GUIDE DATA ----------
+const MAT=P(`Apricorn|Shake trees in every region
+Tumblestone|Shake or mine ore in every region
+Sky Tumblestone|Coronet Highlands (Celestica Ruins, Wayward Wood), Cobalt Coastlands cliffs
+Black Tumblestone|Crimson Mirelands (Ursa’s Ring, Holm of Trials), Alabaster Icelands
+Iron Chunk|Black ore in Cobalt Coastlands, Coronet Highlands, Alabaster Icelands; or buy from Anvin
+Spoiled Apricorn|Wild Pokémon drops or near trees
+Ball of Mud|Crimson Mirelands ground and swamps
+Caster Fern|Crimson Mirelands, Cobalt Coastlands
+Sootfoot Root|Crimson Mirelands, Coronet Highlands
+Bugwort|Obsidian Fieldlands (Grueling Grove, The Heartwood)
+Hopo Berry|Shake berry trees
+King's Leaf|Alabaster Icelands, Coronet Highlands
+Medicinal Leek|Obsidian Fieldlands, Crimson Mirelands, Jubilife Farm
+Vivichoke|Crimson Mirelands, Coronet Highlands, Jubilife Farm`).reduce((o,r)=>({...o,[r[0]]:r[1]}),{});
+const SI={"Poké Ball":11,"Potion":5,"Black Tumblestone":33,"Cheri Berry":5,"Spoiled Apricorn":10,"Medicinal Leek":6,"Tumblestone":61,"Dazzling Honey":5,"Direshroom":2,"Revive":7,"Hopo Berry":5,"Swordcap":2,"Iron Chunk":30,"Super Potion":7,"Honey Cake":2,"Caster Fern":6,"King's Leaf":1,"Bugwort":6,"Razz Berry":3,"Hearty Grains":3,"Sootfoot Root":5,"Apricorn":16,"Vivichoke":9,"Stardust":9};
+const GL=P(`Grit Dust|Raises one stat’s Effort Level (EL) by 1. EL is a permanent stat boost, 0 to 10 per stat. Dust is for stats at EL 0 to 2.|Alpha drops, Star Rank rewards, requests
+Grit Gravel|Same as Dust, for stats at EL 3 to 5.|Alpha drops, requests, Star Rank rewards
+Grit Pebble|Same, for stats at EL 6 to 8.|Requests, Star Rank rewards
+Grit Rock|Same, for a stat at EL 9 (takes it to 10).|Requests, Star Rank 9 and 10
+Seed of Mastery|Masters a move so you can use Agile and Strong Style without grinding levels.|Alpha drops, requests
+Exp. Candy S/M/L/XL|Gives experience to one Pokémon; bigger sizes give more.|Requests, Alpha drops
+Rare Candy|Raises one Pokémon by a level (up to your obedience cap).|Requests, Star Rank rewards
+Apricorn|Main ingredient of every Poké Ball type.|Shake trees
+Tumblestone|Ball ingredient. Sky Tumblestone makes Feather/Wing/Jet Balls; Black Tumblestone makes Heavy/Leaden/Gigaton Balls.|Shake or mine ore
+Iron Chunk|Ball ingredient for Great, Ultra, Wing, Jet, Leaden and Gigaton Balls.|Black ore, Anvin
+Spoiled Apricorn|Ingredient for Sticky Glob.|Wild drops
+Ball of Mud|Ingredient for Sticky Glob.|Crimson Mirelands
+Caster Fern|Ingredient for Smoke Bomb, Scatter Bang and Sticky Glob.|Mirelands, Coastlands
+Sootfoot Root|Ingredient for Smoke Bomb, Old Gateau and Swap Snack.|Mirelands, Highlands
+Bugwort|Ingredient for Remedy and Stealth Spray.|Fieldlands
+Hopo Berry|Ingredient for Stealth Spray, Jubilife Muffin and Swap Snack.|Berry trees
+Oran Berry|Ingredient for Potion.|Berry trees
+Cheri / Pecha / Rawst / Aspear Berry|You need one of each to craft a Full Heal.|Berry trees
+Sitrus Berry|Ingredient for Max Potion.|Berry trees
+Leppa Berry|Ingredient for Max Ether (restores PP).|Berry trees
+Medicinal Leek|Ingredient for Potion and Revive.|Fieldlands, Mirelands, farm
+Vivichoke|Ingredient for Hyper Potion, Revive and Superb Remedy.|Mirelands, Highlands, farm
+King's Leaf|Ingredient for Max Potion, Max Revive and Aux Powerguard.|Icelands, Highlands
+Pep-Up Plant|Ingredient for Super Potion, Fine Remedy, Max Ether/Elixir and Aux items.|Craftworks, field
+Direshroom|Ingredient for Dire Hit (raises critical hit chance) and Choice Dumpling.|Field
+Swordcap|Ingredient for Aux Power (raises Attack).|Field
+Dazzling Honey|Ingredient for Honey Cake and Old Gateau.|Combee trees, field
+Hearty Grains|Ingredient for Grain Cake, Jubilife Muffin and Choice Dumpling.|Field, Request 23
+Stardust|Ingredient for Star Piece.|Request rewards, field
+Odd Keystone|Spiritomb-related item tied to the wisp hunt (Request 22). Check its in-game description.|Wisps
+Plates and Celestica Flute|Story keys. Plates are collected toward Arceus; the Flute calls ride Pokémon. Do not discard.|Story, legendaries
+Crafting Kit|Portable crafting bench. Only uses items in your satchel. Benches at camps use storage too.|Story
+Poké / Great / Ultra Ball|Standard balls; each tier catches better.|Craft or buy
+Feather / Wing / Jet Ball|Lighter balls thrown farther and faster; each tier is stronger.|Craft
+Heavy / Leaden / Gigaton Ball|Heavier balls with shorter throws; each tier is stronger.|Craft
+Potion line|Potion, Super, Hyper, Max Potion heal more each tier; Full Restore also cures status.|Craft
+Revive / Max Revive|Revive a fainted Pokémon (Max Revive restores full HP).|Craft
+Smoke Bomb / Stealth Spray|Help you sneak up on Pokémon without being noticed.|Craft
+Scatter Bang|Startles Pokémon; needed for some research tasks.|Craft
+Sticky Glob / Mud Ball|Thrown to slow or stun a Pokémon; Heatran’s shield needs them.|Craft
+Aux Power / Guard / Evasion / Powerguard|Battle boosts: Attack, Defense, evasion, or Attack and Defense together.|Craft
+Dire Hit|Raises critical hit chance in battle.|Craft
+Cake lures|Thrown to attract Pokémon that like that food (Mushroom, Honey, Grain, Bean, Salt).|Craft`);
+const SLOT=P(`Balls|3 (Poké or Great, Feather, Heavy)|5 (add Ultra, Wing)|7 (add Jet or Gigaton)
+Healing|3 (Potion line, Revive)|5 (Hyper, Max Potion, Max Revive)|6 (Full Restore, Full Heal)
+Stun and stealth|2 (Smoke Bomb, Sticky Glob)|4 (Scatter Bang, Stealth Spray)|4
+Balms and fight items|1|2|3 (balms plus Aux items)
+Training|2 (Grit Dust, Exp. Candy)|5 (all Grit, Seed of Mastery)|6 (add Rare Candy)
+Tools and keys|1 (Crafting Kit)|2|3 (evolution items as needed)
+Total slots|About 12 to 20|About 25 to 30|About 35 to 40`);
+function Gloss(){const [q,sq]=useState("");const r=GL.filter(x=>x.join(" ").toLowerCase().includes(q.toLowerCase()));
+ return h`<div><h3 className="font-semibold text-amber-400 mb-1">Satchel slot guide (suggested)</h3><p className="text-xs text-slate-400 mb-2">Each different item uses one slot. Keep raw materials in storage and craft at a bench (benches use storage; the Crafting Kit only uses your satchel). Carry finished items. Upgrade costs climb after 40 slots, so 35 to 40 is a good stop.</p><${Tbl} head=${["Group","Early (20 slots)","Mid (30)","Late (35 to 40)"]} rows=${SLOT}/>
+ <input placeholder="Search items…" value=${q} onInput=${e=>sq(e.target.value)} className="w-full mb-3 bg-slate-900 border border-slate-700 rounded p-2"/>${r.map(x=>h`<div key=${x[0]} className="bg-slate-800/70 rounded-lg p-3 mb-2 text-sm"><b>${x[0]}</b><div className="text-slate-300">${x[1]}</div><div className="text-xs text-slate-400">Get it: ${x[2]}</div></div>`)}</div>`}
+// ---------- V6: ALPHAS / TOOLBOX ----------
+const AL=P(`Rapidash|40|O|Horseshoe Plains
+Bibarel|16|O|Tidewater Dam
+Kricketune|12|O|Nature’s Pantry
+Floatzel|33|O|Worn Bridge
+Stantler|42|O|Deertrack Heights
+Luxio|35|O|Floaro Gardens
+Scyther|42|O|Grandtree Arena
+Heracross|45|O|Grueling Grove
+Lopunny|40|O|The Heartwood
+Snorlax|45|O|Sandgem Flats
+Alakazam|60|O|Sandgem Flats
+Blissey|62|O|Obsidian Falls
+Staravia|32|O|Windswept Run
+Gyarados|60|O|Lake Verity
+Golbat|42|O|Oreburrow Tunnel (night)
+Infernape|65|O|Ramanas Island
+Vespiquen|45|M|Cottonsedge Prairie
+Raichu|45|M|Golden Lowlands
+Pachirisu|30|M|Gapejaw Bog
+Tangrowth|45|M|Gapejaw Bog
+Ursaring|42|M|Ursa’s Ring
+Toxicroak|40|M|Holm of Trials
+Carnivine|42|M|Holm of Trials
+Sliggoo|50|M|Holm of Trials
+Torterra|65|M|Holm of Trials
+Roserade|50|M|Cloudpool Ridge
+Honchkrow|48|M|Cloudpool Ridge (night)
+Lickilicky|50|M|Shrouded Ruins
+Hippowdon|58|M|Sludge Mound
+Skuntank|46|M|Scarlet Bog
+Yanmega|52|M|Droning Meadow
+Whiscash|50|M|Lake Valor
+Drapion|55|B|Ginkgo Landing
+Golduck|44|B|Bathers’ Lagoon
+Ambipom|50|B|Hideaway Bay
+Purugly|45|B|Veilstone Cape
+Machamp|64|B|Veilstone Cape
+Dusknoir|65|B|Deadwood Haunt (night)
+Chansey|48|B|Tombolo Walk
+Ninetales|61|B|Firespit Island
+Magmortar|66|B|Firespit Island
+Mantine|50|B|Tranquility Cove
+Walrein|58|B|Islespy Shore
+Empoleon|69|B|Islespy Shore
+Octillery|52|B|Castaway Shore
+Tentacruel|54|B|Lunker’s Lair
+Lumineon|55|B|Seagrass Haven
+Gastrodon|50|B|Seagrass Haven
+Crobat|55|H|Wayward Cave
+Carnivine|48|H|Wayward Wood
+Mothim|45|H|Wayward Wood
+Goodra|60|H|Ancient Quarry
+Steelix|60|H|Celestica Ruins
+Bronzong|56|H|Celestica Ruins
+Rhyperior|74|H|Sacred Plaza
+Electivire|68|H|Cloudcap Pass
+Probopass|62|H|Primeval Grotto
+Gliscor|67|H|Primeval Grotto
+Gabite|56|H|Clamberclaw Cliffs
+Golem|60|H|Bolderoll Ravine
+Mismagius|62|H|Stonetooth Rows (night)
+Clefable|64|H|Fabled Spring (night)
+Luxray|58|H|Sacred Plaza
+Glalie|56|A|Bonechill Wastes
+Froslass|62|A|Bonechill Wastes (underground cavern)
+Zoroark|65|A|Bonechill Wastes (northern cavern)
+Abomasnow|64|A|Whiteout Valley
+Garchomp|85|A|Avalanche Slopes
+Swinub|45|A|Avalanche Slopes
+Mamoswine|68|A|Avalugg’s Legacy
+Lucario|70|A|Icebound Falls
+Machamp|68|A|Arena’s Approach
+Gardevoir|70|A|Heart’s Crag
+Chimecho|58|A|Lake Acuity
+Gallade|70|A|Snowpoint Temple`);
+LISTS.alp={n:"Static Alphas",p:"a",rows:AL.map((r,i)=>({id:"a"+i,t:r[0]+" Lv. "+r[1],sub:RGN[r[2]]+" · "+r[3],body:"Guaranteed Alpha. Alphas respawn when you return to Jubilife Village and re-enter the region."}))};
+const SOL=["Bidoof","Eevee","Wormadam","Abra","Blissey","Sneasel","Rotom","Bastiodon","Roselia","Magikarp"];
+const NAT=P(`Physical attacker|Adamant (+Atk, -SpA) or Jolly (+Spe, -SpA)
+Special attacker|Modest (+SpA, -Atk) or Timid (+Spe, -Atk)
+Physical tank|Bold (+Def, -Atk) or Impish (+Def, -SpA)
+Special tank|Calm (+SpD, -Atk) or Careful (+SpD, -SpA)`);
+function Tool({s,set}){const [sec,ss]=useState("grit"),[f,sf]=useState({n:"",r:1}),c=s.c||{},inv=s.inv||{},it=s.itm||{},ro=s.ro||[],sh=s.sh||[];
+ const S=[["grit","Grit totals"],["farm","Shopping list"],["nat","Natures & moves"],["shiny","Shiny log"],["sol","Solitude"],["area","Missing by area"]];
+ const up=(i,fn)=>set(p=>({...p,sh:p.sh.map((x,j)=>j===i?fn(x):x)}));let b;
+ if(sec==="grit"){const nd={"Grit Dust":0,"Grit Gravel":0,"Grit Pebble":0,"Grit Rock":0};ro.forEach(m=>m.el.forEach(v=>{for(let k=v;k<10;k++)nd[GR(k)]++}));
+  b=h`<div><p className="text-xs text-slate-400 mb-2">Grit needed to take every stat of every roster Pokémon to Effort Level 10. Pick fewer stats if it is too much.</p>${Object.entries(nd).map(([k,n])=>h`<div key=${k} className=${n>(it[k]||0)?"text-amber-400":""}>${k}: need ${n}, have ${it[k]||0}${n>(it[k]||0)?" (short "+(n-(it[k]||0))+")":""}</div>`)}</div>`}
+ else if(sec==="farm"){const m={};CR.forEach(r=>{if(!(r[0] in inv)||inv[r[0]]>=+r[2])return;const d=+r[2]-inv[r[0]];r[3].split(",").forEach(x=>{const a=x.split(":");m[a[0]]=(m[a[0]]||0)+d*a[1]})});
+  const L=Object.entries(m).map(([k,n])=>[k,n-(inv[k]||0)]).filter(x=>x[1]>0),O=ITM.filter(r=>r[0] in it&&it[r[0]]<((s.tg||{})[r[0]]??+r[1]));
+  b=h`<div><p className="text-xs text-slate-400 mb-2">Materials you are short of to refill every low crafted item to its target. Count items in the Satchel tab first.</p>${L.length||O.length?null:h`<p className="text-sm">Nothing short.</p>`}${L.map(([k,n])=>h`<div key=${k} className="text-sm mb-1"><b>${k}</b> short ${n}. <span className="text-slate-400">${MAT[k]||"Check the Item Guide"}</span></div>`)}${O.map(r=>h`<div key=${r[0]} className="text-sm mb-1"><b>${r[0]}</b> low. <span className="text-slate-400">${r[2]}</span></div>`)}</div>`}
+ else if(sec==="nat")b=h`<div><${Tbl} head=${["Role","Good natures"]} rows=${NAT}/><p className="text-xs text-slate-400 mb-2">Pick the nature for the stat your best move uses. Use Zisu’s tutor for coverage, a Seed of Mastery to master moves, Strong Style for big hits and Agile Style to act twice.</p><${Tbl} head=${["Tutor move","Type","Priority","Why"]} rows=${ZIS}/></div>`;
+ else if(sec==="shiny")b=h`<div className="space-y-2"><div className="flex gap-2 flex-wrap"><input placeholder="Pokémon" value=${f.n} onInput=${e=>sf({...f,n:e.target.value})} className=${IN}/><input type="number" min="1" value=${f.r} onInput=${e=>sf({...f,r:+e.target.value||1})} className=${IN+" w-20"}/><button className="bg-amber-600 px-3 py-2 rounded" onClick=${()=>{if(f.n.trim()){set(p=>({...p,sh:[...(p.sh||[]),{n:f.n.trim(),r:f.r,e:0}]}));sf({n:"",r:1})}}}>Start hunt</button></div><p className="text-xs text-slate-400">Second box is your shiny rolls per encounter (see the Shiny tab).</p>
+  ${sh.map((x,i)=>h`<div key=${i} className="bg-slate-800/70 rounded p-2 text-sm flex gap-2 items-center"><b>${x.n}</b><span className="text-slate-400">${x.e} seen · ${((1-Math.pow(1-1/4096,x.e*x.r))*100).toFixed(1)}% chance by now</span><button onClick=${()=>up(i,y=>({...y,e:y.e+1}))} className="ml-auto bg-slate-700 px-2 rounded">+1</button><button onClick=${()=>up(i,y=>({...y,e:y.e+10}))} className="bg-slate-700 px-2 rounded">+10</button><button onClick=${()=>set(p=>({...p,sh:p.sh.filter((_,j)=>j!==i)}))} className="text-red-400">✕</button></div>`)}</div>`;
+ else if(sec==="sol")b=h`<div><p className="text-xs text-slate-400 mb-2">Species from your request list. Tips for each are in the Solitude tab.</p>${SOL.map(n=>h`<label key=${n} className="flex gap-2 text-sm mb-1"><input type="checkbox" checked=${!!c["x"+n]} onChange=${()=>tgl(set,"x"+n)} className="accent-amber-500"/>${n}</label>`)}<${Bar} l="Cleared" v=${SOL.filter(n=>c["x"+n]).length} m=${SOL.length}/></div>`;
+ else b=h`<div>${Object.keys(RGN).filter(k=>"OMBHA".includes(k)).map(k=>{const m=DEX.filter(d=>d.rg.includes(k)&&!c["dc"+d.i]);return h`<details key=${k} className="bg-slate-800/70 rounded-lg mb-2"><summary className="p-3 cursor-pointer">${RGN[k]}: ${m.length} not caught</summary><div className="px-4 pb-3 text-xs space-y-1">${m.map(d=>h`<div key=${d.i}>#${d.i} ${d.n}: ${d.loc}</div>`)}</div></details>`})}</div>`;
+ return h`<div><div className="flex gap-2 flex-wrap mb-3">${S.map(([k,n])=>h`<button key=${k} onClick=${()=>ss(k)} className=${"px-3 py-1 rounded-full text-sm "+(sec===k?"bg-amber-600":"bg-slate-800")}>${n}</button>`)}</div>${b}</div>`}
+const NEW={tool:Tool,gloss:Gloss,items:Items,pick:Pick,guide:Guide,plan:Plan,log:Log,dex:Dex,types:TypesTab,roster:Roster,sat:Satchel,shiny:Shiny,stars:Stars,path:PATH,mech:MECH};
 // ---------- APP ----------
 const KEY="pla-companion-v1";
 function Row({r,s,set}){const on=!!(s.c||{})[r.id];
@@ -689,13 +994,13 @@ function App(){
  const [tab,setTab]=useState("dash"),[q,setQ]=useState(""),[imp,setImp]=useState(""),[gq,setGq]=useState(""),[rs,setRs]=useState(false);
  useEffect(()=>{try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}},[s]);
  const cnt=p=>Object.keys(s.c||{}).filter(k=>s.c[k]&&k[0]===p).length;
- const tabs=[["dash","Dashboard"],["story","Story"],["nob","Nobles"],["leg","Legendaries"],["dex","Pokédex"],["evo","Evolutions"],["roster","Roster"],["sat","Satchel"],["shiny","Shiny"],["types","Types"],["stars","Stars"],["shop","Shops"],["req","Requests"],["wisp","Wisps"],["uno","Unown"],["ver","Verses"],["path","Solitude"],["mech","Mechanics"],["bk","Backup"]];
+ const tabs=[["dash","Dashboard"],["story","Story"],["guide","Guide"],["plan","Next Steps"],["items","Items & Stock"],["gloss","Item Guide"],["pick","Battle Picker"],["log","Quick Log"],["nob","Nobles"],["leg","Legendaries"],["dex","Pokédex"],["evo","Evolutions"],["roster","Roster"],["sat","Satchel"],["shiny","Shiny"],["types","Types"],["stars","Stars"],["shop","Shops"],["req","Requests"],["wisp","Wisps"],["uno","Unown"],["ver","Verses"],["alp","Alphas"],["tool","Toolbox"],["path","Solitude"],["mech","Mechanics"],["bk","Backup"]];
  let body;
  const res=gq.length>1?Object.entries(LISTS).flatMap(([k,L])=>L.rows.filter(r=>(r.t+" "+r.sub+" "+r.body).toLowerCase().includes(gq.toLowerCase())).slice(0,4).map(r=>[k,L.n,r.t])).slice(0,12):[];
  const omni=h`<div className="mb-3"><input placeholder="Search everything…" value=${gq} onInput=${e=>setGq(e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded p-2"/>${res.map(([k,n,t],i)=>h`<button key=${i} onClick=${()=>{setTab(k);setQ(gq);setGq("")}} className="block w-full text-left text-sm p-2 border-b border-slate-800">${t} <span className="text-slate-400">· ${n}</span></button>`)}</div>`;
- if(tab==="dash")body=h`<div><h2 className="text-lg font-semibold mb-1 text-amber-400">Completion</h2><p className="text-xs text-slate-400 mb-3">Arceus unlocks at 239 caught entries (237 standard + Manaphy + Phione) out of 242.</p>
+ if(tab==="dash")body=h`<div>${lowList(s).length?h`<button onClick=${()=>setTab("items")} className="w-full text-left bg-red-900/40 border border-red-700 rounded p-2 mb-3 text-sm">Low stock: ${lowList(s).slice(0,8).join(", ")}</button>`:null}<h2 className="text-lg font-semibold mb-1 text-amber-400">Completion</h2><p className="text-xs text-slate-400 mb-3">Arceus unlocks at 239 caught entries (237 standard + Manaphy + Phione) out of 242.</p>
   ${GOALS.map(([l,m],i)=>{const v=(s.m||{})[l]||0;return h`<div key=${l}><${Bar} l=${l} v=${v} m=${m||242}/><input type="number" min="0" value=${v} onInput=${e=>{const x=+e.target.value;set(p=>({...p,m:{...p.m,[l]:x}}))}} className="w-24 bg-slate-900 border border-slate-700 rounded p-1 mb-3 text-sm"/>${DXM[l]?h`<span className="text-xs text-slate-400 ml-2">Pokédex tab: ${Object.keys(s.c||{}).filter(x=>s.c[x]&&x.startsWith("d"+DXM[l])).length}</span>`:null}</div>`})}
-  <${Bar} l="Legendary/Mythical (18)" v=${cnt("l")} m=${LEG.length}/><${Bar} l="Spiritomb Wisps" v=${cnt("w")} m=${WL.length}/><${Bar} l="Unown Forms" v=${cnt("u")} m=${UNO.length}/><${Bar} l="Old Verses" v=${cnt("v")} m=${VER.length}/><${Bar} l="Key Requests (of 122)" v=${cnt("r")} m=${REQ.length}/><${Bar} l="Story Missions (27)" v=${cnt("s")} m=${MIS.length}/><${Bar} l="Noble Pokémon (5)" v=${cnt("n")} m=${NOB.length}/><${Bar} l="Evolutions Done" v=${cnt("e")} m=${EVO.length}/></div>`;
+  <${Bar} l="Legendary/Mythical (18)" v=${cnt("l")} m=${LEG.length}/><${Bar} l="Spiritomb Wisps" v=${cnt("w")} m=${WL.length}/><${Bar} l="Unown Forms" v=${cnt("u")} m=${UNO.length}/><${Bar} l="Old Verses" v=${cnt("v")} m=${VER.length}/><${Bar} l="Static Alphas (75)" v=${cnt("a")} m=${LISTS.alp.rows.length}/><${Bar} l="Key Requests (of 122)" v=${cnt("r")} m=${REQ.length}/><${Bar} l="Story Missions (27)" v=${cnt("s")} m=${MIS.length}/><${Bar} l="Noble Pokémon (5)" v=${cnt("n")} m=${NOB.length}/><${Bar} l="Evolutions Done" v=${cnt("e")} m=${EVO.length}/></div>`;
  else if(tab==="shop")body=h`<div><h2 className="font-semibold text-amber-400 mb-2">Ginter (Ginkgo Guild)</h2><${Tbl} head=${["Disguised","Real item","Cost"]} rows=${GIN}/>
   <h2 className="font-semibold text-amber-400 mb-2">Simona’s Trading Post (Merit Points)</h2><${Tbl} head=${["Item","MP","Evolves"]} rows=${SIM}/>
   <h2 className="font-semibold text-amber-400 mb-2">Zisu’s Move Tutor</h2><${Tbl} head=${["Move","Type","Priority","Why"]} rows=${ZIS}/></div>`;
