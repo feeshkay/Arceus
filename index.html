@@ -960,6 +960,232 @@ function Tool({s,set}){const [sec,ss]=useState("grit"),[f,sf]=useState({n:"",r:1
 // ---------- APP ----------
 const KEY="pla-companion-v1";
 function Tbl({head,rows}){return h`<div className="overflow-x-auto mb-6"><table className="w-full text-sm"><thead><tr>${head.map(x=>h`<th key=${x} className="text-left p-2 text-amber-400 border-b border-slate-600">${x}</th>`)}</tr></thead><tbody>${rows.map((r,i)=>h`<tr key=${i} className="border-b border-slate-800">${r.map((c,j)=>h`<td key=${j} className="p-2">${c}</td>`)}</tr>`)}</tbody></table></div>`}
+// ----- V9 DATA: item list facts (effects and locations) and request rewards
+const IDBR2=P(`Potion|Healing|Restores 60 HP to one Pokémon.|Jubilife Village shop and camp shops, Request #3
+Super Potion|Healing|Restores 100 HP to one Pokémon.|Jubilife Village shop and camp shops, boxes in Cobalt Coastlands
+Hyper Potion|Healing|Restores 150 HP to one Pokémon.|Jubilife Village shop and camp shops, boxes in Cobalt Coastlands, Request #55
+Max Potion|Healing|Completely restores the max HP of one Pokémon.|Jubilife Village shop and camp shops, Summit Camp, boxes in Cobalt Coastlands
+Full Restore|Healing|Fully restores one Pokémon's HP and cures any status condition.|Jubilife Village shop and camp shops, boxes in Cobalt Coastlands, Request #81
+Full Heal|Healing|Heals any status condition. Needs one Cheri, Pecha, Rawst and Aspear Berry to craft.|Jubilife Village shop and camp shops, boxes in Cobalt Coastlands, Request #34
+Revive|Healing|Brings back a fainted Pokémon with half its max HP.|Jubilife Village shop and camp shops, boxes in Cobalt Coastlands, Request #14
+Max Revive|Healing|Brings back a fainted Pokémon with all of its max HP.|Jubilife Village shop and camp shops, boxes in Cobalt Coastlands, Requests #32 and #74
+Remedy|Status & PP|Herbal medicine that restores 60 HP like a Potion, but its bitter taste makes the Pokémon less friendly toward you.|Jubilife Village shop
+Fine Remedy|Status & PP|Herbal medicine that restores 100 HP like a Super Potion, but its bitter taste makes the Pokémon less friendly toward you.|Request #29
+Superb Remedy|Status & PP|Herbal medicine that restores 150 HP like a Hyper Potion, but its bitter taste makes the Pokémon less friendly toward you.|Jubilife Village shop
+Max Ether|Status & PP|Fully restores the PP of one move you choose.|Jubilife Village shop, boxes in Cobalt Coastlands
+Max Elixir|Status & PP|Fully restores the PP of all four of a Pokémon's moves.|Jubilife Village shop, boxes in Cobalt Coastlands
+Aux Evasion|Battle boosts|Makes moves less likely to hit a Pokémon in battle. The effect ends if the Pokémon leaves the battle.|Request #41
+Aux Guard|Battle boosts|Sharply boosts a Pokémon's defensive stats in battle. The effect ends if the Pokémon leaves the battle.|Request #21
+Aux Power|Battle boosts|Sharply boosts a Pokémon's offensive stats in battle. The effect ends if the Pokémon leaves the battle.|Request #9
+Aux Powerguard|Battle boosts|Sharply boosts a Pokémon's offensive and defensive stats in battle. The effect ends if the Pokémon leaves the battle.|Request #56
+Dire Hit|Battle boosts|Sharply boosts a Pokémon's critical-hit ratio in battle. The effect ends if the Pokémon leaves the battle.|
+Choice Dumpling|Battle boosts|A dumpling that fixes a Pokémon on one move in battle. It deals more damage with that move but takes more damage too.|Recipe in Coronet Highlands
+Swap Snack|Battle boosts|When eaten, temporarily swaps a Pokémon's offensive stats with its defensive stats.|Jubilife Village, Request #54 gives the recipe
+Twice-Spiced Radish|Lures & food|Pickled vegetables that put a Pokémon in a hard-hitting stance, boosting the power of its moves by 50 percent.|Request #22
+Old Gateau|Lures & food|A sweet treat from Jubilife Village. Feed it to a Pokémon to cure any status condition.|Recipe at Brava Arena
+Jubilife Muffin|Lures & food|A sweet treat gaining popularity in Jubilife Village, loved by Pokémon. Feed it to a Pokémon to cure any status condition.|Request #48 gives the recipe
+Hometown Muffin|Lures & food|A baked treat made from Berries and other ingredients, often eaten in regions such as Galar. Beloved by many Pokémon.|Jubilife Village
+Basculegion Food|Lures & food|Favored food of Basculegion, which will carry you on its back. Crafted in an unusual way from unusually gathered ingredients.|Aipom Hill
+Mushroom Cake|Lures & food|Lure cake that attracts monstrous Pokémon and dragon Pokémon.|Jubilife Village shop and camp shops, boxes in Cobalt Coastlands
+Honey Cake|Lures & food|Lure cake that attracts bug Pokémon and fairylike Pokémon.|Jubilife Village shop and camp shops, boxes in Cobalt Coastlands, Request #12
+Grain Cake|Lures & food|Lure cake that attracts Pokémon that live and wander in the fields.|Jubilife Village shop and camp shops, boxes in Cobalt Coastlands, Request #30
+Bean Cake|Lures & food|Lure cake that attracts fish Pokémon, bird Pokémon and other flyers.|Jubilife Village shop and camp shops, boxes in Cobalt Coastlands, Request #53
+Salt Cake|Lures & food|Lure cake that attracts Pokémon that resemble grass, plants or minerals.|Jubilife Village shop and camp shops, Request #67
+Scatter Bang|Stun & stealth|Thrown at the ground, it makes a loud noise that scares off weak Pokémon nearby so they run away.|Jubilife Village shop and camp shops, boxes in Cobalt Coastlands, Request #49
+Smoke Bomb|Stun & stealth|Thrown at the ground, it makes a cloud of fine powder that reduces visibility so wild Pokémon do not notice you.|Jubilife Village shop and camp shops, boxes in Cobalt Coastlands, Request #37
+Sticky Glob|Stun & stealth|A ball of sticky stuff. Hitting a Pokémon with one may stun it and give you an opening. Heatran's magma shield needs globs or mud.|Jubilife Village shop and camp shops, boxes in Cobalt Coastlands, Request #87
+Stealth Spray|Stun & stealth|Muffles your footsteps and makes wild Pokémon less likely to notice you for a short time.|Jubilife Village shop and camp shops
+Snowball|Stun & stealth|A hard ball of compressed snow. Hitting a Pokémon with one may stun it and give you an opening.|Snow piles in Alabaster Icelands
+Star Piece|Key & misc|A small gem shard with a red sparkle. Sells for a high price at the general store. Crafted from 3 each of Red, Blue and Green Shards plus Stardust.|Summit Camp, Icepeak Camp, red and grey ore deposits, Space-time Distortions, dug up by Ursaluna, Requests #50, #58, #69, #77, #86
+Nugget|Key & misc|A nugget of pure gold. Sells for a high price at the general store.|Jubilife Village and camps, boxes in Cobalt Coastlands, Space-time Distortions, Miss Fortune bandits, Requests #26, #47 and #79
+Comet Shard|Key & misc|A shard that fell when a comet passed. Sells for a high price at the general store.|Blue ore deposits, Space-time Distortions, Requests #66, #89 and #90
+Pokéshi Doll|Key & misc|A wooden toy carved in the image of a Pokémon. Can be sold to the general store. Crafted from 3 Wood.|Boxes in Cobalt Coastlands, Request #18
+Griseous Orb|Key & misc|Reward for Request #91. It will not drop unless Giratina has been caught.|Request #91
+Stardust|Craft materials|Lovely red sand. Sells for a low price at the general store.|Jubilife Village and camps, red, grey and blue ore deposits, Space-time Distortions, Miss Fortune bandits, Requests #7 and #38
+Red Shard|Craft materials|A small red shard, a fragment of some implement made long ago.|Obsidian Falls, Space-time Distortions
+Blue Shard|Craft materials|A small blue shard, a fragment of some implement made long ago.|Obsidian Falls, Space-time Distortions
+Green Shard|Craft materials|A small green shard, a fragment of some implement made long ago.|Space-time Distortions
+Wood|Craft materials|A handy log. 3 logs craft a Pokéshi Doll.|Under trees, dropped by Scyther and Kleavor
+Apricorn|Craft materials|Fruit whose shell forms the capsule of every Poké Ball when crafting from scratch.|Apricorn trees in all areas, farm harvest, Jubilife Village shop
+Tumblestone|Craft materials|Combined with an Apricorn, it makes a Poké Ball. Also used for Great and Ultra Balls.|Jubilife Village shop, red ore deposits, rewards from Massive Mass Outbreaks in the Fieldlands, Coastlands and Highlands
+Sky Tumblestone|Craft materials|Combined with an Apricorn, this sky-blue stone makes a Feather Ball. Also used for Wing and Jet Balls.|Jubilife Village shop, blue ore deposits, dropped by Gyarados, Porygon, Mantine and others
+Black Tumblestone|Craft materials|Combined with an Apricorn, this black stone makes a Heavy Ball. Also used for Leaden and Gigaton Balls.|Jubilife Village shop, grey ore deposits, dug up by Ursaluna, dropped by Onix, Rhyhorn, Bastiodon and others
+Iron Chunk|Craft materials|A hunk of iron for the parts of many Poké Ball types.|Jubilife Village shop, Heights Camp, red, grey and blue ore deposits, dug up by Ursaluna, Request #40
+Spoiled Apricorn|Craft materials|An Apricorn with its insides eaten. Hitting a Pokémon with one may stun it. Ingredient for Sticky Glob.|Apricorn trees in all areas, farm harvest, Highlands Camp, leaf piles in Crimson Mirelands and Cobalt Coastlands, dropped by many Pokémon
+Ball of Mud|Craft materials|A stiff ball of mud. Hitting a Pokémon with one may stun it. Ingredient for Sticky Glob.|Jubilife Village, Lava Dome Sanctum, Highlands Camp, snow piles in Alabaster Icelands, dug up by Ursaluna, dropped by many Pokémon
+Caster Fern|Craft materials|A fern whose leaves serve as wrapping for crafted throwing items.|Jubilife Village shop, farm harvest, Highlands Camp, haystacks and floor in Crimson Mirelands
+Sootfoot Root|Craft materials|Tuber used for Smoke Bombs. Can be mashed for cooking.|Jubilife Village shop, farm harvest, haystacks in Crimson Mirelands, floor in Cobalt Coastlands
+Pop Pod|Craft materials|A sea vegetable used for Scatter Bangs.|Jubilife Village shop, dropped by Qwilfish, Remoraid, Octillery, Basculin and Basculegion
+Cake-Lure Base|Craft materials|A field provision that boosts the flavor of foods it is mixed with.|Fieldlands Camp, Jubilife Village shop and camp shops
+Candy Truffle|Craft materials|A sweet truffle full of mysterious energy, used in crafting.|Jubilife Village shop, farm harvest, Summit Camp, Request #33
+Direshroom|Craft materials|Mushrooms that sharpen focus. Ingredient for Dire Hit.|Jubilife Village shop, farm harvest, under trees
+Doppel Bonnets|Craft materials|Mushrooms that make you nimble. Ingredient for Aux Evasion.|Jubilife Village shop, farm harvest, under trees
+Iron Barktongue|Craft materials|Mushrooms that toughen the body. Ingredient for Aux Guard.|Jubilife Village shop, farm harvest, on cliffsides
+Swordcap|Craft materials|Mushrooms that swell the muscles. Ingredient for Aux Power.|Jubilife Village shop, farm harvest, under trees
+Sand Radish|Craft materials|A bitter root pickled into Twice-Spiced Radishes.|Jubilife Village shop, farm harvest, floor in Alabaster Icelands and Cobalt Coastlands, Request #76
+Bugwort|Berries & plants|A wildflower with medicinal properties, so bitter that wild Pokémon will not eat it.|Jubilife Village shop, farm harvest, floor in Crimson Mirelands and Cobalt Coastlands, dropped by Drifloon, Spiritomb, Duskull and others
+Medicinal Leek|Berries & plants|Needed for medicines. Also called the wayfarer's friend.|Jubilife Village shop, farm harvest, haystacks and floor in Crimson Mirelands, floor in Alabaster Icelands
+Vivichoke|Berries & plants|Also called a morning-dew bud. Used for items that bring back fainted Pokémon.|Jubilife Village shop, Deertrack Path, farm harvest, haystacks and floor in Crimson Mirelands, floor in Alabaster Icelands, Requests #11 and #17
+King's Leaf|Berries & plants|The king of herbs. Boosts the strength of medicines made with it.|Jubilife Village shop, farm harvest, leaf piles in Crimson Mirelands and Cobalt Coastlands, floor in Crimson Mirelands, Alabaster Icelands and Cobalt Coastlands, Request #57
+Pep-Up Plant|Berries & plants|A very spicy, nutritious herb for items that restore PP or boost stats.|Jubilife Village shop, farm harvest, floor in Alabaster Icelands and Cobalt Coastlands
+Hopo Berry|Berries & plants|Restores PP. A wild Pokémon that eats one reacts more slowly.|Jubilife Village shop, farm harvest, berry trees in all areas, Request #29
+Oran Berry|Berries & plants|Restores 20 HP. Throw near wild Pokémon to draw their attention.|Jubilife Village shop, farm harvest, berry trees in all areas, Request #4
+Sitrus Berry|Berries & plants|Restores up to half max HP. Throw near wild Pokémon to draw their attention.|Jubilife Village shop, Grandtree Arena, farm harvest, Request #35
+Leppa Berry|Berries & plants|Restores 10 PP of one move. Throw near wild Pokémon to draw their attention.|Jubilife Village shop, farm harvest, berry trees in all areas
+Razz Berry|Berries & plants|Restores up to a third of max HP. A wild Pokémon that eats one becomes easier to catch.|Jubilife Village shop, Jubilife Village, Heights Camp, Coastlands Camp, farm harvest, berry trees in all areas, Requests #19 and #55
+Cheri Berry|Berries & plants|Cures paralysis. One of the four berries needed for a Full Heal. Throw near wild Pokémon to draw their attention.|Jubilife Village shop, berry trees in all areas
+Pecha Berry|Berries & plants|Cures poisoning. One of the four berries needed for a Full Heal. Throw near wild Pokémon to draw their attention.|Jubilife Village shop, berry trees in all areas
+Rawst Berry|Berries & plants|Cures burns. One of the four berries needed for a Full Heal. Throw near wild Pokémon to draw their attention.|Jubilife Village shop, dropped by Ponyta, Growlithe, Magby and others
+Aspear Berry|Berries & plants|Cures frostbite. One of the four berries needed for a Full Heal. Throw near wild Pokémon to draw their attention.|Jubilife Village shop, berry trees in all areas, dropped by Vulpix
+Aguav Berry|Berries & plants|Restores up to half max HP. A wild Pokémon that hates bitter flavors pauses briefly when it eats one.|Farm harvest, Mirelands Camp, Summit Camp, Icepeak Camp, berry-focused Massive Mass Outbreaks
+Chesto Berry|Berries & plants|Cures drowsiness. Throw near wild Pokémon to draw their attention.|Berry trees in all areas, dropped by Zubat, Mime Jr., Gastly and others
+Figy Berry|Berries & plants|Restores up to half max HP. A wild Pokémon that hates spicy flavors pauses briefly when it eats one.|Farm harvest
+Iapapa Berry|Berries & plants|Restores up to half max HP. A wild Pokémon that hates sour flavors pauses briefly when it eats one.|Farm harvest
+Lum Berry|Berries & plants|Cures any status condition. Throw near wild Pokémon to draw their attention.|Farm harvest, berry trees in all areas, dropped by Burmy, Cherubi, Petilil and others
+Mago Berry|Berries & plants|Restores up to half max HP. A wild Pokémon that hates sweet flavors pauses briefly when it eats one.|Farm harvest
+Nanab Berry|Berries & plants|Restores up to a third of max HP. Calms a wild Pokémon that eats one.|Jubilife Village shop, farm harvest, Request #16
+Pinap Berry|Berries & plants|Restores up to a third of max HP. Catching a wild Pokémon that ate one gives more Exp. Points.|Jubilife Village shop, farm harvest, dropped by Gastrodon
+Wiki Berry|Berries & plants|Restores up to half max HP. A wild Pokémon that hates dry flavors pauses briefly when it eats one.|Farm harvest
+Grit Dust|Training|Raises the Effort Level of one stat by 1, only up to level 3.|Given when you release Pokémon, defeating Pokémon in battle, Request #5
+Grit Gravel|Training|Raises one stat's Effort Level by 1. The stat must be at level 3 to 5.|Jubilife Village, given when you release Pokémon, defeating Pokémon in battle, Star Rank rewards, Requests #35, #40, #41 and #56
+Grit Pebble|Training|Raises one stat's Effort Level by 1. The stat must be at level 6 to 8.|Jubilife Village, Moonview Arena, Temple of Sinnoh, Icepeak Arena, given when you release Pokémon, defeating Pokémon in battle, Star Rank rewards, Request #84
+Grit Rock|Training|Raises one stat's Effort Level by 1. The stat must already be at level 9.|Jubilife Village, Summit Camp, Icepeak Camp, Temple of Sinnoh, given when you release Pokémon, defeating Pokémon in battle, Star Rank rewards, Requests #88, #91 and #92
+Seed of Mastery|Training|A rare seed. Give it to the Security Corps captain to have a Pokémon master a move so it can be used in Agile or Strong Style.|Jubilife Village, Coastlands Camp, carried by Alpha Pokémon, Request #51, Paths of Solitude
+Exp. Candy S|Training|Gives a small amount of Exp. Points to one Pokémon.|Jubilife Village shop, carried by many Alpha Pokémon, Eternal Battle Reverie and Path of Tenacity gifts, many requests
+Exp. Candy M|Training|Gives a moderate amount of Exp. Points to one Pokémon.|Jubilife Village shop, Grandtree, Molten, Moonview, Icepeak and Brava Arenas, carried by many Alpha Pokémon, Requests #49, #67, #68 and #73
+Exp. Candy L|Training|Gives a large amount of Exp. Points to one Pokémon.|Jubilife Village shop, arenas, carried by many Alpha Pokémon, Requests #76, #81, #83 and #94
+Exp. Candy XL|Training|Gives a very large amount of Exp. Points to one Pokémon.|Jubilife Village shop, Temple of Sinnoh, Request #93
+Rare Candy|Training|Instantly raises one Pokémon's level by 1, up to your obedience cap.|Jubilife Village shop, Heights Camp, Star Rank rewards, Requests #8, #15, #28, #39, #52, #85 and #87
+Black Augurite|Evolution items|Evolves Scyther into Kleavor. Use it directly from the satchel.|Space-time Distortions, dug up by Ursaluna, carried by Graveler and Golem, Request #68
+Dawn Stone|Evolution items|Evolution stone that sparkles like a glittering eye.|Jubilife Village shop, red and blue ore deposits, Space-time Distortions, Path of Tenacity gift, Request #82
+Dusk Stone|Evolution items|Evolution stone that holds deep shadows.|Jubilife Village shop, red and grey ore deposits, Space-time Distortions, Path of Tenacity gift
+Fire Stone|Evolution items|Evolution stone with a fiery orange heart.|Jubilife Village shop, red ore deposits, Space-time Distortions, Path of Tenacity gift
+Ice Stone|Evolution items|Evolution stone with a snowflake pattern. Evolves Eevee into Glaceon.|Jubilife Village shop, Avalanche Slopes, snow piles in Alabaster Icelands, Path of Tenacity gift
+Leaf Stone|Evolution items|Evolution stone with a leaf pattern. Evolves Eevee into Leafeon and Hisuian Voltorb into Hisuian Electrode.|Jubilife Village shop, leaf piles in Crimson Mirelands and Cobalt Coastlands, Space-time Distortions, Request #73
+Moon Stone|Evolution items|Evolution stone as dark as the night sky.|Jubilife Village shop, Fabled Spring, Space-time Distortions, dug up by Ursaluna, Path of Tenacity gift
+Shiny Stone|Evolution items|Evolution stone that shines with a dazzling light.|Jubilife Village shop, Space-time Distortions, Path of Tenacity gift, Request #74
+Sun Stone|Evolution items|Evolution stone that burns as red as the evening sun. Evolves Petilil into Hisuian Lilligant.|Jubilife Village shop, Space-time Distortions, dug up by Ursaluna, Path of Tenacity gift, Request #85
+Thunder Stone|Evolution items|Evolution stone with a thunderbolt pattern. Evolves Magneton into Magnezone and Nosepass into Probopass.|Jubilife Village shop, grey ore deposits, Space-time Distortions, Path of Tenacity gift
+Water Stone|Evolution items|Evolution stone as blue as a deep pool.|Jubilife Village shop, blue ore deposits, Space-time Distortions, Path of Tenacity gift
+Oval Stone|Evolution items|Evolution stone that is round and smooth. Evolves Happiny and Chansey.|Jubilife Village shop, dropped by Happiny, Chansey and Blissey
+Dubious Disc|Evolution items|Evolves Porygon2 into Porygon-Z. Use it directly from the satchel.|Jubilife Village shop, Space-time Distortions, Path of Tenacity gift
+Electirizer|Evolution items|Evolves Electabuzz into Electivire. Use it directly from the satchel.|Jubilife Village shop, Space-time Distortions, Path of Tenacity gift
+Magmarizer|Evolution items|Evolves Magmar into Magmortar. Use it directly from the satchel.|Jubilife Village shop, Space-time Distortions, Path of Tenacity gift
+Metal Coat|Evolution items|Evolves Scyther into Scizor and Onix into Steelix. Use it directly from the satchel.|Jubilife Village shop, Space-time Distortions, dropped by Scizor, Steelix, Magnemite and others
+Protector|Evolution items|Evolves Rhydon into Rhyperior. Use it directly from the satchel.|Jubilife Village shop, Space-time Distortions, Path of Tenacity gift
+Razor Claw|Evolution items|Evolves Hisuian Sneasel into Sneasler in the daytime, or Johtonian Sneasel into Weavile at night.|Jubilife Village shop, Space-time Distortions, Path of Tenacity gift, dropped by Sneasel, Sneasler and Weavile
+Razor Fang|Evolution items|Evolves Gligar into Gliscor.|Jubilife Village shop, Space-time Distortions, Path of Tenacity gift, dropped by Gligar and Gliscor
+Reaper Cloth|Evolution items|Evolves Dusclops into Dusknoir. Use it directly from the satchel.|Jubilife Village shop, Jubilife Village, Space-time Distortions, Path of Tenacity gift, dropped by Duskull, Dusclops and Dusknoir
+Peat Block|Evolution items|Evolves Ursaring into Ursaluna when used during a Full Moon.|Jubilife Village shop, dug up by Ursaluna, Request #86
+Upgrade|Evolution items|Evolves Porygon into Porygon2.|Jubilife Village shop, Space-time Distortions
+Linking Cord|Evolution items|Evolves Kadabra, Machoke, Graveler and Haunter. No trading needed.|Jubilife Village shop, Space-time Distortions, Path of Tenacity gift, Request #64
+Odd Keystone|Key & misc|A mysterious stone used to collect wisps that glow with an eerie purple light.|Jubilife Village
+Crafting Kit|Key & misc|A kit with everything for crafting, even with no workbench nearby. It only uses materials in your satchel.|Horseshoe Plains
+Celestica Flute|Key & misc|Calls special Pokémon willing to carry you around the region.|Heights Camp
+Shiny Charm|Key & misc|A charm that is said to increase the chance of finding a Shiny Pokémon in the wild.|Jubilife Village`);
+const GENR=[];
+[["Adamant","Attack","Sp. Atk"],["Bold","Defense","Attack"],["Brave","Attack","Speed"],["Calm","Sp. Def","Attack"],["Careful","Sp. Def","Sp. Atk"],["Gentle","Sp. Def","Defense"],["Hasty","Speed","Defense"],["Impish","Defense","Sp. Atk"],["Jolly","Speed","Sp. Atk"],["Lax","Defense","Sp. Def"],["Lonely","Attack","Defense"],["Mild","Sp. Atk","Defense"],["Modest","Sp. Atk","Attack"],["Naive","Speed","Sp. Def"],["Naughty","Attack","Sp. Def"],["Quiet","Sp. Atk","Speed"],["Rash","Sp. Atk","Sp. Def"],["Relaxed","Defense","Speed"],["Sassy","Sp. Def","Speed"],["Serious","",""],["Timid","Speed","Attack"]].forEach(([n,u,d])=>GENR.push([n+" Mint","Mints",d?"When a Pokémon smells this mint, its "+u+" grows more easily but its "+d+" grows more slowly.":"When a Pokémon smells this mint, all its stats grow at their usual rates.","Jubilife Village, farm harvest"+(n==="Adamant"||n==="Modest"?", Request #72":"")]));
+[["Survival","protects a person from fainting while out in the field"],["Tempting","tends to be lost before any other item when you faint in the field"],["Warding","protects a person from being afflicted with status conditions"]].forEach(([n,t])=>["B","P","R","T","Y"].forEach(c=>GENR.push([n+" Charm "+c,"Charms","A mysterious charm that "+t+". This type of charm comes in five colors.","Jubilife Village shop"])));
+[["Forest","the Lord of the Woods, Kleavor","Grandtree Arena"],["Marsh","the Lady of the Ridge, Lilligant","Lake Valor, Brava Arena"],["Mountain","the Lord of the Hollow, Electrode","Moonview Arena"],["Snow","the Lord of the Tundra, Avalugg","Icepeak Arena"],["Volcano","the Lord of the Isles, Arcanine","Molten Arena"]].forEach(([n,w,l])=>GENR.push([n+" Balm","Balms","A mysterious soothing balm that helps calm the frenzy of "+w+".",l]));
+[["Mysterious","to be used when battling Arceus","Temple of Sinnoh"],["Space","that has the power to calm Palkia in its frenzy","Temple of Sinnoh"],["Time","that has the power to calm Dialga in its frenzy","Temple of Sinnoh"]].forEach(([n,w,l])=>GENR.push([n+" Balm","Balms","A mysterious balm "+w+".",l]));
+[["Blank","Normal","Snowpoint Temple"],["Draco","Dragon","Lake Verity, Lake Valor, Lake Acuity"],["Dread","Dark","Moonview Arena"],["Earth","Ground","Sludge Mound"],["Fist","Fighting","Jubilife Village"],["Flame","Fire","Molten Arena"],["Icicle","Ice","Icepeak Arena"],["Insect","Bug","Grandtree Arena"],["Iron","Steel","Lava Dome Sanctum"],["Meadow","Grass","Brava Arena"],["Mind","Psychic","Heights Camp"],["Pixie","Fairy","Ancient Retreat"],["Sky","Flying","Snowpoint Temple"],["Splash","Water","Ginkgo Landing"],["Spooky","Ghost","Temple of Sinnoh"],["Stone","Rock","Grueling Grove"],["Toxic","Poison","Clamberclaw Cliffs"],["Zap","Electric","Moonview Arena"]].forEach(([n,t,l])=>GENR.push([n+" Plate","Plates","A stone tablet. When used on a certain Pokémon, it gives that Pokémon the "+t+" type. Plates are collected toward Arceus. Do not discard.",l]));
+GENR.push(["Legend Plate","Plates","A stone tablet with the essence of all creation. When used on a certain Pokémon, it gives that Pokémon every type.",""]);
+[["Adamant Crystal","When used on Dialga, this large glowing gem allows it to change form.","Lake Valor, Request #89"],["Lustrous Globe","When used on Palkia, this large glowing orb allows it to change form.","Pearl Settlement, Request #90"],["Griseous Core","When used on Giratina, this large glowing gem allows it to change form.","Turnback Cave"],["Azelf's Fang","Proof of Azelf's trial at Lake Valor. Needed to forge the Red Chain.","Lake Valor"],["Mesprit's Plume","Proof of Mesprit's trial at Lake Verity. Needed to forge the Red Chain.","Lake Verity"],["Uxie's Claw","Proof of Uxie's trial at Lake Acuity. Needed to forge the Red Chain.","Lake Acuity"],["Red Chain","A mythical chain said to bind the Legendary Pokémon that created the Hisui region.","Shrouded Ruins"],["Azure Flute","A flute with echoing sounds that do not seem to be of this world.","Temple of Sinnoh"],["Eternal Ice","Ice beloved by the Lord of the Tundra, Avalugg. Said to be fragments of ancient Avalugg.","Avalugg's Legacy"],["Gracidea","A flower often bundled in bouquets to convey gratitude.","Fieldlands Camp"],["Origin Ore","An ore of mysterious power, said to contain the power of Sinnoh itself.","Primeval Grotto"],["Reveal Glass","A special device that wrings out the potential of Pokémon. An imperfect prototype.","Ancient Retreat"],["Secret Medicine","An astonishing medicine that instantly restores any Pokémon's health. Made by an apothecary in Cianwood City.","Jubilife Village, Request #32"],["Old Journal","A stab-bound journal with all its torn pages collected and restored.","Avalanche Slopes"],["Torn Journal","An old diary missing the latter half of its pages.","Avalanche Slopes"],["Wall Fragment","A fragment of a stone panel from the Solaceon Ruins, carved with writing.","Golden Lowlands"],["Lost Satchel","A satchel that someone dropped.",""]].forEach(r=>GENR.push([r[0],"Key & misc",r[1],r[2]]));
+const RQD=P(`1|Wurmple Can Evolve|Beauregard (Jubilife Village)|3x Dazzling Honey|Beauregard keeps the Wurmple he's shown.
+2|Adorable Starly|Marli (Jubilife Village)|10x Poke Ball|
+3|What Did Shinx's Ears Look Like|Toshi (Jubilife Village)|3x Potion|
+4|Big Buizel, Little Buizel|Dorian (Jubilife Village)|5x Oran Berry, 1x Exp. Candy S|Keep checking your caught Buizels until you have a large specimen. Dorian keeps it.
+5|What It Takes to be Awesome|Sho (Jubilife Village)|3x Grit Dust|
+6|Mushroom Cake Marketing|Morel (Obsidian Fieldlands)|Mushroom Cake Crafting Recipe|
+7|Playing with Drifloon|Miki (Galaxy Board)|1x Stardust|The kid is behind the shed near the shoreline.
+8|Bothersome Bidoof|Tsumugi (Galaxy Board)|1x Rare Candy|
+9|Zubat's Eyes|Clarissa (Galaxy Board)|2x Aux Power|
+10|Wurmple's Evolved!|Beauregard (Jubilife Village)|1x Exp. Candy S|
+11|The Timbre of the Fields|Yeo (Obsidian Fieldlands)|3x Vivichoke|The Kricketune you show Yeo must be at Research Rank 10.
+12|A Perfect Pickling Stone|Radisa (Obsidian Fieldlands)|3x Honey Cake, 1x Exp. Candy S|
+13|Trees that Bear Berries|Bjorn (Galaxy Board)|15x Poke Ball|
+14|Berry Helpful|Andra (Jubilife Village)|3x Revive|
+15|Balloon Race in the Fieldlands|Balloon Race Guy (Obsidian Fieldlands)|1x Rare Candy, 15x Feather Ball|If you pop 25 or more, you get a Stardust the first time. If you pop all 30, the reward is a Nugget.
+16|Strange Happenings at Midnight|Sanqua (Jubilife Village)|7x Nanab Berry|
+17|To Bloom or Not to Bloom|Kichi (Jubilife Village)|5x Vivichoke|
+18|Please! Make me a Pokeshi Doll|Anvin (Jubilife Village)|1x Pokeshi Doll|
+19|A Peculiar Ponyta|Yota (Galaxy Board)|5x Razz Berry|
+20|The Mysterious Will-o-the-Wisp|Paira (Jubilife Village)|2x Exp. Candy S|Do not knock out the Chimchar; she needs to see it herself. It respawns if you fail.
+21|Back-Alley Mr. Mime|Andra (Galaxy Board)|2x Aux Guard|The invisible walls are a hassle, but you will get there.
+22|Eerie Apparitions in the Night|Vessa (Jubilife Village)|3x Twice-Spiced Radish|One of the longest sidequest chains in the game.
+23|Getting Ahold of New Wares|Choy (Jubilife Village)|The General Store gains new goods|
+24|Inspiration from Hippopotas|Anthe (Jubilife Village)|New attire is added to the Clothing Store|
+25|The Pokemon in the Woodland Photo|Dagero (Jubilife Village)|An extra feature option at the Photo Studio|He is looking for a Buneary.
+26|Aim for the Big Leagues|Taggart (Jubilife Village)|12x Great Ball, 1x Nugget|Try to nab multiple balloons per ball.
+27|Help Wanted: Plowing the Fields|Miller (Jubilife Village)|Additional Farm Fields|
+28|Measuring Your Compatibility|Belamy (Jubilife Village)|1x Rare Candy|
+29|The Search for Bitter Leaves|Shinon (Jubilife Village)|3x Fine Remedy, 5x Hoppo Berry|Shinon is in search of a Petilil.
+30|A Beautiful Rose|Berra (Crimson Mirelands)|5x Grain Cake, 2x Exp. Candy S|Roselia's Research Level must be at least 10.
+31|Setting up the Bogbound Camp|Odo (Crimson Mirelands)|An additional Base Camp is unlocked|
+32|The Headache-Stricken Psyduck|Martia (Crimson Mirelands)|1x Max Revive|Speak with Tomma for the Secret Medicine key item.
+33|What a Massive Mushroom|Morel (Galaxy Board)|5x Candy Truffle|Morel keeps the Parasect.
+34|Croagunk's Curative Poison|Pesselle (Galaxy Board)|3x Full Heal, 3x Exp. Candy S|Pesselle keeps the Croagunk.
+35|Battling with Pachirisu|Ren (Galaxy Board)|3x Sitrus Berry, 1x Grit Gravel|
+36|Watering with Care|Odo (Galaxy Board)|15x Heavy Ball, 3x Exp. Candy S|
+37|The Fragrance of Nostalgic Herbs|Risa (Galaxy Board)|5x Smoke Bomb, 2x Exp. Candy S|Tangela is, indeed, gone forever.
+38|Gone Astray In the Mirelands|Zeke (Galaxy Board)|3x Stardust|
+39|All About Magikarp|Ceci (Jubilife Village)|1x Rare Candy|Magikarp's Research Level must reach 10.
+40|The Charm Lost in the Swamp|Yojiro (Crimson Mirelands)|5x Iron Chunk, 1x Grit Gravel|
+41|An Elegant Tail|Asabei (Jubilife Village)|2x Aux Evasion, 2x Grit Gravel|
+42|Help Wanted: Watering the Fields|Miller (Jubilife Village)|Additional Farm Field|
+43|More New Wares|Choy (Jubilife Village)|The General Store gains more new goods|
+44|The Pokemon in the Nighttime Photo|Dagero (Jubilife Village)|Another extra feature option at the Photo Studio|It is Duskull.
+45|Shellos of East and West|Anthe (Jubilife Village)|More new attire is added to the Clothing Store|
+46|Setting up the Coastlands Camp|Gully (Cobalt Coastlands)|An additional Base Camp is unlocked|
+47|Balloon Race in the Coastlands|Balloon Race Guy (Cobalt Coastlands)|1x Nugget, 10x Ultra Ball|Additional rewards for higher marks.
+48|Taste of Home|Floaro (Jubilife Village)|Jubilife Muffins recipe|
+49|Keep an Eye Out for Aipom!|Hiko (Cobalt Coastlands)|5x Scatter Bang, 1x Exp. Candy M|
+50|Double the Tails, Double the Fun|Netta (Jubilife Village)|1x Star Piece|She wants a Finneon.
+51|Coming Up Roses|Himeno (Obsidian Fieldlands)|1x Seed of Mastery|Bring him a Scyther.
+52|Eevee's Evolutions|Floaro (Jubilife Village)|1x Rare Candy, Evolution Stone|Umbreon wants a Jubilife Muffin.
+53|Octillery's Ink|Radisa (Jubilife Village)|5x Bean Cake|Octillery's Research Level must be at least 10.
+54|Serving Up Swap Snacks|Bonn (Jubilife Village)|Swap Snack recipe|
+55|Poor, Peckish Piplup|Maris (Cobalt Coastlands)|5x Razz Berry, 3x Hyper Potion|Feed the Piplup a Bean Cake.
+56|Getting Help from Machoke|Bosley (Cobalt Coastlands)|3x Grit Gravel, 1x Aux Powerguard|Complete Machoke's Research Level to 10.
+57|The Taste of Honey|Almous (Galaxy Board)|3x King's Leaf, 3x Dazzling Honey|
+58|Gone Astray in the Coastlands|Zeke (Galaxy Board)|1x Star Piece|
+59|Misdreavus the Hairstyle Muse|Arezu (Jubilife Village)|Additional hairstyles available|
+60|Help Wanted: Rock Smashing in the Fields|Miller (Jubilife Village)|Additional Farm Fields|
+61|Even More New Wares|Choy (Jubilife Village)|The General Store gains even more new goods|
+62|The Pokemon in the River Photo|Dagero (Jubilife Village)|Yet another extra feature option at the Photography Studio|It is Turtwig this time.
+63|Fancy, Fashionable Wormadam|Anthe (Jubilife Village)|Even more attire is added at the Clothing Store|
+64|Getting to Know Ghosts|Ward (Jubilife Village)|1x Linking Cord|Gastly needs to be at least Research Level 10.
+65|Setting up the Mountain Camp|Eshim (Coronet Highlands)|An additional Base Camp is unlocked|
+66|The Sea's Legend|Laventon (Galaxy Board)|3x Comet Shard|
+67|The Clefairy's Moonlit Dance|Astair (Galaxy Board)|5x Salt Cake, 2x Exp. Candy M|
+68|A Nosepass to Guide the Way|Gully (Galaxy Board)|1x Black Augurite, 2x Exp. Candy M|Your Nosepass is Gully's forever.
+69|Gone Astray in the Highlands|Zeke (Galaxy Board)|2x Star Piece|
+70|Colorful New Looks|Anthe (Jubilife Village)|Still more attire is added at the Clothing Store|
+71|New Wares Yet Again|Choy (Jubilife Village)|The General Store gains still more new goods|
+72|Pesselle's Easy Errand|Pesselle (Galaxy Board)|1x Adamant Mint, 1x Modest Mint|It is probably faster to just buy all 100 Medicinal Leeks.
+73|Which is the Real Burmy|Leif (Jubilife Village)|1x Leaf Stone, 3x Exp. Candy M|Burmy's Research Level must be 10.
+74|A Bit of Help from Blissey|Pippa (Galaxy Board)|1x Shiny Stone, 2x Max Revive|The Abomasnow is tough, so focus on its Fire-type weakness.
+75|Kirlia the Hairstyle Muse|Arezu (Jubilife Village)|Additional hairstyles available|
+76|Mushroom Hunting with Swinub|Morel (Galaxy Board)|5x Sand Radish, 1x Exp. Candy L|Have a Swinub in your party while searching.
+77|Gone Astray in the Fieldlands|Zeke (Galaxy Board)|3x Star Piece|
+78|Setting up the Icepeak Camp|Brice (Alabaster Icelands)|An additional Base Camp is unlocked|
+79|Balloon Race in the Icelands|Balloon Race Guy (Alabaster Icelands)|3x Nugget|
+80|The Perfect Pickle Recipe|Radisa (Jubilife Village)|Twice-spiced Radish Recipe|
+81|In Search of a Fiery Pokemon|Brice (Alabaster Icelands)|3x Full Restore, 1x Exp. Candy L|
+82|Traces of a Lost Village|Mani (Galaxy Board)|1x Dawn Stone|
+83|Snow-White Vulpix in the Snow|Keaka (Galaxy Board)|1x Exp. Candy L|The Alolan Vulpix is at the Avalanche Slopes area.
+84|The Bergmite Enthusiast|Dominia (Alabaster Icelands)|3x Grit Pebble|Bergmite's Research Level must be 10 or more.
+85|A Home Under the Eaves|Ida (Galaxy Board)|1x Rare Candy, 1x Sun Stone|
+86|Gone Astray in the Icelands|Zeke (Galaxy Board)|Ice Stone, 5x Star Piece, 1x Peat Block|
+87|Rolling with Spheal|Senki (Coronet Highlands)|5x Sticky Glob, 1x Rare Candy|
+88|Steely Lucario|Rye (Galaxy Board)|1x Grit Rock|
+89|The Diamond Clan's Treasure|Adaman (Crimson Mirelands)|Adamant Crystal, 3x Comet Shard|Prepare for a three-on-one fight.
+90|The Pearl Clan's Treasure|Iridia (Alabaster Icelands)|Lustrous Globe, 3x Comet Shard|Prepare for another three-on-one fight.
+91|On the Trail of Giratina|Adaman (Jubilife Village)|1x Griseous Orb, 1x Grit Rock|The Griseous Orb will not drop unless Giratina has been caught.
+92|A Token of Gratitude|Medi (Galaxy Board)|1x Grit Rock|
+93|The Darksome Nightmare|Cael (Galaxy Board)|1x Exp. Candy XL|
+94|Incarnate Forces of Hisui|Cogita (Galaxy Board)|4x Exp. Candy L|`);
+
 // ---------- V7: UI PASS (grouped menu, item sheet, links, To Get) ----------
 let GO=()=>{},ITEM=()=>{},QK=()=>{},FN=1;
 const REGK=[["Obsidian Fieldlands",/obsidian|fieldlands/i],["Crimson Mirelands",/crimson|mirelands/i],["Cobalt Coastlands",/cobalt|coastlands/i],["Coronet Highlands",/coronet|highlands/i],["Alabaster Icelands",/alabaster|icelands/i]];
@@ -1082,9 +1308,13 @@ Plates|Key & misc|Story keys. Plates are collected toward Arceus. Do not discard
 Celestica Flute|Key & misc|Story key. The Flute calls ride Pokémon. Do not discard it.|Story
 Odd Keystone|Key & misc|Spiritomb-related item tied to the wisp hunt (Request 22). Check its in-game description.|Wisps`);
 const IDB=[...IDBR.map(r=>({n:r[0],c:r[1],d:r[2],w:r[3]||""})),...GIN.map(r=>({n:r[0],c:"Ginter finds",d:"Mystery item sold by Ginter at the Ginkgo Guild. Buying it reveals: "+r[1]+".",w:"Ginter (Ginkgo Guild), cost "+r[2]}))];
+IDBR2.concat(GENR).forEach(r=>{const o=IDB.find(x=>x.n===r[0]);if(o){if(r[2])o.d=r[2];if(r[3])o.w=r[3]}else IDB.push({n:r[0],c:r[1],d:r[2],w:r[3]||""})});
 const IDM={},ORD={};IDB.forEach((x,i)=>{IDM[x.n]=x;ORD[x.n]=i});
+const IDBS=[...IDB].sort((a,b)=>a.n.localeCompare(b.n));
 const ordIdx=n=>n in ORD?ORD[n]:9999;
 const srt=(a,f,az)=>[...a].sort((x,y)=>az?f(x).localeCompare(f(y)):(ordIdx(f(x))-ordIdx(f(y))||f(x).localeCompare(f(y))));
+IDBR2.forEach(r=>{if(r[0] in MAT&&r[3])MAT[r[0]]=r[3]});
+ITM.forEach(r=>{const o=IDBR2.find(x=>x[0]===r[0]);if(o&&o[3])r[2]=o[3]});
 const ITMM={};ITM.forEach(r=>{ITMM[r[0]]=r[2]});
 const ITMK=new Set(ITM.map(r=>r[0]));
 const CRR={},CRM={};CR.forEach(r=>{CRR[r[0]]=r;CRM[r[0]]={g:r[3]==="-"?[]:r[3].split(",").map(x=>{const a=x.split(":");return[a[0],+a[1]]})}});
@@ -1137,13 +1367,14 @@ const DOTS=s=>{const a=s.inv||{},b=s.itm||{},t=s.tg||{},PG=prog(s),d={};
  if(lc+li)d.need="r";if(lc)d.sat="r";if(li)d.items="r";
  if(setupGaps(s).length)d.setup="a";
  const ns=PG.nx?+((PG.nx[3].match(/\d+/)||[0])[0]):0;if(ns>PG.rk){d.stars="a";d.plan="a"}
+ {const bd=bkDays(s);if(bd===null||bd>=7)d.bk="a"}
  GROUPS.forEach(g=>{const v=g[3].map(x=>d[x[0]]);if(v.includes("r"))d[g[0]]="r";else if(v.includes("a"))d[g[0]]="a"});
  return d};
 // ----- small UI pieces
 const INAMES=[...new Set(IDB.map(x=>x.n).concat(CR.map(r=>r[0])))].filter(n=>n.length>3).sort((a,b)=>b.length-a.length);
 const INRE=new RegExp("("+INAMES.map(n=>n.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|")+")","g");
 const IL=({n,t})=>h`<button className="lnk" onClick=${e=>{e.preventDefault();e.stopPropagation();ITEM(n)}}>${t||n}</button>`;
-const LK=t=>{if(!t)return t;return String(t).split(INRE).map((x,i)=>i%2?h`<${IL} key=${i} n=${x}/>`:x)};
+const LK=t=>{if(!t)return t;const p=String(t).split(INRE);return p.map((x,i)=>i%2?((/[A-Za-z]$/.test(p[i-1]||"")||/^[A-Za-z]/.test(p[i+1]||""))?x:h`<${IL} key=${i} n=${x}/>`):x)};
 const RQ=(t,c)=>[...new Set((String(t||"").match(/#\d+/g)||[]).map(x=>+x.slice(1)))].map(n=>h`<button key=${n} className=${"chip "+(c["r"+n]?"opacity-50":"")} onClick=${()=>GO("req",{id:"r"+n})}>Request #${n}${c["r"+n]?" ✓":""}</button>`);
 function Num({v,set,min=0,max=1000000000,w="w-20"}){
  const [d,sd]=useState(null);
@@ -1153,6 +1384,21 @@ function Num({v,set,min=0,max=1000000000,w="w-20"}){
   className=${IN+" text-center "+w}/>`}
 const Step=({v,set,min=0,max=1000000000,w="w-16"})=>h`<span className="inline-flex items-center gap-1"><button className="btn-s" onClick=${()=>set(Math.max(min,(+v||0)-1))}>−</button><${Num} v=${v} set=${set} min=${min} max=${max} w=${w}/><button className="btn-s" onClick=${()=>set(Math.min(max,(+v||0)+1))}>+</button></span>`;
 function Bar({l,v,m,to}){const inner=h`<div className="mb-3"><div className="flex justify-between text-sm"><span>${l}${to?" ›":""}</span><span>${v}/${m}</span></div><div className="row-pg"><div style=${{width:(m?Math.min(100,v/m*100):0)+"%"}}></div></div></div>`;return to?h`<button className="block w-full text-left" onClick=${()=>GO(to)}>${inner}</button>`:inner}
+
+// ----- request rewards and recipe locations
+const isKnown=n=>!!(IDM[n]||CRR[n]||ITMK.has(n));
+const RALIAS={"Poke Ball":"Poké Ball","Star Pieces":"Star Piece","Hoppo Berry":"Hopo Berry","Pokeshi Doll":"Pokéshi Doll"};
+const rqItems=t=>{const it=[],tx=[];String(t).split(", ").forEach(p=>{const m=p.match(/^(\d+)x (.+)$/);let n=m?m[2]:p;const q=m?+m[1]:1;n=(RALIAS[n]||n).replace("’","'");if(isKnown(n))it.push({n,q});else tx.push(p)});return{it,tx}};
+const REQD={};
+RQD.forEach(r=>{const n=+r[0],i=REQ.findIndex(x=>+x[0]===n),o=rqItems(r[3]);REQD[n]={t:r[1],p:r[2],r:r[3],note:r[4]||"",it:o.it,tx:o.tx};
+ const row=LISTS.req.rows.find(x=>x.id==="r"+n);
+ if(i>=0){const old=REQ[i][2];REQ[i][1]=r[1];REQ[i][2]=r[3];
+  if(row){row.t="#"+n+" "+r[1];row.sub=r[2]+" · "+r[3];row.body="Given by: "+r[2]+"\nReward: "+r[3]+(r[4]?"\nNote: "+r[4]:"")+(old&&!/see the request in your in-game log/.test(old)&&old!==r[3]?"\nDetails: "+old:"");row.links=o.it.map(x=>["Item: "+x.n,"_item",x.n])}}});
+const reqRows=n=>{const d=REQD[+n];return d?d.it.map(x=>({n:x.n,q:x.q})):[]};
+const RCPW={};
+"Aux Evasion|Aux Guard|Aux Power|Aux Powerguard|Bean Cake|Dire Hit|Fine Remedy|Full Heal|Grain Cake|Honey Cake|Max Elixir|Max Ether|Max Revive|Remedy|Salt Cake|Star Piece|Sticky Glob|Superb Remedy".split("|").forEach(n=>{RCPW[n]="sold in the Jubilife Village shop"});
+"Great Ball|Heavy Ball|Gigaton Ball|Full Restore|Hyper Potion|Jet Ball|Jubilife Muffin|Leaden Ball|Max Potion|Poké Ball|Revive|Scatter Bang|Smoke Bomb|Stealth Spray|Ultra Ball|Wing Ball".split("|").forEach(n=>{RCPW[n]="Jubilife Village"});
+Object.assign(RCPW,{"Feather Ball":"Jubilife Village, Ginkgo Landing","Potion":"Horseshoe Plains","Mushroom Cake":"Request #6 reward","Old Gateau":"Brava Arena","Swap Snack":"Request #54 reward","Twice-Spiced Radish":"Request #80 reward","Choice Dumpling":"Coronet Highlands"});
 
 // ----- item pop-up
 function Sheet({n,s,set,close,back}){
@@ -1169,16 +1415,17 @@ function Sheet({n,s,set,close,back}){
    <div className="flex-1"><div className="text-xl font-bold text-amber-400">${n}</div><span className="tag">${it.c}</span>${lo?h`<span className="tag red ml-2">Low stock</span>`:null}</div>
    <button className="btn2" onClick=${close}>✕</button></div>
   <p className="text-sm mb-3">${LK(it.d)}</p>
+  ${RCPW[n]?h`<div className="text-xs text-slate-400 mb-2">Recipe location (item list): ${RCPW[n]}</div>`:null}
   <div className="card p-3 mb-3"><div className="flex items-center gap-2 flex-wrap"><b>You have</b><${Step} v=${have} set=${v=>setCnt(set,n,v)}/>
    ${tgt!=null?h`<span className="text-sm text-slate-400 flex items-center gap-1">restock below ${ITMK.has(n)?h`<${Num} v=${tgt} set=${v=>set(p=>({...p,tg:{...p.tg,[n]:v}}))} w="w-16"/>`:tgt}</span>`:null}</div>
    ${cnd?null:h`<div className="text-xs text-slate-500 mt-1">Not counted yet, so it will not raise a low-stock alert until you enter a number.</div>`}</div>
-  ${r?h`<div className="card p-3 mb-3"><b>How to make it</b>
+  ${r?h`<div className="card p-3 mb-3"><b>How to make it</b>${it.w?h`<div className="text-xs text-slate-400 mt-1">Also found: ${LK(it.w)}</div>`:null}
    <div className="mt-1">${ing.map(([k,q])=>h`<div key=${k} className="text-sm"><${IL} n=${k}/> × ${q} <span className=${(inv[k]||0)>=q?"text-green-400":"text-amber-400"}>(you have ${inv[k]||0})</span></div>`)}</div>
    <div className="text-sm mt-2">${u.ok?"✓ Recipe unlocked":"🔒 "+u.why}${u.to?h` <button className="lnk" onClick=${()=>{close();GO(u.to[0],u.to[1])}}>open ›</button>`:null}</div>
    ${u.ok&&can>0?h`<button className="btn mt-2" onClick=${()=>craft1(set,r)}>Craft 1 (you can make ${can})</button>`:null}
    ${!u.ok||known?h`<label className="flex items-center gap-2 text-sm mt-2"><input type="checkbox" checked=${known} onChange=${()=>set(p=>({...p,rcp:{...p.rcp,[n]:!(p.rcp||{})[n]}}))} className="w-5 h-5 accent-amber-500"/>I already have this recipe</label>`:null}</div>`
   :h`<div className="card p-3 mb-3"><b>Where to get it</b><div className="text-sm mt-1">${wh?LK(wh):"Source not loaded yet. Add a note below when you find it."}</div>
-   <div className="flex flex-wrap gap-2 mt-2">${RQ(wh,c)}</div>
+   ${ITMK.has(n)&&it.w&&it.w!==wh?h`<div className="text-xs text-slate-400 mt-2">More places: ${LK(it.w)}</div>`:null}<div className="flex flex-wrap gap-2 mt-2">${RQ(wh+" "+(ITMK.has(n)?it.w:""),c)}</div>
    ${av&&av.t?h`<div className=${"text-xs mt-2 "+(av.ok?"text-green-400":"text-amber-400")}>${av.ok?"✓ You should be able to get this now":"🔒 Opens at Mission "+(av.lk?av.lk[0]:"?")+" ("+av.rs[0]+")"}</div>`:null}</div>`}
   ${used.length?h`<div className="card p-3 mb-3"><b>Used to make</b><div className="flex flex-wrap gap-2 mt-2">${used.map(x=>h`<button key=${x} className="chip" onClick=${()=>ITEM(x)}>${x}</button>`)}</div></div>`:null}
   ${evo.length||shS.length||shG.length?h`<div className="card p-3 mb-3"><b>Evolutions and shops</b>
@@ -1194,10 +1441,10 @@ function Need({s,set}){
  const setRank=k=>set(p=>{const cur=SR.filter(r=>(+((p.m||{}).pts)||0)>=+r[1]).length;if(cur===k)return p;return{...p,m:{...p.m,pts:k?+SR[k-1][1]:0}}});
  const togR=r=>set(p=>({...p,ra:{...p.ra,[r]:!prog(p).open[r]}}));
  const G={};Object.keys(N.gross).forEach(k=>{const need=N.gross[k],have=inv[k]||0;if(have>=need)return;const av=avail(k,PG),g=av.first||(av.any?"Anywhere":"Locked");(G[g]=G[g]||[]).push({k,need,have,av})});
-Object.keys(G).forEach(g=>G[g].sort((a,b)=>ordIdx(a.k)-ordIdx(b.k)));
+Object.keys(G).forEach(g=>G[g].sort((a,b)=>a.k.localeCompare(b.k)));
  const order=["Anywhere",...REGN.filter(r=>PG.open[r]),"Locked"].filter(g=>G[g]);
  const craftNow=N.low.filter(x=>x.u.ok&&x.can>0),locked=N.low.filter(x=>!x.u.ok),nLow=N.low.length+N.oth.length;
- const sub={Anywhere:"No trip needed: shake trees, buy, or use drops and your farm.",Locked:"Not reachable yet. These need an area you have not opened."};
+ const sub={Anywhere:"No trip needed: shake trees, use your farm, or buy at the Jubilife Village shop (it adds goods after Choy's requests #23, #43, #61 and #71).",Locked:"Not reachable yet. These need an area you have not opened."};
  const gather=g=>h`<div key=${g} className="card p-3"><div className="font-semibold text-amber-400">${g==="Anywhere"?"🏘 Anywhere":g==="Locked"?"🔒 Not reachable yet":"📍 "+g}</div><div className="text-xs text-slate-400 mb-1">${sub[g]||"You can go here now."}</div>
   ${G[g].map(x=>h`<div key=${x.k} className="flex items-center gap-2 py-2 border-t border-slate-800"><div className="flex-1 min-w-0"><div><${IL} n=${x.k}/> <span className="text-sm text-amber-300">need ${x.need-x.have} more</span></div>
    <div className="text-xs text-slate-500">for ${(N.fm[x.k]||[]).join(", ")} · ${x.av.t||"source not loaded yet"}${x.av.lk?" · opens at Mission "+x.av.lk[0]:""}</div></div>
@@ -1220,7 +1467,7 @@ Object.keys(G).forEach(g=>G[g].sort((a,b)=>ordIdx(a.k)-ordIdx(b.k)));
 
 // ----- Satchel (slots you can type, unlock status, links)
 function Satchel({s,set}){
- const D={slots:20,used:0,cost:""},sa={...D,...s.sat},inv=s.inv||{},PG=prog(s),[fl,sfl]=useState("all"),[cat,sc]=useState(""),[q,sq]=useState(""),[az,saz]=useState(false);
+ const D={slots:20,used:0,cost:""},sa={...D,...s.sat},inv=s.inv||{},PG=prog(s),[fl,sfl]=useState("all"),[cat,sc]=useState(""),[q,sq]=useState(""),[az,saz]=useState(true);
  const up=(k,v)=>set(p=>({...p,sat:{...D,...p.sat,[k]:v}}));
  const R=CR.map(r=>({n:r[0],c:r[1],t:+r[2],g:CRM[r[0]].g,w:r[4],u:unl(r,PG,s),r}));
  const mats=[...new Set(R.flatMap(r=>r.g.map(x=>x[0])))].filter(k=>!CRR[k]);
@@ -1253,7 +1500,7 @@ function Satchel({s,set}){
   <h3 className="font-semibold text-amber-400 pt-2">Raw materials</h3><div className="grid grid-cols-1 sm:grid-cols-2 gap-2">${srt(mats.filter(k=>!q||k.toLowerCase().includes(q.toLowerCase())),k=>k,az).map(k=>{const av=avail(k,PG);return h`<div key=${k} className="card p-2 flex items-center gap-2"><div className="flex-1 min-w-0"><${IL} n=${k}/><div className="text-xs text-slate-400">${WH(k)||"source not loaded yet"}</div>${av.ok?null:h`<div className="text-xs text-amber-300">🔒 opens at Mission ${av.lk?av.lk[0]:"?"}</div>`}</div><${Step} v=${inv[k]||0} set=${v=>setCnt(set,k,v)}/></div>`})}</div></div>`}
 // ----- Items & Stock
 function Items({s,set}){const it=s.itm||{},tg=s.tg||{},cu=s.cu||[],c=s.c||{},[f,sf]=useState({n:"",t:5,w:""}),[fl,sfl]=useState("all"),[q,sq]=useState(""),lo=lowList(s);
- const R=[...ITM.map(r=>({n:r[0],t:tg[r[0]]??+r[1],w:r[2],cn:it[r[0]]||0,e:r[0] in it,k:r[0]})),...cu.map((x,i)=>({n:x.n,t:x.t,w:x.w,cn:x.c||0,e:true,i}))].sort((a,b)=>(lo.includes(b.n)?1:0)-(lo.includes(a.n)?1:0)||ordIdx(a.n)-ordIdx(b.n)).filter(r=>fl==="all"||(fl==="low"&&lo.includes(r.n))||(fl==="new"&&!r.e)).filter(r=>!q||r.n.toLowerCase().includes(q.toLowerCase()));
+ const R=[...ITM.map(r=>({n:r[0],t:tg[r[0]]??+r[1],w:r[2],cn:it[r[0]]||0,e:r[0] in it,k:r[0]})),...cu.map((x,i)=>({n:x.n,t:x.t,w:x.w,cn:x.c||0,e:true,i}))].sort((a,b)=>(lo.includes(b.n)?1:0)-(lo.includes(a.n)?1:0)||a.n.localeCompare(b.n)).filter(r=>fl==="all"||(fl==="low"&&lo.includes(r.n))||(fl==="new"&&!r.e)).filter(r=>!q||r.n.toLowerCase().includes(q.toLowerCase()));
  const upC=(r,k,v)=>r.k?set(p=>({...p,[k==="c"?"itm":"tg"]:{...p[k==="c"?"itm":"tg"],[r.k]:v}})):set(p=>({...p,cu:p.cu.map((x,j)=>j===r.i?{...x,[k]:v}:x)}));
  return h`<div className="space-y-3"><p className="text-sm text-slate-400">Training items and rewards. Enter what you have; anything under its target raises a red alert. Crafted balls and potions live in <button className="lnk" onClick=${()=>GO("sat")}>Satchel</button>. The list of what to go get is in <button className="lnk" onClick=${()=>GO("need")}>To Get</button>.</p>
   <input placeholder="Search items…" value=${q} onInput=${e=>sq(e.target.value)} className=${IN+" w-full"}/>
@@ -1266,7 +1513,7 @@ function Items({s,set}){const it=s.itm||{},tg=s.tg||{},cu=s.cu||[],c=s.c||{},[f,
   <details className="card p-3"><summary className="cursor-pointer text-sm text-slate-300">Quick start</summary><p className="text-xs text-slate-400 my-2">Fills in the item counts from your earlier chat so you do not have to type them all.</p><button onClick=${()=>set(p=>({...p,inv:{...p.inv,...SI},itm:{...p.itm,"Grit Dust":7,"Exp. Candy S":1}}))} className="btn">Load my current items (from chat)</button></details></div>`}
 // ----- Item Guide
 function Gloss({s,set}){const [q,sq]=useState(""),[cat,sc]=useState(""),cats=[...new Set(IDB.map(x=>x.c))];
- const r=IDB.filter(x=>(!cat||x.c===cat)&&(x.n+" "+x.d+" "+x.c).toLowerCase().includes(q.toLowerCase()));
+ const r=IDB.filter(x=>(!cat||x.c===cat)&&(x.n+" "+x.d+" "+x.c).toLowerCase().includes(q.toLowerCase())).sort((a,b)=>cats.indexOf(a.c)-cats.indexOf(b.c)||a.n.localeCompare(b.n));
  return h`<div className="space-y-3"><p className="text-sm text-slate-400">Every item in the app. Tap one to see what it does, where to get it, how to craft it and what it is used for.</p>
   <input placeholder="Search items…" value=${q} onInput=${e=>sq(e.target.value)} className=${IN+" w-full"}/>
   <div className="flex flex-wrap gap-2"><button className=${"chip "+(!cat?"on":"")} onClick=${()=>sc("")}>All</button>${cats.map(k=>h`<button key=${k} className=${"chip "+(cat===k?"on":"")} onClick=${()=>sc(k)}>${k}</button>`)}</div>
@@ -1309,10 +1556,14 @@ function Row({r,s,set,fo}){const on=!!(s.c||{})[r.id],op=!!fo&&fo.id===r.id;
 
 // ----- Dashboard
 const GT={"Pokédex Caught":"dex","Research Lv. 10":"dex","Perfected Entries":"dex","Alpha Caught":"alp","Side Requests":"req"};
+const BKJ=s=>JSON.stringify({...s,undo:undefined});
+const bkDays=s=>(+s.bk)?Math.floor((Date.now()-(+s.bk))/864e5):null;
+const bkText=s=>{const d=bkDays(s);return d===null?"never backed up":d===0?"backed up today":d===1?"backed up yesterday":"backed up "+d+" days ago"};
 function Dash({s,set}){
  const PG=prog(s),lo=lowList(s),c=s.c||{},dots=DOTS(s),cn=p=>Object.keys(c).filter(k=>c[k]&&k[0]===p).length,nx=PG.nx,need=nx?+((nx[3].match(/\d+/)||[0])[0]):0,nr=SR[PG.rk];
  return h`<div className="space-y-4">
   ${lo.length?h`<button className="card-red w-full text-left p-3 flex items-center gap-3" onClick=${()=>GO("need")}><span className="text-2xl">🔴</span><span className="flex-1"><b>${lo.length} item${lo.length>1?"s":""} low on stock</b><span className="block text-xs text-slate-300">${lo.slice(0,6).join(", ")}${lo.length>6?"…":""}</span></span><span className="text-amber-300 text-sm">To Get ›</span></button>`:null}
+  ${bkDays(s)===null||bkDays(s)>=7?h`<button className="card-amb w-full text-left p-3" onClick=${()=>GO("bk")}><b>Back up your data</b><span className="block text-xs text-slate-300">You are ${bkText(s)}. Your progress lives only in this browser, so clearing Safari data would erase it.</span><span className="text-amber-300 text-sm">Open Backup ›</span></button>`:null}
   ${setupGaps(s).length?h`<button className="card-amb w-full text-left p-3" onClick=${()=>GO("setup")}><b>Finish setup (${setupGaps(s).length} left)</b><span className="block text-xs text-slate-300">${setupGaps(s).join(" · ")}</span><span className="text-amber-300 text-sm">Open Setup ›</span></button>`:null}
   <div className="card p-3"><div className="text-xs text-slate-400">Do this next</div>${nx?h`<div className="font-semibold">Mission ${nx[0]}: ${nx[1]}</div><div className="text-sm text-slate-300">${nx[2]} · needs ${nx[3]}</div>${need>PG.rk?h`<div className="text-sm text-amber-400 mt-1">You need ★${need} first: ${SR[need-1][1]-PG.pts} more research points.</div>`:null}<div className="flex gap-2 mt-2 flex-wrap"><button className="btn" onClick=${()=>GO("guide",{m:+nx[0]})}>Open guide</button><button className="btn2" onClick=${()=>GO("plan")}>Next Steps</button></div>`:h`<div className="font-semibold">All story missions are ticked 🎉</div>`}</div>
   <div className="card p-3"><${Bar} l=${"Star Rank ★"+PG.rk+(nr?" → "+nr[0]:" (max)")} v=${PG.pts} m=${nr?+nr[1]:PG.pts||1} to="stars"/>
@@ -1346,7 +1597,7 @@ function Setup({s,set}){
  const cats=[...new Set(CR.map(r=>r[1]))];
  const mats=[...new Set(CR.flatMap(r=>CRM[r[0]].g.map(x=>x[0])))].filter(k=>!CRR[k]);
  const groups=[...cats.map(k=>[k,CR.filter(r=>r[1]===k).map(r=>r[0])]),["Training and rewards",ITM.map(r=>r[0])],["Raw materials",mats]];
-const [q,sq]=useState(""),[az,saz]=useState(false);
+const [q,sq]=useState(""),[az,saz]=useState(true);
  const allN=[...new Set(groups.flatMap(g=>g[1]))],qm=q?srt(allN.filter(k=>k.toLowerCase().includes(q.toLowerCase())),k=>k,az):[];
  const crow=k=>h`<div key=${k} className="flex items-center gap-2 text-sm"><span className="flex-1 min-w-0"><${IL} n=${k}/></span><${Cnt} s=${s} set=${set} k=${k}/></div>`;
  const sec=(n,t,body,open)=>h`<details open=${!!open} className="card p-3"><summary className="cursor-pointer font-semibold text-amber-400">${n}. ${t}</summary><div className="mt-3 space-y-3">${body}</div></details>`;
@@ -1374,11 +1625,9 @@ const [q,sq]=useState(""),[az,saz]=useState(false);
  </div>`}
 
 // ----- V8: quick update, buy planner, roster editing
-const isKnown=n=>!!(IDM[n]||CRR[n]||ITMK.has(n));
 const BALLS=CR.filter(r=>r[1]==="Balls").map(r=>r[0]);
-const REQN=w=>{const o=[];String(w||"").replace(/#(\d+) to #(\d+)/g,(_,a,b)=>{for(let i=+a;i<=+b;i++)o.push(i);return""}).replace(/#(\d+)/g,(_,a)=>{o.push(+a);return""});return o};
-const REQRW={};ITM.forEach(r=>REQN(r[2]).forEach(n=>{(REQRW[n]=REQRW[n]||[]).push(r[0])}));
-const ALPHAIT=ITM.filter(r=>/Alpha drops/.test(r[2])).map(r=>r[0]);
+const ALPHAIT=ITM.filter(r=>/Alpha|defeating Pokémon/.test(r[2])).map(r=>r[0]);
+const WILDIT=["Grit Dust","Grit Gravel","Grit Pebble","Grit Rock"];
 const rkRew=k=>{const o=[];String(SR[k-1][3]).replace(/(\d+)x ([^,]+)/g,(_,q,n)=>{o.push({n:n.trim(),q:+q});return""});return o};
 const rkRews=(a,b)=>{const m={};for(let k=a;k<=b;k++)rkRew(k).forEach(x=>{m[x.n]=(m[x.n]||0)+x.q});return Object.entries(m).map(([n,q])=>({n,q}))};
 function RowsEd({rows,set,title,hints}){
@@ -1387,32 +1636,34 @@ function RowsEd({rows,set,title,hints}){
   <div className="flex flex-wrap gap-2 items-center"><button className="chip" onClick=${()=>set([...rows,{n:"",q:1}])}>+ Add item</button>${(hints||[]).filter(n=>!rows.some(r=>r.n===n)).slice(0,8).map(n=>h`<button key=${n} className="chip" onClick=${()=>set([...rows,{n,q:1}])}>${n}</button>`)}</div></div>`}
 function Quick({s,set,close,m0}){
  const PG=prog(s);
- const mk=()=>({n:"",lv:5,al:false,ball:"",ro:true,ms:PG.nx?+PG.nx[0]:27,rq:"1",ft:"wild",fnm:"",aa:"",rk:Math.min(10,PG.rk+1),gain:[],used:[],mg:0,mgs:1});
- const [mode,sm]=useState(m0||"catch"),[f,sf]=useState(mk),[done,sd]=useState(null);
+ const nr0=(REQ.find(x=>!(s.c||{})["r"+x[0]])||["1"])[0];
+ const mk=k=>({n:"",lv:5,al:false,ball:"",ro:true,ms:PG.nx?+PG.nx[0]:27,rq:nr0,ft:"wild",fnm:"",aa:"",rk:Math.min(10,PG.rk+1),gain:k==="req"?reqRows(nr0):[],used:[],mg:0,mgs:1});
+ const [mode,sm]=useState(m0||"catch"),[f,sf]=useState(()=>mk(m0||"catch")),[done,sd]=useState(null);
  const up=o=>sf(x=>({...x,...o}));
+ const undo=()=>{set(p=>p.undo?{...p.undo.sn,bk:p.bk}:p);sd(null)};
  const MODES=[["catch","Caught"],["mission","Mission"],["req","Request"],["fight","Fight"],["rank","Rank up"],["items","Items"]];
  const apply=()=>{
   const gain=f.gain.filter(r=>isKnown(r.n)&&r.q>0),used=f.used.filter(r=>isKnown(r.n)&&r.q>0),L=[];
   const nm=f.n.trim(),d=DEX.find(x=>x.n.toLowerCase()===nm.toLowerCase()),dn=d?d.n:nm;
   if(mode==="catch"){if(!dn)return;L.push("Caught "+dn+" Lv. "+f.lv+(f.al?" (Alpha)":"")+(f.ball?" with "+f.ball:""))}
   if(mode==="mission"){const m=MIS.find(x=>+x[0]===+f.ms);L.push("Finished Mission "+f.ms+(m?": "+m[1]:""))}
-  if(mode==="req"){const r=REQ.find(x=>+x[0]===+f.rq);L.push("Finished Request #"+f.rq+(r?": "+r[1]:""))}
+  if(mode==="req"){const r=REQ.find(x=>+x[0]===+f.rq);L.push("Finished Request #"+f.rq+(r?": "+r[1]:""));const d=REQD[+f.rq];(d?d.tx:[]).forEach(x=>{if(/recipe$/i.test(x))L.push("Recipe unlocked: "+x)})}
   if(mode==="fight")L.push("Beat "+(f.ft==="alpha"?"an Alpha ":f.ft==="boss"?"a boss or noble ":"a wild ")+(f.fnm.trim()||"Pokémon"));
   if(mode==="rank")L.push("Reached Star Rank "+f.rk);
   gain.forEach(r=>L.push("+"+r.q+" "+r.n));used.forEach(r=>L.push("−"+r.q+" "+r.n));
   if(f.mg)L.push((f.mgs>0?"+":"−")+f.mg+" money");
   if(!L.length)return;
-  set(p=>{let q={...p};const add=(k,dl)=>{q=applyCnt(q,k,Math.max(0,cntOf(q,k)+dl))};
+  set(p=>{let q={...p};const sn={...p};delete sn.undo;const add=(k,dl)=>{q=applyCnt(q,k,Math.max(0,cntOf(q,k)+dl))};
    gain.forEach(r=>add(r.n,r.q));used.forEach(r=>add(r.n,-r.q));
    if(f.mg)q.money=Math.max(0,(+q.money||0)+f.mgs*f.mg);
    if(mode==="catch"){q.log=[{n:dn,lv:f.lv},...(q.log||[])];if(d){q.c={...q.c,["dc"+d.i]:true};if(f.al)q.c["da"+d.i]=true}
     if(f.ball)add(f.ball,-1);
     if(f.ro)q.ro=[...(q.ro||[]),{n:dn,t1:d?d.ty[0]:"Normal",t2:d&&d.ty[1]?d.ty[1]:"",lv:f.lv,nat:"",al:f.al,el:[0,0,0,0,0,0]}]}
    if(mode==="mission")q.c={...q.c,["s"+f.ms]:true};
-   if(mode==="req")q.c={...q.c,["r"+f.rq]:true};
+   if(mode==="req"){q.c={...q.c,["r"+f.rq]:true};const d=REQD[+f.rq];(d?d.tx:[]).forEach(x=>{const m=x.match(/^(.*?) (?:crafting )?recipe$/i);if(m){const b=m[1].toLowerCase(),r=CR.find(y=>y[0].toLowerCase()===b||y[0].toLowerCase()+"s"===b);if(r)q.rcp={...q.rcp,[r[0]]:true}}})}
    if(mode==="fight"&&f.aa!=="")q.c={...q.c,["a"+f.aa]:true};
    if(mode==="rank")q.m={...q.m,pts:Math.max(+((q.m||{}).pts)||0,+SR[f.rk-1][1])};
-   q.act=[...L,...(q.act||[])].slice(0,25);return q});
+   q.act=[...L,...(q.act||[])].slice(0,25);q.undo={sn,label:L.join("; ").slice(0,140)};return q});
   sd(L)};
  const money=h`<div className="card p-2 flex flex-wrap items-center gap-2"><span className="text-sm font-semibold">Money</span><button className=${"chip "+(f.mgs>0?"on":"")} onClick=${()=>up({mgs:1})}>Gained</button><button className=${"chip "+(f.mgs<0?"on":"")} onClick=${()=>up({mgs:-1})}>Spent</button><${Num} v=${f.mg} set=${v=>up({mg:v})} w="w-24"/><span className="text-xs text-slate-400">now ${+s.money||0}</span></div>`;
  const rw=(hints,t)=>h`<${RowsEd} rows=${f.gain} set=${v=>up({gain:v})} title=${t||"Items received"} hints=${hints}/>`;
@@ -1424,22 +1675,25 @@ function Quick({s,set,close,m0}){
   <div className="text-xs text-slate-400">Ticks it as Caught in the Pokédex and adds it to the catch log.</div></div>`;
  else if(mode==="mission")body=h`<div className="space-y-2"><select value=${f.ms} onChange=${e=>up({ms:+e.target.value})} className=${IN+" w-full"}>${MIS.map(m=>h`<option key=${m[0]} value=${m[0]}>Mission ${m[0]}: ${m[1]}</option>`)}</select>
   <div className="text-xs text-slate-400">I do not have mission reward lists saved yet, so add what the game gave you below.</div>${rw([])}</div>`;
- else if(mode==="req")body=h`<div className="space-y-2"><select value=${f.rq} onChange=${e=>up({rq:e.target.value})} className=${IN+" w-full"}>${REQ.map(r=>h`<option key=${r[0]} value=${r[0]}>#${r[0]} ${r[1]}</option>`)}</select>
-  ${(REQRW[+f.rq]||[]).length?h`<div className="text-xs text-slate-400">My data lists this request as a source of: ${REQRW[+f.rq].join(", ")}. Amounts are not saved, so enter them.</div>`:h`<div className="text-xs text-slate-400">No saved reward info for this request. Add what the game gave you.</div>`}${rw(REQRW[+f.rq])}</div>`;
+ else if(mode==="req"){const d=REQD[+f.rq];body=h`<div className="space-y-2"><select value=${f.rq} onChange=${e=>up({rq:e.target.value,gain:reqRows(+e.target.value)})} className=${IN+" w-full"}>${REQ.map(r=>h`<option key=${r[0]} value=${r[0]}>#${r[0]} ${r[1]}${(s.c||{})["r"+r[0]]?" ✓":""}</option>`)}</select>
+  ${d?h`<div className="text-xs text-slate-300">Given by ${d.p}. Reward: ${d.r}.${d.note?" Note: "+d.note:""}</div>`:h`<div className="text-xs text-slate-400">No saved reward info for this request. Add what the game gave you.</div>`}
+  ${d&&d.tx.length?h`<div className="text-xs text-amber-300">Also unlocks or gives: ${d.tx.join(", ")} (nothing to count).</div>`:null}
+  <div className="text-xs text-slate-400">The reward items are filled in below. Change anything that differs from what the game gave you.</div>${rw([])}</div>`}
  else if(mode==="fight")body=h`<div className="space-y-2"><div className="flex gap-2 flex-wrap">${[["wild","Wild"],["alpha","Alpha"],["boss","Boss or noble"]].map(([k,l])=>h`<button key=${k} className=${"chip "+(f.ft===k?"on":"")} onClick=${()=>up({ft:k})}>${l}</button>`)}</div>
   <input placeholder="Which Pokémon or boss (optional)" value=${f.fnm} onInput=${e=>up({fnm:e.target.value})} className=${IN+" w-full"}/>
   ${f.ft==="alpha"?h`<select value=${f.aa} onChange=${e=>up({aa:e.target.value})} className=${IN+" w-full"}><option value="">Static Alpha to tick off (optional)</option>${AL.map((a,i)=>h`<option key=${i} value=${i}>${a[0]} Lv. ${a[1]} · ${a[3]}</option>`)}</select>`:null}
-  ${rw(f.ft==="alpha"?ALPHAIT:[],"Drops and rewards")}<${RowsEd} rows=${f.used} set=${v=>up({used:v})} title="Items used up in the fight"/></div>`;
+  ${rw(f.ft==="alpha"?ALPHAIT:f.ft==="wild"?WILDIT:[],"Drops and rewards")}<${RowsEd} rows=${f.used} set=${v=>up({used:v})} title="Items used up in the fight"/></div>`;
  else if(mode==="rank")body=h`<div className="space-y-2"><label className="text-sm flex items-center gap-2">I reached<select value=${f.rk} onChange=${e=>{const k=+e.target.value;up({rk:k,gain:k>PG.rk?rkRews(PG.rk+1,k):[]})}} className=${IN}>${[1,2,3,4,5,6,7,8,9,10].filter(k=>k>PG.rk).map(k=>h`<option key=${k} value=${k}>★ ${k}</option>`)}</select></label>
   <div className="text-xs text-slate-400">Research points are set to that rank's minimum. The reward items from the Stars table are filled in below; check them against what the game gave you.</div>
   ${rw(PG.rk<10?rkRews(PG.rk+1,f.rk).map(x=>x.n):[],"Rank-up rewards")}<button className="chip" onClick=${()=>up({gain:rkRews(PG.rk+1,f.rk)})}>Fill in from Stars table</button></div>`;
  else body=h`<div className="space-y-2"><${RowsEd} rows=${f.gain} set=${v=>up({gain:v})} title="Items gained (found, bought, rewarded)"/><${RowsEd} rows=${f.used} set=${v=>up({used:v})} title="Items used or given away"/></div>`;
  return h`<div className="sheet-bg" onClick=${close}><div className="sheet" onClick=${e=>e.stopPropagation()}>
   <div className="flex items-center mb-2"><div className="text-xl font-bold text-amber-400 flex-1">Quick update</div><button className="btn2" onClick=${close}>✕</button></div>
-  <datalist id="itmn">${IDB.map(x=>h`<option key=${x.n} value=${x.n}/>`)}</datalist>
-  ${done?h`<div className="card-grn p-3 space-y-1"><b>Saved</b>${done.map((x,i)=>h`<div key=${i} className="text-sm">✓ ${x}</div>`)}<div className="flex gap-2 mt-2"><button className="btn" onClick=${()=>{sd(null);sf(mk())}}>Update more</button><button className="btn2" onClick=${close}>Close</button></div></div>`
-  :h`<div className="space-y-3"><div className="flex flex-wrap gap-2">${MODES.map(([k,l])=>h`<button key=${k} className=${"chip "+(mode===k?"on":"")} onClick=${()=>{sm(k);sf(mk())}}>${l}</button>`)}</div>
+  <datalist id="itmn">${IDBS.map(x=>h`<option key=${x.n} value=${x.n}/>`)}</datalist>
+  ${done?h`<div className="card-grn p-3 space-y-1"><b>Saved</b>${done.map((x,i)=>h`<div key=${i} className="text-sm">✓ ${x}</div>`)}<div className="flex gap-2 mt-2"><button className="btn" onClick=${()=>{sd(null);sf(mk(mode))}}>Update more</button><button className="btn2" onClick=${close}>Close</button>${s.undo?h`<button className="chip" onClick=${undo}>↩ Undo this update</button>`:null}</div></div>`
+  :h`<div className="space-y-3"><div className="flex flex-wrap gap-2">${MODES.map(([k,l])=>h`<button key=${k} className=${"chip "+(mode===k?"on":"")} onClick=${()=>{sm(k);sf(mk(k))}}>${l}</button>`)}</div>
    ${body}${money}<button className="btn w-full" onClick=${apply}>Confirm and save</button>
+   ${s.undo?h`<div className="card p-2 text-xs"><b>Last update:</b> ${s.undo.label} <button className="lnk" onClick=${undo}>↩ Undo</button><div className="text-slate-500 mt-1">Undo puts everything back the way it was just before that update, including anything you changed after it.</div></div>`:null}
    ${(s.act||[]).length?h`<div className="text-xs text-slate-500"><div className="font-semibold text-slate-400 mb-1">Recent updates</div>${s.act.slice(0,6).map((x,i)=>h`<div key=${i}>${x}</div>`)}</div>`:null}</div>`}
  </div></div>`}
 // ----- Buy planner
@@ -1457,7 +1711,7 @@ function Buy({s,set}){
   const rank=r.pri==="s"?9:r.pri==="h"?0:r.pri==="l"?4:tier;
   return{have,t,need,tier,rank}};
  const keepSug=Math.round(money*0.2/100)*100,keep=cd.keep!=null?cd.keep:keepSug;
- const items=rows.map((r,i)=>({r,i,...info(r)})).sort((a,b)=>a.rank-b.rank||(+a.r.p||0)-(+b.r.p||0));
+ const items=rows.map((r,i)=>({r,i,...info(r)})).sort((a,b)=>a.rank-b.rank||(+a.r.p||0)-(+b.r.p||0)||a.r.n.localeCompare(b.r.n));
  let left=Math.max(0,money-keep),spend=0,want=0;
  const plan=items.map(x=>{const p=+x.r.p||0,mx=Math.min(x.r.q!=null?x.r.q:99,x.need);
   if(x.rank>=9||x.need<=0)return{...x,buy:0,st:"skip"};
@@ -1465,7 +1719,7 @@ function Buy({s,set}){
   want+=mx*p;const buy=Math.min(mx,Math.floor(left/p));left-=buy*p;spend+=buy*p;
   return{...x,buy,st:buy>=mx?"buy":buy>0?"part":"cant",mx}});
  const cantAll=plan.filter(x=>x.st==="cant"||x.st==="part");
- const addLow=()=>{const names=[...N.low.map(x=>x.n),...N.oth.map(x=>x.n),...Object.keys(N.gross).filter(k=>(N.gross[k]-cntOf(s,k))>0)];const ex=new Set(rows.map(r=>r.n));setRows([...rows,...[...new Set(names)].filter(n=>!ex.has(n)).sort((a,b)=>ordIdx(a)-ordIdx(b)).map(n=>({n,p:hint(n),q:99}))])};
+ const addLow=()=>{const names=[...N.low.map(x=>x.n),...N.oth.map(x=>x.n),...Object.keys(N.gross).filter(k=>(N.gross[k]-cntOf(s,k))>0)];const ex=new Set(rows.map(r=>r.n));setRows([...rows,...[...new Set(names)].filter(n=>!ex.has(n)).sort((a,b)=>a.localeCompare(b)).map(n=>({n,p:hint(n),q:99}))])};
  const cap={buy:["Buy","tag grn"],part:["Buy some","tag amb"],cant:["Cannot afford","tag red"],skip:["Not needed","tag"],price:["Enter price","tag amb"]};
  const pris=[["","Auto"],["h","High"],["l","Low"],["s","Skip"]];
  return h`<div className="space-y-3">
@@ -1473,7 +1727,7 @@ function Buy({s,set}){
    <div className="flex flex-wrap items-center gap-4"><label className="text-sm">${lab} you have <${Num} v=${money} set=${v=>set(p=>({...p,[cur==="m"?"money":"mp"]:v}))} w="w-28"/></label>
    <label className="text-sm">Keep at least <${Num} v=${keep} set=${v=>upd(c=>({...c,keep:v}))} w="w-24"/></label></div>
    <div className="text-xs text-slate-400">${cd.keep!=null?"You set the amount to keep. ":"Suggested: keep 20% ("+keepSug+") as a cushion. Change it if you like. "}One shop currency at a time. Switch the buttons above for Simona's Merit Points.</div></div>
-  <datalist id="itmn">${IDB.map(x=>h`<option key=${x.n} value=${x.n}/>`)}</datalist>
+  <datalist id="itmn">${IDBS.map(x=>h`<option key=${x.n} value=${x.n}/>`)}</datalist>
   <div className="card p-3 space-y-2"><b className="text-amber-400 text-sm">What the shop is selling</b>
    <div className="flex flex-wrap gap-2 items-center"><input list="itmn" placeholder="Item" value=${f.n} onInput=${e=>{const n=e.target.value;sf({...f,n,p:f.p||hint(n)})}} className=${IN+" flex-1 min-w-0"}/><span className="text-xs text-slate-400">Price</span><${Num} v=${f.p} set=${v=>sf({...f,p:v})} w="w-20"/><span className="text-xs text-slate-400">Stock</span><${Num} v=${f.q} set=${v=>sf({...f,q:v})} w="w-16"/>
     <button className="btn" onClick=${()=>{const n=f.n.trim();if(n&&isKnown(n)&&!rows.some(r=>r.n===n)){setRows([...rows,{n,p:f.p,q:f.q}]);sf({n:"",p:0,q:99})}}}>Add</button></div>
@@ -1541,11 +1795,11 @@ function App(){
   <h2 className="font-semibold text-amber-400 mb-2">Simona’s Trading Post (Merit Points)</h2><${Tbl} head=${["Item","MP","Evolves"]} rows=${SIM.map(r=>[LK(r[0]),r[1],r[2]])}/>
   <h2 className="font-semibold text-amber-400 mb-2">Zisu’s Move Tutor</h2><${Tbl} head=${["Move","Type","Priority","Why"]} rows=${ZIS}/></div>`;
  else if(NEW[tab]){const C=NEW[tab];body=h`<${C} key=${foc.n} s=${s} set=${set} fo=${fo}/>`}
- else if(tab==="bk")body=h`<div className="space-y-3"><p className="text-sm text-slate-300">Your progress is saved in this browser only. Copy or download a backup now and then. To restore, paste a backup below and press Import.</p>
-  <div className="flex gap-2 flex-wrap"><button className="btn" onClick=${()=>{try{navigator.clipboard.writeText(JSON.stringify(s)).then(()=>alert("Backup copied.")).catch(()=>alert("Could not copy. Select the text below and copy it by hand."))}catch(e){alert("Could not copy. Select the text below and copy it by hand.")}}}>Copy backup</button><button className="btn2" onClick=${()=>{try{const b=new Blob([JSON.stringify(s)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="hisui-backup.json";a.click()}catch(e){alert("Could not download. Use Copy backup instead.")}}}>Download file</button></div>
-  <textarea readOnly value=${JSON.stringify(s)} className="w-full h-32 bg-slate-900 border border-slate-700 rounded p-2 text-xs"/>
+ else if(tab==="bk")body=h`<div className="space-y-3"><p className="text-sm text-slate-300">Your progress is saved in this browser only (${bkText(s)}). Copy or download a backup now and then. To restore, paste a backup below and press Import.</p>
+  <div className="flex gap-2 flex-wrap"><button className="btn" onClick=${()=>{try{navigator.clipboard.writeText(BKJ(s)).then(()=>{set(p=>({...p,bk:Date.now()}));alert("Backup copied.")}).catch(()=>alert("Could not copy. Select the text below and copy it by hand."))}catch(e){alert("Could not copy. Select the text below and copy it by hand.")}}}>Copy backup</button><button className="btn2" onClick=${()=>{try{const b=new Blob([BKJ(s)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="hisui-backup.json";a.click();set(p=>({...p,bk:Date.now()}))}catch(e){alert("Could not download. Use Copy backup instead.")}}}>Download file</button></div>
+  <textarea readOnly value=${BKJ(s)} className="w-full h-32 bg-slate-900 border border-slate-700 rounded p-2 text-xs"/>
   <textarea value=${imp} onInput=${e=>setImp(e.target.value)} placeholder="Paste backup JSON here" className="w-full h-32 bg-slate-900 border border-slate-700 rounded p-2 text-xs"/>
-  <div className="flex gap-2"><button className="btn" onClick=${()=>{try{set(JSON.parse(imp));setImp("")}catch(e){alert("That isn’t valid backup JSON.")}}}>Import</button><button className="px-4 py-2 rounded-lg bg-red-700 font-semibold" onClick=${()=>{if(rs){set({});setRs(false)}else setRs(true)}}>${rs?"Click again to confirm reset":"Reset all progress"}</button></div></div>`;
+  <div className="flex gap-2"><button className="btn" onClick=${()=>{try{set({...JSON.parse(imp),bk:Date.now()});setImp("")}catch(e){alert("That isn’t valid backup JSON.")}}}>Import</button><button className="px-4 py-2 rounded-lg bg-red-700 font-semibold" onClick=${()=>{if(rs){set({});setRs(false)}else setRs(true)}}>${rs?"Click again to confirm reset":"Reset all progress"}</button></div></div>`;
  else{const L=LISTS[tab],f1=fo.id,rows=f1?L.rows.filter(r=>r.id===f1):L.rows.filter(r=>(r.t+r.sub+r.body).toLowerCase().includes(q.toLowerCase()));
   body=h`<div><${Bar} l=${L.n} v=${cnt(L.p)} m=${L.rows.length}/>${f1?h`<div className="card-amb p-2 mb-2 flex items-center gap-2 text-sm"><span>Showing 1 entry</span><button className="btn2 ml-auto" onClick=${()=>setFoc({tab,n:FN++})}>Show all ${L.rows.length}</button></div>`:h`<input placeholder="Search this list…" value=${q} onInput=${e=>setQ(e.target.value)} className=${IN+" w-full mb-3"}/>`}${rows.map(r=>h`<${Row} key=${r.id} r=${r} s=${s} set=${set} fo=${f1?{id:f1}:null}/>`)}</div>`}
  const gk=TABG[tab]||"home",G0=GROUPS.find(g=>g[0]===gk)||GROUPS[0],dt=k=>dots[k]?h`<span className=${"dot "+(dots[k]==="a"?"a":"")}></span>`:null;
