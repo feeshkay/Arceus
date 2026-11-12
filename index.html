@@ -694,11 +694,7 @@ function Roster({s,set}){
  const miss=E.filter(e=>!cov.has(e)).slice(0,6),stack=A.filter(t=>team.filter(m=>mult(ty(m),t)>1).length>=3);
  const sel=(v,fn,ph)=>h`<select value=${v} onChange=${e=>fn(e.target.value)} className=${IN}>${ph?h`<option value="">No 2nd type</option>`:null}${TYPES.map(t=>h`<option key=${t}>${t}</option>`)}</select>`;
  return h`<div className="space-y-4">
- <div className="bg-slate-800/70 rounded-lg p-3 space-y-2"><h3 className="font-semibold text-amber-400">Add to roster</h3>
-  <div className="flex flex-wrap gap-2"><input placeholder="Pokémon (e.g. Gallade)" value=${f.n} onInput=${e=>sf({...f,n:e.target.value})} className=${IN}/>${sel(f.t1,v=>sf({...f,t1:v}))}${sel(f.t2,v=>sf({...f,t2:v}),1)}<input type="number" min="1" max="100" value=${f.lv} onInput=${e=>sf({...f,lv:+e.target.value})} className=${IN+" w-20"}/><input placeholder="Nature" value=${f.nat} onInput=${e=>sf({...f,nat:e.target.value})} className=${IN+" w-28"}/><label className="flex items-center gap-1 text-sm"><input type="checkbox" checked=${f.al} onChange=${e=>sf({...f,al:e.target.checked})}/>Alpha</label></div>
-  <div className="flex flex-wrap gap-2 text-xs">${ST.map((x,i)=>h`<label key=${x}>${x} EL<input type="number" min="0" max="10" value=${f.el[i]} onInput=${e=>{const v=Math.min(10,Math.max(0,+e.target.value));sf({...f,el:f.el.map((y,j)=>j===i?v:y)})}} className=${IN+" w-16 ml-1"}/></label>`)}</div>
-  <button className="bg-amber-600 px-4 py-2 rounded" onClick=${()=>{if(f.n.trim()){set(p=>({...p,ro:[...(p.ro||[]),{...f,n:f.n.trim()}]}));sf({...f,n:""})}}}>Add</button></div>
- ${ro.map((m,i)=>h`<div key=${i} className="flex gap-2 items-center text-sm bg-slate-800/70 rounded p-2"><b>${m.n}</b><span className="text-slate-400">${ty(m).join("/")} · Lv.${m.lv}${m.nat?" · "+m.nat:""}${m.al?" · Alpha":""}</span><span className="ml-auto">EL ${tot(m)}/60</span><button onClick=${()=>set(p=>({...p,ro:p.ro.filter((_,j)=>j!==i)}))} className="text-red-400">✕</button></div>`)}
+ <${RosterEdit} s=${s} set=${set}/>
  <div className="bg-slate-800/70 rounded-lg p-3 space-y-2"><h3 className="font-semibold text-amber-400">Best team</h3>
   <div className="flex flex-wrap gap-2"><select value=${mode} onChange=${e=>sm(e.target.value)} className=${IN}>${Object.entries(M).map(([k,v])=>h`<option key=${k} value=${k}>${v[0]}</option>`)}</select>${mode==="leg"?h`<select value=${lg} onChange=${e=>sl(e.target.value)} className=${IN}>${LEG.map(r=>h`<option key=${r[0]}>${r[0]}</option>`)}</select>`:null}</div>
   ${team.length?null:h`<p className="text-sm text-slate-400">Add Pokémon above to get a lineup.</p>`}
@@ -766,7 +762,7 @@ function Log({s,set}){const [n,sn]=useState(""),[lv,sl]=useState(5),lg=s.log||[]
  const add=()=>{const d=DEX.find(x=>x.n.toLowerCase()===n.trim().toLowerCase()),nm=d?d.n:n.trim();if(!nm)return;set(p=>({...p,log:[{n:nm,lv},...(p.log||[])],c:d?{...p.c,["dc"+d.i]:true}:p.c}));sn("")};
  const hits=nm=>REQ.filter(r=>(r[1]+" "+r[2]).toLowerCase().includes(nm.toLowerCase().split(" ").pop()));
  const bt="px-2 py-1 rounded text-xs ";
- return h`<div className="space-y-3"><div className="flex flex-wrap gap-2"><input list="dxn" placeholder="Pokémon you just caught" value=${n} onInput=${e=>sn(e.target.value)} className=${IN}/><datalist id="dxn">${DEX.map(d=>h`<option key=${d.i} value=${d.n}/>`)}</datalist><input type="number" min="1" max="100" value=${lv} onInput=${e=>sl(+e.target.value)} className=${IN+" w-20"}/><button onClick=${add} className="bg-amber-600 px-4 py-2 rounded">Log catch</button></div>
+ return h`<div className="space-y-3"><div className="flex flex-wrap gap-2"><input list="dxn" placeholder="Pokémon you just caught" value=${n} onInput=${e=>sn(e.target.value)} className=${IN}/><datalist id="dxn">${DEX.map(d=>h`<option key=${d.i} value=${d.n}/>`)}</datalist><${Num} v=${lv} set=${v=>sl(v)} min=${1} max=${100} w="w-20"/><button onClick=${add} className="bg-amber-600 px-4 py-2 rounded">Log catch</button></div>
  <p className="text-xs text-slate-400">Logging also ticks it as Caught in the Pokédex. Request matches below come from the Key Requests list.</p>
  ${lg.map((e,i)=>{const hs=hits(e.n);return h`<div key=${i} className="bg-slate-800/70 rounded-lg p-3 text-sm"><div className="flex"><b>${e.n}</b><span className="ml-2 text-slate-400">Lv. ${e.lv}${e.lv>=10?" · Lv. 10+":""}</span><button onClick=${()=>set(p=>({...p,log:p.log.filter((_,j)=>j!==i)}))} className="ml-auto text-red-400">✕</button></div>
  ${hs.length?hs.map(r=>h`<div key=${r[0]} className="mt-1 text-amber-300">Could help Request #${r[0]} (${r[1]}) <button onClick=${()=>tgl(set,"r"+r[0])} className=${bt+(c["r"+r[0]]?"bg-green-700":"bg-slate-700")}>${c["r"+r[0]]?"Done":"Mark done"}</button> <button onClick=${()=>set(p=>({...p,sv:{...p.sv,[r[0]]:!(p.sv||{})[r[0]]}}))} className=${bt+(sv[r[0]]?"bg-amber-700":"bg-slate-700")}>${sv[r[0]]?"Saved":"Save for later"}</button></div>`):h`<div className="text-xs text-slate-500 mt-1">No matching request in your list.</div>`}</div>`})}</div>`}
@@ -795,7 +791,7 @@ function Pick({s,set,fo}){const ro=s.ro||[],[bi,sb]=useState(()=>{const i=BT.fin
  <div className="text-xs">Hits ${se(m)}/${b.tg.length} of their Pokémon super-effectively · resists ${A.filter(a=>mult(ty(m),a)<1).length} of their ${A.length} types · weak to ${A.filter(a=>mult(ty(m),a)>1).length}</div>
  ${cap&&m.lv>cap?h`<div className="text-xs text-red-400">Level ${m.lv} is above your obedience cap of ${cap}; raise your Star Rank.</div>`:null}${b.lv&&m.lv<b.lv-5?h`<div className="text-xs text-amber-400">Under-leveled vs Lv. ${b.lv}; use Exp. Candy or Rare Candy.</div>`:null}
  ${w?h`<div className="text-xs text-amber-300">Train next: ${ST[w[1]]} (EL ${w[0]}) with ${GR(w[0])}.</div>`:null}
- <div className="flex gap-2 mt-1 items-center text-xs">Lv<input type="number" min="1" max="100" value=${m.lv} onInput=${e=>ed(i,"lv",+e.target.value)} className=${IN+" w-16"}/>Move types<input placeholder="e.g. Ground, Ice" value=${m.mv||""} onInput=${e=>ed(i,"mv",e.target.value)} className=${IN+" flex-1"}/></div></div>`})}
+ <div className="flex gap-2 mt-1 items-center text-xs">Lv<${Num} v=${m.lv} set=${v=>ed(i,"lv",v)} min=${1} max=${100} w="w-16"/>Move types<input placeholder="e.g. Ground, Ice" value=${m.mv||""} onInput=${e=>ed(i,"mv",e.target.value)} className=${IN+" flex-1"}/></div></div>`})}
  ${ro.length&&gap.length?h`<p className="text-sm text-amber-400">Nobody in this lineup hits ${gap.map(t=>t.join("/")).join(", ")} super-effectively. Catch or teach a move of type: ${[...new Set(gap.flatMap(t=>TYPES.filter(a=>mult(t,a)>1)))].join(", ")}.</p>`:null}
  ${ro.length?h`<div className="bg-slate-800/70 rounded-lg p-3 text-sm"><b className="text-amber-400">Before you start</b>${[[top.length===6,"Six Pokémon chosen"],[!gap.length,"Every enemy Pokémon is hit super-effectively"],[!cap||top.every(x=>x.m.lv<=cap),"Everyone obeys at your Star Rank"],[!b.lv||top.every(x=>x.m.lv>=b.lv-5),"Levels are close to the enemy"],[(s.inv||{}).Revive>=5,"5 or more Revives"],[((s.inv||{})["Max Potion"]||0)+((s.inv||{})["Hyper Potion"]||0)>=5,"5 or more Max or Hyper Potions"]].map(([o,x],i)=>h`<div key=${i} className=${o?"text-green-400":"text-amber-400"}>${o?"✓":"✗"} ${x}</div>`)}<textarea readOnly value=${b.n+": "+top.map(x=>x.m.n+" Lv"+x.m.lv).join(", ")} className="w-full h-14 mt-2 bg-slate-900 border border-slate-700 rounded p-2 text-xs"/></div>`:null}
  <p className="text-xs text-slate-500">Rule-based. Type the types of your moves so coverage counts them. Roster edits here save to the Roster tab.</p></div>`}
@@ -956,7 +952,7 @@ function Tool({s,set}){const [sec,ss]=useState("grit"),[f,sf]=useState({n:"",r:1
   const L=Object.entries(m).map(([k,n])=>[k,n-(inv[k]||0)]).filter(x=>x[1]>0),O=ITM.filter(r=>r[0] in it&&it[r[0]]<((s.tg||{})[r[0]]??+r[1]));
   b=h`<div><p className="text-xs text-slate-400 mb-2">Materials you are short of to refill every low crafted item to its target. Count items in the Satchel tab first.</p>${L.length||O.length?null:h`<p className="text-sm">Nothing short.</p>`}${L.map(([k,n])=>h`<div key=${k} className="text-sm mb-1"><b>${k}</b> short ${n}. <span className="text-slate-400">${MAT[k]||"Check the Item Guide"}</span></div>`)}${O.map(r=>h`<div key=${r[0]} className="text-sm mb-1"><b>${r[0]}</b> low. <span className="text-slate-400">${r[2]}</span></div>`)}</div>`}
  else if(sec==="nat")b=h`<div><${Tbl} head=${["Role","Good natures"]} rows=${NAT}/><p className="text-xs text-slate-400 mb-2">Pick the nature for the stat your best move uses. Use Zisu’s tutor for coverage, a Seed of Mastery to master moves, Strong Style for big hits and Agile Style to act twice.</p><${Tbl} head=${["Tutor move","Type","Priority","Why"]} rows=${ZIS}/></div>`;
- else if(sec==="shiny")b=h`<div className="space-y-2"><div className="flex gap-2 flex-wrap"><input placeholder="Pokémon" value=${f.n} onInput=${e=>sf({...f,n:e.target.value})} className=${IN}/><input type="number" min="1" value=${f.r} onInput=${e=>sf({...f,r:+e.target.value||1})} className=${IN+" w-20"}/><button className="bg-amber-600 px-3 py-2 rounded" onClick=${()=>{if(f.n.trim()){set(p=>({...p,sh:[...(p.sh||[]),{n:f.n.trim(),r:f.r,e:0}]}));sf({n:"",r:1})}}}>Start hunt</button></div><p className="text-xs text-slate-400">Second box is your shiny rolls per encounter (see the Shiny tab).</p>
+ else if(sec==="shiny")b=h`<div className="space-y-2"><div className="flex gap-2 flex-wrap"><input placeholder="Pokémon" value=${f.n} onInput=${e=>sf({...f,n:e.target.value})} className=${IN}/><${Num} v=${f.r} set=${v=>sf({...f,r:v})} min=${1} w="w-20"/><button className="bg-amber-600 px-3 py-2 rounded" onClick=${()=>{if(f.n.trim()){set(p=>({...p,sh:[...(p.sh||[]),{n:f.n.trim(),r:f.r,e:0}]}));sf({n:"",r:1})}}}>Start hunt</button></div><p className="text-xs text-slate-400">Second box is your shiny rolls per encounter (see the Shiny tab).</p>
   ${sh.map((x,i)=>h`<div key=${i} className="bg-slate-800/70 rounded p-2 text-sm flex gap-2 items-center"><b>${x.n}</b><span className="text-slate-400">${x.e} seen · ${((1-Math.pow(1-1/4096,x.e*x.r))*100).toFixed(1)}% chance by now</span><button onClick=${()=>up(i,y=>({...y,e:y.e+1}))} className="ml-auto bg-slate-700 px-2 rounded">+1</button><button onClick=${()=>up(i,y=>({...y,e:y.e+10}))} className="bg-slate-700 px-2 rounded">+10</button><button onClick=${()=>set(p=>({...p,sh:p.sh.filter((_,j)=>j!==i)}))} className="text-red-400">✕</button></div>`)}</div>`;
  else if(sec==="sol")b=h`<div><p className="text-xs text-slate-400 mb-2">Species from your request list. Tips for each are in the Solitude tab.</p>${SOL.map(n=>h`<label key=${n} className="flex gap-2 text-sm mb-1"><input type="checkbox" checked=${!!c["x"+n]} onChange=${()=>tgl(set,"x"+n)} className="accent-amber-500"/>${n}</label>`)}<${Bar} l="Cleared" v=${SOL.filter(n=>c["x"+n]).length} m=${SOL.length}/></div>`;
  else b=h`<div>${Object.keys(RGN).filter(k=>"OMBHA".includes(k)).map(k=>{const m=DEX.filter(d=>d.rg.includes(k)&&!c["dc"+d.i]);return h`<details key=${k} className="bg-slate-800/70 rounded-lg mb-2"><summary className="p-3 cursor-pointer">${RGN[k]}: ${m.length} not caught</summary><div className="px-4 pb-3 text-xs space-y-1">${m.map(d=>h`<div key=${d.i}>#${d.i} ${d.n}: ${d.loc}</div>`)}</div></details>`})}</div>`;
@@ -965,7 +961,7 @@ function Tool({s,set}){const [sec,ss]=useState("grit"),[f,sf]=useState({n:"",r:1
 const KEY="pla-companion-v1";
 function Tbl({head,rows}){return h`<div className="overflow-x-auto mb-6"><table className="w-full text-sm"><thead><tr>${head.map(x=>h`<th key=${x} className="text-left p-2 text-amber-400 border-b border-slate-600">${x}</th>`)}</tr></thead><tbody>${rows.map((r,i)=>h`<tr key=${i} className="border-b border-slate-800">${r.map((c,j)=>h`<td key=${j} className="p-2">${c}</td>`)}</tr>`)}</tbody></table></div>`}
 // ---------- V7: UI PASS (grouped menu, item sheet, links, To Get) ----------
-let GO=()=>{},ITEM=()=>{},FN=1;
+let GO=()=>{},ITEM=()=>{},QK=()=>{},FN=1;
 const REGK=[["Obsidian Fieldlands",/obsidian|fieldlands/i],["Crimson Mirelands",/crimson|mirelands/i],["Cobalt Coastlands",/cobalt|coastlands/i],["Coronet Highlands",/coronet|highlands/i],["Alabaster Icelands",/alabaster|icelands/i]];
 const REGN=REGK.map(r=>r[0]);
 const regs=t=>REGK.filter(r=>r[1].test(t||"")).map(r=>r[0]);
@@ -1086,13 +1082,15 @@ Plates|Key & misc|Story keys. Plates are collected toward Arceus. Do not discard
 Celestica Flute|Key & misc|Story key. The Flute calls ride Pokémon. Do not discard it.|Story
 Odd Keystone|Key & misc|Spiritomb-related item tied to the wisp hunt (Request 22). Check its in-game description.|Wisps`);
 const IDB=[...IDBR.map(r=>({n:r[0],c:r[1],d:r[2],w:r[3]||""})),...GIN.map(r=>({n:r[0],c:"Ginter finds",d:"Mystery item sold by Ginter at the Ginkgo Guild. Buying it reveals: "+r[1]+".",w:"Ginter (Ginkgo Guild), cost "+r[2]}))];
-const IDM={};IDB.forEach(x=>{IDM[x.n]=x});
+const IDM={},ORD={};IDB.forEach((x,i)=>{IDM[x.n]=x;ORD[x.n]=i});
+const ordIdx=n=>n in ORD?ORD[n]:9999;
+const srt=(a,f,az)=>[...a].sort((x,y)=>az?f(x).localeCompare(f(y)):(ordIdx(f(x))-ordIdx(f(y))||f(x).localeCompare(f(y))));
 const ITMM={};ITM.forEach(r=>{ITMM[r[0]]=r[2]});
 const ITMK=new Set(ITM.map(r=>r[0]));
 const CRR={},CRM={};CR.forEach(r=>{CRR[r[0]]=r;CRM[r[0]]={g:r[3]==="-"?[]:r[3].split(",").map(x=>{const a=x.split(":");return[a[0],+a[1]]})}});
 const WH=k=>MAT[k]||ITMM[k]||(IDM[k]&&IDM[k].w)||"";
 const DX=n=>{const d=DEX.find(x=>x.n===n);return d?{i:d.i}:{q:n}};
-const GROUPS=[["home","Home","🏠",[["dash","Dashboard"],["setup","Setup"]]],["play","Play","🧭",[["plan","Next Steps"],["story","Story"],["guide","Guide"],["req","Requests"],["log","Quick Log"],["stars","Stars"]]],["stuff","Items","🎒",[["need","To Get"],["items","Stock"],["sat","Satchel"],["gloss","Item Guide"],["shop","Shops"]]],["team","Team","⚔️",[["pick","Battle Picker"],["roster","Roster"],["leg","Legendaries"],["nob","Nobles"],["evo","Evolutions"],["types","Types"]]],["coll","Collect","📖",[["dex","Pokédex"],["alp","Alphas"],["wisp","Wisps"],["uno","Unown"],["ver","Verses"],["path","Solitude"]]],["tools","Tools","🧰",[["tool","Toolbox"],["shiny","Shiny odds"],["mech","Mechanics"],["bk","Backup"]]]];
+const GROUPS=[["home","Home","🏠",[["dash","Dashboard"],["setup","Setup"]]],["play","Play","🧭",[["plan","Next Steps"],["story","Story"],["guide","Guide"],["req","Requests"],["log","Quick Log"],["stars","Stars"]]],["stuff","Items","🎒",[["need","To Get"],["buy","Buy Planner"],["items","Stock"],["sat","Satchel"],["gloss","Item Guide"],["shop","Shops"]]],["team","Team","⚔️",[["pick","Battle Picker"],["roster","Roster"],["leg","Legendaries"],["nob","Nobles"],["evo","Evolutions"],["types","Types"]]],["coll","Collect","📖",[["dex","Pokédex"],["alp","Alphas"],["wisp","Wisps"],["uno","Unown"],["ver","Verses"],["path","Solitude"]]],["tools","Tools","🧰",[["tool","Toolbox"],["shiny","Shiny odds"],["mech","Mechanics"],["bk","Backup"]]]];
 const TABG={},TABN={};GROUPS.forEach(g=>g[3].forEach(t=>{TABG[t[0]]=g[0];TABN[t[0]]=t[1]}));
 // ----- links on list rows
 const ITN=IDB.map(x=>x.n).filter(n=>/Augurite|Peat|Razor|Metal Coat|Protector|Electirizer|Magmarizer|Reaper|Dubious|Upgrade|Linking|Stone/.test(n));
@@ -1119,7 +1117,8 @@ const avail=(k,PG)=>{const t=WH(k),rs=regs(t),op=rs.filter(r=>PG.open[r]),any=!r
 // ----- counts
 const cntOf=(s,k)=>{if(ITMK.has(k))return (s.itm||{})[k]||0;const cu=(s.cu||[]).find(x=>x.n===k);if(cu)return cu.c||0;return (s.inv||{})[k]||0};
 const isCnt=(s,k)=>ITMK.has(k)?k in (s.itm||{}):((s.cu||[]).some(x=>x.n===k)||k in (s.inv||{}));
-const setCnt=(set,k,v)=>set(p=>{v=Math.max(0,v||0);if(ITMK.has(k))return{...p,itm:{...p.itm,[k]:v}};if((p.cu||[]).some(x=>x.n===k))return{...p,cu:p.cu.map(x=>x.n===k?{...x,c:v}:x)};return{...p,inv:{...p.inv,[k]:v}}});
+const applyCnt=(p,k,v)=>{v=Math.max(0,v||0);if(ITMK.has(k))return{...p,itm:{...p.itm,[k]:v}};if((p.cu||[]).some(x=>x.n===k))return{...p,cu:p.cu.map(x=>x.n===k?{...x,c:v}:x)};return{...p,inv:{...p.inv,[k]:v}}};
+const setCnt=(set,k,v)=>set(p=>applyCnt(p,k,v));
 const lowN=(s,n)=>{const r=CRR[n];if(r)return(n in (s.inv||{}))&&s.inv[n]<+r[2];if(ITMK.has(n)){const t=(s.tg||{})[n]??+ITM.find(x=>x[0]===n)[1];return(n in (s.itm||{}))&&s.itm[n]<t}return false};
 const craft1=(set,r)=>set(p=>{const inv={...p.inv},g=CRM[r[0]].g;if(!g.length)return p;for(let i=0;i<g.length;i++){if((inv[g[i][0]]||0)<g[i][1])return p}g.forEach(([k,q])=>{inv[k]=(inv[k]||0)-q});inv[r[0]]=(inv[r[0]]||0)+1;return{...p,inv}});
 const canN=(inv,r)=>{const g=CRM[r[0]].g;return g.length?Math.min(...g.map(([k,q])=>Math.floor((inv[k]||0)/q))):0};
@@ -1195,6 +1194,7 @@ function Need({s,set}){
  const setRank=k=>set(p=>{const cur=SR.filter(r=>(+((p.m||{}).pts)||0)>=+r[1]).length;if(cur===k)return p;return{...p,m:{...p.m,pts:k?+SR[k-1][1]:0}}});
  const togR=r=>set(p=>({...p,ra:{...p.ra,[r]:!prog(p).open[r]}}));
  const G={};Object.keys(N.gross).forEach(k=>{const need=N.gross[k],have=inv[k]||0;if(have>=need)return;const av=avail(k,PG),g=av.first||(av.any?"Anywhere":"Locked");(G[g]=G[g]||[]).push({k,need,have,av})});
+Object.keys(G).forEach(g=>G[g].sort((a,b)=>ordIdx(a.k)-ordIdx(b.k)));
  const order=["Anywhere",...REGN.filter(r=>PG.open[r]),"Locked"].filter(g=>G[g]);
  const craftNow=N.low.filter(x=>x.u.ok&&x.can>0),locked=N.low.filter(x=>!x.u.ok),nLow=N.low.length+N.oth.length;
  const sub={Anywhere:"No trip needed: shake trees, buy, or use drops and your farm.",Locked:"Not reachable yet. These need an area you have not opened."};
@@ -1220,7 +1220,7 @@ function Need({s,set}){
 
 // ----- Satchel (slots you can type, unlock status, links)
 function Satchel({s,set}){
- const D={slots:20,used:0,cost:""},sa={...D,...s.sat},inv=s.inv||{},PG=prog(s),[fl,sfl]=useState("all"),[cat,sc]=useState("");
+ const D={slots:20,used:0,cost:""},sa={...D,...s.sat},inv=s.inv||{},PG=prog(s),[fl,sfl]=useState("all"),[cat,sc]=useState(""),[q,sq]=useState(""),[az,saz]=useState(false);
  const up=(k,v)=>set(p=>({...p,sat:{...D,...p.sat,[k]:v}}));
  const R=CR.map(r=>({n:r[0],c:r[1],t:+r[2],g:CRM[r[0]].g,w:r[4],u:unl(r,PG,s),r}));
  const mats=[...new Set(R.flatMap(r=>r.g.map(x=>x[0])))].filter(k=>!CRR[k]);
@@ -1229,7 +1229,7 @@ function Satchel({s,set}){
  const carry=CR.filter(r=>(inv[r[0]]||0)>0).length+ITM.filter(r=>((s.itm||{})[r[0]]||0)>0).length;
  const tier=sa.slots<=24?0:sa.slots<=33?1:2,free=sa.slots-sa.used,pct=Math.min(100,sa.slots?sa.used/sa.slots*100:0);
  const cats=[...new Set(CR.map(r=>r[1]))];
- const show=R.filter(r=>(!cat||r.c===cat)&&(fl==="all"||(fl==="low"&&low.includes(r))||(fl==="can"&&r.u.ok&&can(r)>0)||(fl==="locked"&&!r.u.ok)||(fl==="open"&&r.u.ok)));
+ const show=(x=>srt(x.filter(r=>!q||r.n.toLowerCase().includes(q.toLowerCase())),r=>r.n,az))(R).filter(r=>(!cat||r.c===cat)&&(fl==="all"||(fl==="low"&&low.includes(r))||(fl==="can"&&r.u.ok&&can(r)>0)||(fl==="locked"&&!r.u.ok)||(fl==="open"&&r.u.ok)));
  const lab=(t,x)=>h`<div><div className="text-xs text-slate-400 mb-1">${t}</div>${x}</div>`;
  return h`<div className="space-y-3">
   <div className="card p-3"><h3 className="font-semibold text-amber-400 mb-2">Satchel slots</h3>
@@ -1240,6 +1240,7 @@ function Satchel({s,set}){
   <div className="card p-3"><div className="font-semibold text-amber-400 mb-1">Suggested layout at ${sa.slots} slots <span className="tag">${["Early","Mid","Late"][tier]}</span></div>
    ${SLOT.map(r=>h`<div key=${r[0]} className="flex justify-between gap-3 text-sm py-1 border-t border-slate-800"><span className="text-slate-300">${r[0]}</span><span className="text-right">${r[tier+1]}</span></div>`)}
    <div className="text-xs text-slate-500 mt-1">A suggestion, not official. Each different item uses one slot.</div></div>
+  <div className="flex gap-2"><input placeholder="Search recipes and materials…" value=${q} onInput=${e=>sq(e.target.value)} className=${IN+" flex-1"}/><button className=${"chip "+(az?"on":"")} onClick=${()=>saz(!az)}>A–Z</button></div>
   <div className="flex flex-wrap gap-2">${[["all","All"],["low","Low"],["can","Can craft now"],["open","Unlocked"],["locked","Locked"]].map(([k,l])=>h`<button key=${k} className=${"chip "+(fl===k?"on":"")} onClick=${()=>sfl(k)}>${l}${k==="low"&&low.length?" ("+low.length+")":""}</button>`)}</div>
   <div className="flex flex-wrap gap-2"><button className=${"chip "+(!cat?"on":"")} onClick=${()=>sc("")}>All types</button>${cats.map(k=>h`<button key=${k} className=${"chip "+(cat===k?"on":"")} onClick=${()=>sc(k)}>${k}</button>`)}</div>
   ${show.length?null:h`<p className="text-sm text-slate-400">Nothing matches this filter.</p>`}
@@ -1249,12 +1250,13 @@ function Satchel({s,set}){
    <div className="text-xs mt-1">Recipe: ${r.g.map(([k,q],i)=>h`<span key=${k}>${i?" + ":""}${q} <${IL} n=${k}/><span className=${(inv[k]||0)>=q?"text-green-400":"text-amber-400"}> (${inv[k]||0})</span></span>`)}</div>
    <div className="text-xs text-slate-400 mt-1">Restock below ${r.t} · ${r.w}${r.u.ok&&cc>0?" · can craft now: "+cc:""}${!r.u.ok&&r.u.to?h` · <button className="lnk" onClick=${()=>GO(r.u.to[0],r.u.to[1])}>${r.u.why} ›</button>`:""}</div>
    ${r.u.ok&&cc>0?h`<button className="btn mt-2" onClick=${()=>craft1(set,r.r)}>Craft 1</button>`:null}</div>`})}
-  <h3 className="font-semibold text-amber-400 pt-2">Raw materials</h3><div className="grid grid-cols-1 sm:grid-cols-2 gap-2">${mats.map(k=>{const av=avail(k,PG);return h`<div key=${k} className="card p-2 flex items-center gap-2"><div className="flex-1 min-w-0"><${IL} n=${k}/><div className="text-xs text-slate-400">${WH(k)||"source not loaded yet"}</div>${av.ok?null:h`<div className="text-xs text-amber-300">🔒 opens at Mission ${av.lk?av.lk[0]:"?"}</div>`}</div><${Step} v=${inv[k]||0} set=${v=>setCnt(set,k,v)}/></div>`})}</div></div>`}
+  <h3 className="font-semibold text-amber-400 pt-2">Raw materials</h3><div className="grid grid-cols-1 sm:grid-cols-2 gap-2">${srt(mats.filter(k=>!q||k.toLowerCase().includes(q.toLowerCase())),k=>k,az).map(k=>{const av=avail(k,PG);return h`<div key=${k} className="card p-2 flex items-center gap-2"><div className="flex-1 min-w-0"><${IL} n=${k}/><div className="text-xs text-slate-400">${WH(k)||"source not loaded yet"}</div>${av.ok?null:h`<div className="text-xs text-amber-300">🔒 opens at Mission ${av.lk?av.lk[0]:"?"}</div>`}</div><${Step} v=${inv[k]||0} set=${v=>setCnt(set,k,v)}/></div>`})}</div></div>`}
 // ----- Items & Stock
-function Items({s,set}){const it=s.itm||{},tg=s.tg||{},cu=s.cu||[],c=s.c||{},[f,sf]=useState({n:"",t:5,w:""}),[fl,sfl]=useState("all"),lo=lowList(s);
- const R=[...ITM.map(r=>({n:r[0],t:tg[r[0]]??+r[1],w:r[2],cn:it[r[0]]||0,e:r[0] in it,k:r[0]})),...cu.map((x,i)=>({n:x.n,t:x.t,w:x.w,cn:x.c||0,e:true,i}))].sort((a,b)=>(lo.includes(b.n)?1:0)-(lo.includes(a.n)?1:0)).filter(r=>fl==="all"||(fl==="low"&&lo.includes(r.n))||(fl==="new"&&!r.e));
+function Items({s,set}){const it=s.itm||{},tg=s.tg||{},cu=s.cu||[],c=s.c||{},[f,sf]=useState({n:"",t:5,w:""}),[fl,sfl]=useState("all"),[q,sq]=useState(""),lo=lowList(s);
+ const R=[...ITM.map(r=>({n:r[0],t:tg[r[0]]??+r[1],w:r[2],cn:it[r[0]]||0,e:r[0] in it,k:r[0]})),...cu.map((x,i)=>({n:x.n,t:x.t,w:x.w,cn:x.c||0,e:true,i}))].sort((a,b)=>(lo.includes(b.n)?1:0)-(lo.includes(a.n)?1:0)||ordIdx(a.n)-ordIdx(b.n)).filter(r=>fl==="all"||(fl==="low"&&lo.includes(r.n))||(fl==="new"&&!r.e)).filter(r=>!q||r.n.toLowerCase().includes(q.toLowerCase()));
  const upC=(r,k,v)=>r.k?set(p=>({...p,[k==="c"?"itm":"tg"]:{...p[k==="c"?"itm":"tg"],[r.k]:v}})):set(p=>({...p,cu:p.cu.map((x,j)=>j===r.i?{...x,[k]:v}:x)}));
  return h`<div className="space-y-3"><p className="text-sm text-slate-400">Training items and rewards. Enter what you have; anything under its target raises a red alert. Crafted balls and potions live in <button className="lnk" onClick=${()=>GO("sat")}>Satchel</button>. The list of what to go get is in <button className="lnk" onClick=${()=>GO("need")}>To Get</button>.</p>
+  <input placeholder="Search items…" value=${q} onInput=${e=>sq(e.target.value)} className=${IN+" w-full"}/>
   <div className="flex flex-wrap gap-2">${[["all","All"],["low","Low"],["new","Not counted yet"]].map(([k,l])=>h`<button key=${k} className=${"chip "+(fl===k?"on":"")} onClick=${()=>sfl(k)}>${l}${k==="low"&&lo.length?" ("+lo.length+")":""}</button>`)}</div>
   ${R.map(r=>{const l=r.e&&r.cn<r.t;return h`<div key=${r.n} className=${(l?"card-amb":"card")+" p-3"}><div className="flex flex-wrap items-center gap-2"><b><${IL} n=${r.n}/></b>${l?h`<span className=${"tag "+(r.cn===0?"red":"amb")}>Low stock</span>`:null}${r.e?null:h`<span className="text-xs text-slate-500">not counted yet</span>`}${r.i!=null?h`<button onClick=${()=>set(p=>({...p,cu:p.cu.filter((_,j)=>j!==r.i)}))} className="ml-auto text-red-400 px-2">✕</button>`:null}</div>
    <div className="text-xs text-slate-300 mt-1">${(IDM[r.n]||{}).d||"Your own tracked item."}</div>
@@ -1314,13 +1316,13 @@ function Dash({s,set}){
   ${setupGaps(s).length?h`<button className="card-amb w-full text-left p-3" onClick=${()=>GO("setup")}><b>Finish setup (${setupGaps(s).length} left)</b><span className="block text-xs text-slate-300">${setupGaps(s).join(" · ")}</span><span className="text-amber-300 text-sm">Open Setup ›</span></button>`:null}
   <div className="card p-3"><div className="text-xs text-slate-400">Do this next</div>${nx?h`<div className="font-semibold">Mission ${nx[0]}: ${nx[1]}</div><div className="text-sm text-slate-300">${nx[2]} · needs ${nx[3]}</div>${need>PG.rk?h`<div className="text-sm text-amber-400 mt-1">You need ★${need} first: ${SR[need-1][1]-PG.pts} more research points.</div>`:null}<div className="flex gap-2 mt-2 flex-wrap"><button className="btn" onClick=${()=>GO("guide",{m:+nx[0]})}>Open guide</button><button className="btn2" onClick=${()=>GO("plan")}>Next Steps</button></div>`:h`<div className="font-semibold">All story missions are ticked 🎉</div>`}</div>
   <div className="card p-3"><${Bar} l=${"Star Rank ★"+PG.rk+(nr?" → "+nr[0]:" (max)")} v=${PG.pts} m=${nr?+nr[1]:PG.pts||1} to="stars"/>
-   <div className="grid grid-cols-2 gap-2">${[["Log a catch","log"],["Satchel","sat"],["Battle Picker","pick"],["Roster","roster"]].map(([l,t])=>h`<button key=${t} className="btn2" onClick=${()=>GO(t)}>${l}</button>`)}</div></div>
+   <div className="grid grid-cols-2 gap-2">${[["＋ Quick update","_q"],["Satchel","sat"],["Buy planner","buy"],["Battle Picker","pick"],["Roster","roster"],["Log a catch","log"]].map(([l,t])=>h`<button key=${t} className="btn2" onClick=${()=>t==="_q"?QK("catch"):GO(t)}>${l}</button>`)}</div></div>
   <div className="card p-3"><h2 className="font-semibold text-amber-400 mb-1">Completion</h2><p className="text-xs text-slate-400 mb-3">Arceus unlocks at 239 caught entries (237 standard + Manaphy + Phione) out of 242. Type your own totals here, or open the tab and tick entries.</p>
    ${GOALS.map(([l,m])=>{const v=(s.m||{})[l]||0;return h`<div key=${l}><${Bar} l=${l} v=${v} m=${m||242} to=${GT[l]}/><div className="flex items-center gap-2 -mt-1 mb-3"><${Num} v=${v} set=${x=>set(p=>({...p,m:{...p.m,[l]:x}}))} w="w-20"/>${DXM[l]?h`<span className="text-xs text-slate-400">Pokédex tab: ${Object.keys(c).filter(x=>c[x]&&x.startsWith("d"+DXM[l])).length}</span>`:null}</div></div>`})}</div>
   <div className="card p-3"><h2 className="font-semibold text-amber-400 mb-2">Collections</h2><div className="grid sm:grid-cols-2 gap-x-4">
    <${Bar} l="Legendary/Mythical (18)" v=${cn("l")} m=${LEG.length} to="leg"/><${Bar} l="Spiritomb Wisps" v=${cn("w")} m=${WL.length} to="wisp"/><${Bar} l="Unown Forms" v=${cn("u")} m=${UNO.length} to="uno"/><${Bar} l="Old Verses" v=${cn("v")} m=${VER.length} to="ver"/><${Bar} l="Static Alphas (75)" v=${cn("a")} m=${LISTS.alp.rows.length} to="alp"/><${Bar} l="Key Requests (of 122)" v=${cn("r")} m=${REQ.length} to="req"/><${Bar} l="Story Missions (27)" v=${cn("s")} m=${MIS.length} to="story"/><${Bar} l="Noble Pokémon (5)" v=${cn("n")} m=${NOB.length} to="nob"/><${Bar} l="Evolutions Done" v=${cn("e")} m=${EVO.length} to="evo"/></div></div>
   <div className="card p-3"><h2 className="font-semibold text-amber-400 mb-2">All pages</h2>${GROUPS.filter(g=>g[0]!=="home").map(g=>h`<div key=${g[0]} className="mb-3"><div className="text-sm text-slate-300 mb-1">${g[2]} ${g[1]}</div><div className="flex flex-wrap gap-2">${g[3].map(([k,n])=>h`<button key=${k} className="chip" onClick=${()=>GO(k)}>${n}${dots[k]?h`<span className=${"dot "+(dots[k]==="a"?"a":"")}></span>`:null}</button>`)}</div></div>`)}</div></div>`}
-const NEW={setup:Setup,tool:Tool,gloss:Gloss,items:Items,pick:Pick,guide:Guide,plan:Plan,log:Log,dex:Dex,types:TypesTab,roster:Roster,sat:Satchel,shiny:Shiny,stars:Stars,path:PATH,mech:MECH,need:Need,dash:Dash};
+const NEW={buy:Buy,setup:Setup,tool:Tool,gloss:Gloss,items:Items,pick:Pick,guide:Guide,plan:Plan,log:Log,dex:Dex,types:TypesTab,roster:Roster,sat:Satchel,shiny:Shiny,stars:Stars,path:PATH,mech:MECH,need:Need,dash:Dash};
 
 // ----- Setup page
 const setupGaps=s=>{const c=s.c||{},g=[];
@@ -1344,6 +1346,9 @@ function Setup({s,set}){
  const cats=[...new Set(CR.map(r=>r[1]))];
  const mats=[...new Set(CR.flatMap(r=>CRM[r[0]].g.map(x=>x[0])))].filter(k=>!CRR[k]);
  const groups=[...cats.map(k=>[k,CR.filter(r=>r[1]===k).map(r=>r[0])]),["Training and rewards",ITM.map(r=>r[0])],["Raw materials",mats]];
+const [q,sq]=useState(""),[az,saz]=useState(false);
+ const allN=[...new Set(groups.flatMap(g=>g[1]))],qm=q?srt(allN.filter(k=>k.toLowerCase().includes(q.toLowerCase())),k=>k,az):[];
+ const crow=k=>h`<div key=${k} className="flex items-center gap-2 text-sm"><span className="flex-1 min-w-0"><${IL} n=${k}/></span><${Cnt} s=${s} set=${set} k=${k}/></div>`;
  const sec=(n,t,body,open)=>h`<details open=${!!open} className="card p-3"><summary className="cursor-pointer font-semibold text-amber-400">${n}. ${t}</summary><div className="mt-3 space-y-3">${body}</div></details>`;
  const tick=ok=>ok?"✓":"○";
  return h`<div className="space-y-3">
@@ -1363,13 +1368,158 @@ function Setup({s,set}){
    <div className="grid sm:grid-cols-2 gap-1">${rc.map(r=>h`<label key=${r[0]} className="flex items-start gap-2 text-sm py-1"><input type="checkbox" checked=${!!(s.rcp||{})[r[0]]} onChange=${()=>set(p=>({...p,rcp:{...p.rcp,[r[0]]:!(p.rcp||{})[r[0]]}}))} className="w-5 h-5 mt-0.5 accent-amber-500"/><span>${r[0]}<span className="block text-xs text-slate-500">${r[4]}</span></span></label>`)}</div>`)}
   ${sec("5","What you are carrying",h`<div className="text-sm text-slate-300">Fill in only what you want tracked. A blank box (–) is ignored; a number, even 0, switches on low-stock alerts for that item.</div>
    <button className="btn2" onClick=${()=>set(p=>({...p,inv:{...p.inv,...SI},itm:{...p.itm,"Grit Dust":7,"Exp. Candy S":1}}))}>Load my current items (from chat)</button>
-   ${groups.map(([n,ks])=>h`<details key=${n} className="bg-slate-900/50 rounded-lg p-2"><summary className="cursor-pointer text-sm">${n} <span className="text-xs text-slate-500">${ks.filter(k=>isCnt(s,k)).length}/${ks.length} entered</span></summary><div className="mt-2 space-y-1">${ks.map(k=>h`<div key=${k} className="flex items-center gap-2 text-sm"><span className="flex-1 min-w-0"><${IL} n=${k}/></span><${Cnt} s=${s} set=${set} k=${k}/></div>`)}</div></details>`)}`)}
+   <div className="flex gap-2"><input placeholder="Search items…" value=${q} onInput=${e=>sq(e.target.value)} className=${IN+" flex-1"}/><button className=${"chip "+(az?"on":"")} onClick=${()=>saz(!az)}>A–Z</button></div>
+   ${q?h`<div className="space-y-1">${qm.length?qm.map(crow):h`<div className="text-sm text-slate-400">No item matches.</div>`}</div>`:groups.map(([n,ks])=>h`<details key=${n} className="bg-slate-900/50 rounded-lg p-2"><summary className="cursor-pointer text-sm">${n} <span className="text-xs text-slate-500">${ks.filter(k=>isCnt(s,k)).length}/${ks.length} entered</span></summary><div className="mt-2 space-y-1">${srt(ks,k=>k,az).map(crow)}</div></details>`)}`,true)}
   ${sec("6","Your team",h`<div className="text-sm text-slate-300">Add the Pokémon you use so Battle Picker and Next Steps can suggest teams. ${(s.ro||[]).length?"You have "+s.ro.length+" on your roster.":"Your roster is empty."}</div><button className="btn" onClick=${()=>GO("roster")}>Open Roster ›</button>`)}
  </div>`}
 
+// ----- V8: quick update, buy planner, roster editing
+const isKnown=n=>!!(IDM[n]||CRR[n]||ITMK.has(n));
+const BALLS=CR.filter(r=>r[1]==="Balls").map(r=>r[0]);
+const REQN=w=>{const o=[];String(w||"").replace(/#(\d+) to #(\d+)/g,(_,a,b)=>{for(let i=+a;i<=+b;i++)o.push(i);return""}).replace(/#(\d+)/g,(_,a)=>{o.push(+a);return""});return o};
+const REQRW={};ITM.forEach(r=>REQN(r[2]).forEach(n=>{(REQRW[n]=REQRW[n]||[]).push(r[0])}));
+const ALPHAIT=ITM.filter(r=>/Alpha drops/.test(r[2])).map(r=>r[0]);
+const rkRew=k=>{const o=[];String(SR[k-1][3]).replace(/(\d+)x ([^,]+)/g,(_,q,n)=>{o.push({n:n.trim(),q:+q});return""});return o};
+const rkRews=(a,b)=>{const m={};for(let k=a;k<=b;k++)rkRew(k).forEach(x=>{m[x.n]=(m[x.n]||0)+x.q});return Object.entries(m).map(([n,q])=>({n,q}))};
+function RowsEd({rows,set,title,hints}){
+ return h`<div className="card p-2 space-y-2"><div className="text-sm font-semibold">${title}</div>
+  ${rows.map((r,i)=>h`<div key=${i}><div className="flex items-center gap-2"><input list="itmn" placeholder="Item name" value=${r.n} onInput=${e=>set(rows.map((x,j)=>j===i?{...x,n:e.target.value}:x))} className=${IN+" flex-1 min-w-0"}/><${Num} v=${r.q} set=${v=>set(rows.map((x,j)=>j===i?{...x,q:v}:x))} min=${1} w="w-16"/><button className="text-red-400 px-2" onClick=${()=>set(rows.filter((_,j)=>j!==i))}>✕</button></div>${r.n&&!isKnown(r.n)?h`<div className="text-xs text-amber-400">Not an item the app knows. Pick one from the suggestions.</div>`:null}</div>`)}
+  <div className="flex flex-wrap gap-2 items-center"><button className="chip" onClick=${()=>set([...rows,{n:"",q:1}])}>+ Add item</button>${(hints||[]).filter(n=>!rows.some(r=>r.n===n)).slice(0,8).map(n=>h`<button key=${n} className="chip" onClick=${()=>set([...rows,{n,q:1}])}>${n}</button>`)}</div></div>`}
+function Quick({s,set,close,m0}){
+ const PG=prog(s);
+ const mk=()=>({n:"",lv:5,al:false,ball:"",ro:true,ms:PG.nx?+PG.nx[0]:27,rq:"1",ft:"wild",fnm:"",aa:"",rk:Math.min(10,PG.rk+1),gain:[],used:[],mg:0,mgs:1});
+ const [mode,sm]=useState(m0||"catch"),[f,sf]=useState(mk),[done,sd]=useState(null);
+ const up=o=>sf(x=>({...x,...o}));
+ const MODES=[["catch","Caught"],["mission","Mission"],["req","Request"],["fight","Fight"],["rank","Rank up"],["items","Items"]];
+ const apply=()=>{
+  const gain=f.gain.filter(r=>isKnown(r.n)&&r.q>0),used=f.used.filter(r=>isKnown(r.n)&&r.q>0),L=[];
+  const nm=f.n.trim(),d=DEX.find(x=>x.n.toLowerCase()===nm.toLowerCase()),dn=d?d.n:nm;
+  if(mode==="catch"){if(!dn)return;L.push("Caught "+dn+" Lv. "+f.lv+(f.al?" (Alpha)":"")+(f.ball?" with "+f.ball:""))}
+  if(mode==="mission"){const m=MIS.find(x=>+x[0]===+f.ms);L.push("Finished Mission "+f.ms+(m?": "+m[1]:""))}
+  if(mode==="req"){const r=REQ.find(x=>+x[0]===+f.rq);L.push("Finished Request #"+f.rq+(r?": "+r[1]:""))}
+  if(mode==="fight")L.push("Beat "+(f.ft==="alpha"?"an Alpha ":f.ft==="boss"?"a boss or noble ":"a wild ")+(f.fnm.trim()||"Pokémon"));
+  if(mode==="rank")L.push("Reached Star Rank "+f.rk);
+  gain.forEach(r=>L.push("+"+r.q+" "+r.n));used.forEach(r=>L.push("−"+r.q+" "+r.n));
+  if(f.mg)L.push((f.mgs>0?"+":"−")+f.mg+" money");
+  if(!L.length)return;
+  set(p=>{let q={...p};const add=(k,dl)=>{q=applyCnt(q,k,Math.max(0,cntOf(q,k)+dl))};
+   gain.forEach(r=>add(r.n,r.q));used.forEach(r=>add(r.n,-r.q));
+   if(f.mg)q.money=Math.max(0,(+q.money||0)+f.mgs*f.mg);
+   if(mode==="catch"){q.log=[{n:dn,lv:f.lv},...(q.log||[])];if(d){q.c={...q.c,["dc"+d.i]:true};if(f.al)q.c["da"+d.i]=true}
+    if(f.ball)add(f.ball,-1);
+    if(f.ro)q.ro=[...(q.ro||[]),{n:dn,t1:d?d.ty[0]:"Normal",t2:d&&d.ty[1]?d.ty[1]:"",lv:f.lv,nat:"",al:f.al,el:[0,0,0,0,0,0]}]}
+   if(mode==="mission")q.c={...q.c,["s"+f.ms]:true};
+   if(mode==="req")q.c={...q.c,["r"+f.rq]:true};
+   if(mode==="fight"&&f.aa!=="")q.c={...q.c,["a"+f.aa]:true};
+   if(mode==="rank")q.m={...q.m,pts:Math.max(+((q.m||{}).pts)||0,+SR[f.rk-1][1])};
+   q.act=[...L,...(q.act||[])].slice(0,25);return q});
+  sd(L)};
+ const money=h`<div className="card p-2 flex flex-wrap items-center gap-2"><span className="text-sm font-semibold">Money</span><button className=${"chip "+(f.mgs>0?"on":"")} onClick=${()=>up({mgs:1})}>Gained</button><button className=${"chip "+(f.mgs<0?"on":"")} onClick=${()=>up({mgs:-1})}>Spent</button><${Num} v=${f.mg} set=${v=>up({mg:v})} w="w-24"/><span className="text-xs text-slate-400">now ${+s.money||0}</span></div>`;
+ const rw=(hints,t)=>h`<${RowsEd} rows=${f.gain} set=${v=>up({gain:v})} title=${t||"Items received"} hints=${hints}/>`;
+ let body;
+ if(mode==="catch")body=h`<div className="space-y-2"><input list="dxn3" placeholder="Pokémon name" value=${f.n} onInput=${e=>up({n:e.target.value})} className=${IN+" w-full"}/><datalist id="dxn3">${DEX.map(d=>h`<option key=${d.i} value=${d.n}/>`)}</datalist>
+  <div className="flex flex-wrap items-center gap-3"><span className="text-sm">Level <${Num} v=${f.lv} set=${v=>up({lv:v})} min=${1} max=${100} w="w-16"/></span><label className="text-sm flex items-center gap-2"><input type="checkbox" checked=${f.al} onChange=${e=>up({al:e.target.checked})} className="w-5 h-5 accent-amber-500"/>Alpha</label></div>
+  <select value=${f.ball} onChange=${e=>up({ball:e.target.value})} className=${IN+" w-full"}><option value="">Ball used: none or not counting</option>${BALLS.map(b=>h`<option key=${b} value=${b}>${b} (you have ${cntOf(s,b)})</option>`)}</select>
+  <label className="text-sm flex items-center gap-2"><input type="checkbox" checked=${f.ro} onChange=${e=>up({ro:e.target.checked})} className="w-5 h-5 accent-amber-500"/>Also add to my Roster (types filled in for you)</label>
+  <div className="text-xs text-slate-400">Ticks it as Caught in the Pokédex and adds it to the catch log.</div></div>`;
+ else if(mode==="mission")body=h`<div className="space-y-2"><select value=${f.ms} onChange=${e=>up({ms:+e.target.value})} className=${IN+" w-full"}>${MIS.map(m=>h`<option key=${m[0]} value=${m[0]}>Mission ${m[0]}: ${m[1]}</option>`)}</select>
+  <div className="text-xs text-slate-400">I do not have mission reward lists saved yet, so add what the game gave you below.</div>${rw([])}</div>`;
+ else if(mode==="req")body=h`<div className="space-y-2"><select value=${f.rq} onChange=${e=>up({rq:e.target.value})} className=${IN+" w-full"}>${REQ.map(r=>h`<option key=${r[0]} value=${r[0]}>#${r[0]} ${r[1]}</option>`)}</select>
+  ${(REQRW[+f.rq]||[]).length?h`<div className="text-xs text-slate-400">My data lists this request as a source of: ${REQRW[+f.rq].join(", ")}. Amounts are not saved, so enter them.</div>`:h`<div className="text-xs text-slate-400">No saved reward info for this request. Add what the game gave you.</div>`}${rw(REQRW[+f.rq])}</div>`;
+ else if(mode==="fight")body=h`<div className="space-y-2"><div className="flex gap-2 flex-wrap">${[["wild","Wild"],["alpha","Alpha"],["boss","Boss or noble"]].map(([k,l])=>h`<button key=${k} className=${"chip "+(f.ft===k?"on":"")} onClick=${()=>up({ft:k})}>${l}</button>`)}</div>
+  <input placeholder="Which Pokémon or boss (optional)" value=${f.fnm} onInput=${e=>up({fnm:e.target.value})} className=${IN+" w-full"}/>
+  ${f.ft==="alpha"?h`<select value=${f.aa} onChange=${e=>up({aa:e.target.value})} className=${IN+" w-full"}><option value="">Static Alpha to tick off (optional)</option>${AL.map((a,i)=>h`<option key=${i} value=${i}>${a[0]} Lv. ${a[1]} · ${a[3]}</option>`)}</select>`:null}
+  ${rw(f.ft==="alpha"?ALPHAIT:[],"Drops and rewards")}<${RowsEd} rows=${f.used} set=${v=>up({used:v})} title="Items used up in the fight"/></div>`;
+ else if(mode==="rank")body=h`<div className="space-y-2"><label className="text-sm flex items-center gap-2">I reached<select value=${f.rk} onChange=${e=>{const k=+e.target.value;up({rk:k,gain:k>PG.rk?rkRews(PG.rk+1,k):[]})}} className=${IN}>${[1,2,3,4,5,6,7,8,9,10].filter(k=>k>PG.rk).map(k=>h`<option key=${k} value=${k}>★ ${k}</option>`)}</select></label>
+  <div className="text-xs text-slate-400">Research points are set to that rank's minimum. The reward items from the Stars table are filled in below; check them against what the game gave you.</div>
+  ${rw(PG.rk<10?rkRews(PG.rk+1,f.rk).map(x=>x.n):[],"Rank-up rewards")}<button className="chip" onClick=${()=>up({gain:rkRews(PG.rk+1,f.rk)})}>Fill in from Stars table</button></div>`;
+ else body=h`<div className="space-y-2"><${RowsEd} rows=${f.gain} set=${v=>up({gain:v})} title="Items gained (found, bought, rewarded)"/><${RowsEd} rows=${f.used} set=${v=>up({used:v})} title="Items used or given away"/></div>`;
+ return h`<div className="sheet-bg" onClick=${close}><div className="sheet" onClick=${e=>e.stopPropagation()}>
+  <div className="flex items-center mb-2"><div className="text-xl font-bold text-amber-400 flex-1">Quick update</div><button className="btn2" onClick=${close}>✕</button></div>
+  <datalist id="itmn">${IDB.map(x=>h`<option key=${x.n} value=${x.n}/>`)}</datalist>
+  ${done?h`<div className="card-grn p-3 space-y-1"><b>Saved</b>${done.map((x,i)=>h`<div key=${i} className="text-sm">✓ ${x}</div>`)}<div className="flex gap-2 mt-2"><button className="btn" onClick=${()=>{sd(null);sf(mk())}}>Update more</button><button className="btn2" onClick=${close}>Close</button></div></div>`
+  :h`<div className="space-y-3"><div className="flex flex-wrap gap-2">${MODES.map(([k,l])=>h`<button key=${k} className=${"chip "+(mode===k?"on":"")} onClick=${()=>{sm(k);sf(mk())}}>${l}</button>`)}</div>
+   ${body}${money}<button className="btn w-full" onClick=${apply}>Confirm and save</button>
+   ${(s.act||[]).length?h`<div className="text-xs text-slate-500"><div className="font-semibold text-slate-400 mb-1">Recent updates</div>${s.act.slice(0,6).map((x,i)=>h`<div key=${i}>${x}</div>`)}</div>`:null}</div>`}
+ </div></div>`}
+// ----- Buy planner
+function Buy({s,set}){
+ const sh=s.shp||{},cur=sh.cur||"m",cd=sh[cur]||{},rows=cd.rows||[],money=+(cur==="m"?s.money:s.mp)||0,lab=cur==="m"?"Money":"Merit Points";
+ const N=needs(s),[f,sf]=useState({n:"",p:0,q:99});
+ const upd=fn=>set(p=>({...p,shp:{...p.shp,[cur]:fn((p.shp||{})[cur]||{})}}));
+ const setRows=r=>upd(c=>({...c,rows:r}));
+ const hint=n=>{const a=cur==="p"?SIM.find(x=>x[0].split(" / ").includes(n)):null;return a?+a[1]:0};
+ const info=r=>{const n=r.n,have=cntOf(s,n),cr=CRR[n];let need=0,tier=9,t=null;
+  if(cr&&(n in (s.inv||{}))){t=+cr[2];need=Math.max(0,t-have);tier=need>0?(have===0?1:2):9}
+  else if(ITMK.has(n)&&(n in (s.itm||{}))){t=(s.tg||{})[n]??+ITM.find(x=>x[0]===n)[1];need=Math.max(0,t-have);tier=need>0?(have===0?2:3):9}
+  else if(N.gross[n]){need=Math.max(0,N.gross[n]-have);tier=need>0?2:9}
+  if(r.w!=null){need=r.w;tier=need>0?3:9}
+  const rank=r.pri==="s"?9:r.pri==="h"?0:r.pri==="l"?4:tier;
+  return{have,t,need,tier,rank}};
+ const keepSug=Math.round(money*0.2/100)*100,keep=cd.keep!=null?cd.keep:keepSug;
+ const items=rows.map((r,i)=>({r,i,...info(r)})).sort((a,b)=>a.rank-b.rank||(+a.r.p||0)-(+b.r.p||0));
+ let left=Math.max(0,money-keep),spend=0,want=0;
+ const plan=items.map(x=>{const p=+x.r.p||0,mx=Math.min(x.r.q!=null?x.r.q:99,x.need);
+  if(x.rank>=9||x.need<=0)return{...x,buy:0,st:"skip"};
+  if(!(p>0))return{...x,buy:0,st:"price"};
+  want+=mx*p;const buy=Math.min(mx,Math.floor(left/p));left-=buy*p;spend+=buy*p;
+  return{...x,buy,st:buy>=mx?"buy":buy>0?"part":"cant",mx}});
+ const cantAll=plan.filter(x=>x.st==="cant"||x.st==="part");
+ const addLow=()=>{const names=[...N.low.map(x=>x.n),...N.oth.map(x=>x.n),...Object.keys(N.gross).filter(k=>(N.gross[k]-cntOf(s,k))>0)];const ex=new Set(rows.map(r=>r.n));setRows([...rows,...[...new Set(names)].filter(n=>!ex.has(n)).sort((a,b)=>ordIdx(a)-ordIdx(b)).map(n=>({n,p:hint(n),q:99}))])};
+ const cap={buy:["Buy","tag grn"],part:["Buy some","tag amb"],cant:["Cannot afford","tag red"],skip:["Not needed","tag"],price:["Enter price","tag amb"]};
+ const pris=[["","Auto"],["h","High"],["l","Low"],["s","Skip"]];
+ return h`<div className="space-y-3">
+  <div className="card p-3 space-y-2"><div className="flex gap-2">${[["m","Money"],["p","Merit Points"]].map(([k,l])=>h`<button key=${k} className=${"chip "+(cur===k?"on":"")} onClick=${()=>set(p=>({...p,shp:{...p.shp,cur:k}}))}>${l}</button>`)}</div>
+   <div className="flex flex-wrap items-center gap-4"><label className="text-sm">${lab} you have <${Num} v=${money} set=${v=>set(p=>({...p,[cur==="m"?"money":"mp"]:v}))} w="w-28"/></label>
+   <label className="text-sm">Keep at least <${Num} v=${keep} set=${v=>upd(c=>({...c,keep:v}))} w="w-24"/></label></div>
+   <div className="text-xs text-slate-400">${cd.keep!=null?"You set the amount to keep. ":"Suggested: keep 20% ("+keepSug+") as a cushion. Change it if you like. "}One shop currency at a time. Switch the buttons above for Simona's Merit Points.</div></div>
+  <datalist id="itmn">${IDB.map(x=>h`<option key=${x.n} value=${x.n}/>`)}</datalist>
+  <div className="card p-3 space-y-2"><b className="text-amber-400 text-sm">What the shop is selling</b>
+   <div className="flex flex-wrap gap-2 items-center"><input list="itmn" placeholder="Item" value=${f.n} onInput=${e=>{const n=e.target.value;sf({...f,n,p:f.p||hint(n)})}} className=${IN+" flex-1 min-w-0"}/><span className="text-xs text-slate-400">Price</span><${Num} v=${f.p} set=${v=>sf({...f,p:v})} w="w-20"/><span className="text-xs text-slate-400">Stock</span><${Num} v=${f.q} set=${v=>sf({...f,q:v})} w="w-16"/>
+    <button className="btn" onClick=${()=>{const n=f.n.trim();if(n&&isKnown(n)&&!rows.some(r=>r.n===n)){setRows([...rows,{n,p:f.p,q:f.q}]);sf({n:"",p:0,q:99})}}}>Add</button></div>
+   ${f.n&&!isKnown(f.n)?h`<div className="text-xs text-amber-400">Pick an item from the suggestions.</div>`:null}
+   <div className="flex gap-2 flex-wrap"><button className="chip" onClick=${addLow}>Add everything I am low on</button>${rows.length?h`<button className="chip" onClick=${()=>setRows([])}>Clear list</button>`:null}</div></div>
+  ${rows.length&&(!(money>0)||!plan.some(x=>+x.r.p>0))?h`<div className="card-amb p-3 text-sm">${!(money>0)?"Enter how much "+lab.toLowerCase()+" you have above. ":""}${!plan.some(x=>+x.r.p>0)?"Enter each item's price (the shop shows it) to get a buying plan.":""}</div>`:rows.length?h`<div className=${cantAll.length?"card-amb p-3":"card-grn p-3"}><b>Plan: spend ${spend}, keep ${money-spend} of ${money}</b>
+   <div className="text-sm text-slate-300 mt-1">${cantAll.length?"Money is tight: you can cover "+spend+" of "+want+" wanted. Spending is in priority order. You would need "+Math.max(0,want-spend)+" more to buy everything.":"You can afford everything you need here and still keep "+keep+"."}</div></div>`:h`<div className="text-sm text-slate-400">Add the shop's items above. Items you are low on get bought first, and the plan stops before dipping under the amount you keep.</div>`}
+  ${plan.map(x=>h`<div key=${x.r.n} className=${(x.st==="buy"?"card-grn":x.st==="skip"?"card":"card")+" p-3"}>
+   <div className="flex items-center gap-2 flex-wrap"><b><${IL} n=${x.r.n}/></b><span className=${cap[x.st][1]}>${cap[x.st][0]}${x.buy>0?" "+x.buy+" ("+x.buy*(+x.r.p||0)+")":""}</span><button className="ml-auto text-red-400 px-2" onClick=${()=>setRows(rows.filter((_,j)=>j!==x.i))}>✕</button></div>
+   <div className="text-xs text-slate-400 mt-1">You have ${x.have}${x.t!=null?" of "+x.t:""} · need ${x.need} more${x.rank<9?" · priority "+(x.rank===0?"high":x.rank===1?"out of stock":x.rank<=2?"restock":x.rank===3?"training or wanted":"low"):""}</div>
+   <div className="flex flex-wrap items-center gap-3 mt-2 text-sm"><span className="flex items-center gap-1">Price <${Num} v=${x.r.p} set=${v=>setRows(rows.map((y,j)=>j===x.i?{...y,p:v}:y))} w="w-20"/></span><span className="flex items-center gap-1">Stock <${Num} v=${x.r.q!=null?x.r.q:99} set=${v=>setRows(rows.map((y,j)=>j===x.i?{...y,q:v}:y))} w="w-16"/></span><span className="flex items-center gap-1">Want <${Num} v=${x.r.w!=null?x.r.w:x.need} set=${v=>setRows(rows.map((y,j)=>j===x.i?{...y,w:v}:y))} w="w-16"/></span>
+    <select value=${x.r.pri||""} onChange=${e=>setRows(rows.map((y,j)=>j===x.i?{...y,pri:e.target.value}:y))} className=${IN}>${pris.map(([k,l])=>h`<option key=${k} value=${k}>${k?"Priority: "+l:"Priority: auto"}</option>`)}</select></div></div>`)}
+ </div>`}
+// ----- Roster editing
+const NATS=["Hardy","Lonely","Brave","Adamant","Naughty","Bold","Docile","Relaxed","Impish","Lax","Timid","Hasty","Serious","Jolly","Naive","Modest","Mild","Quiet","Bashful","Rash","Calm","Gentle","Sassy","Careful","Quirky"];
+const STN=["HP","Atk","Def","SpA","SpD","Spe"];
+function ELGrid({el,onSet}){return h`<div className="grid grid-cols-2 gap-x-4 gap-y-2">${STN.map((x,j)=>h`<div key=${x} className="flex items-center justify-between gap-1 text-sm"><span className="w-9 text-slate-300">${x}</span><${Step} v=${el[j]} set=${v=>onSet(j,v)} min=${0} max=${10} w="w-12"/></div>`)}</div>`}
+function RosterEdit({s,set}){
+ const ro=s.ro||[],[f,sf]=useState({n:"",t1:"Normal",t2:"",lv:50,nat:"",al:false,el:[0,0,0,0,0,0]}),[spend,ss]=useState(false);
+ const tsel=(v,fn,ph)=>h`<select value=${v} onChange=${e=>fn(e.target.value)} className=${IN}>${ph?h`<option value="">No 2nd type</option>`:null}${TYPES.map(t=>h`<option key=${t}>${t}</option>`)}</select>`;
+ const tot=m=>m.el.reduce((a,b)=>a+b,0);
+ const edit=(i,o)=>set(p=>({...p,ro:p.ro.map((x,j)=>j===i?{...x,...o}:x)}));
+ const setEl=(i,j,v)=>set(p=>{const m=p.ro[i],old=m.el[j];let q={...p,ro:p.ro.map((x,k)=>k===i?{...x,el:x.el.map((y,l)=>l===j?v:y)}:x)};
+  if(spend&&v>old){const t={...(q.itm||{})};for(let k=old;k<v;k++){const g=GR(k);if(g in t)t[g]=Math.max(0,t[g]-1)}q.itm=t}return q});
+ const nameIn=v=>{const d=DEX.find(x=>x.n.toLowerCase()===v.trim().toLowerCase());sf(d?{...f,n:v,t1:d.ty[0],t2:d.ty[1]||""}:{...f,n:v})};
+ const preset=v=>sf({...f,el:[v,v,v,v,v,v]});
+ return h`<div className="space-y-3">
+  <datalist id="dxn2">${DEX.map(d=>h`<option key=${d.i} value=${d.n}/>`)}</datalist><datalist id="natn">${NATS.map(n=>h`<option key=${n} value=${n}/>`)}</datalist>
+  <div className="card p-3 space-y-3"><h3 className="font-semibold text-amber-400">Add to roster</h3>
+   <input list="dxn2" placeholder="Pokémon (types fill in for you)" value=${f.n} onInput=${e=>nameIn(e.target.value)} className=${IN+" w-full"}/>
+   <div className="flex flex-wrap gap-2 items-center">${tsel(f.t1,v=>sf({...f,t1:v}))}${tsel(f.t2,v=>sf({...f,t2:v}),1)}<span className="text-sm">Lv <${Num} v=${f.lv} set=${v=>sf({...f,lv:v})} min=${1} max=${100} w="w-16"/></span></div>
+   <div className="flex flex-wrap gap-2 items-center"><input list="natn" placeholder="Nature" value=${f.nat} onInput=${e=>sf({...f,nat:e.target.value})} className=${IN+" w-32"}/><label className="text-sm flex items-center gap-2"><input type="checkbox" checked=${f.al} onChange=${e=>sf({...f,al:e.target.checked})} className="w-5 h-5 accent-amber-500"/>Alpha</label></div>
+   <div><div className="text-xs text-slate-400 mb-1">Effort Levels (0 to 10 per stat)</div><${ELGrid} el=${f.el} onSet=${(j,v)=>sf({...f,el:f.el.map((y,k)=>k===j?v:y)})}/>
+    <div className="flex gap-2 mt-2">${[0,5,10].map(v=>h`<button key=${v} className="chip" onClick=${()=>preset(v)}>All ${v}</button>`)}</div></div>
+   <button className="btn" onClick=${()=>{if(f.n.trim()){set(p=>({...p,ro:[...(p.ro||[]),{...f,n:f.n.trim()}]}));sf({...f,n:"",nat:"",al:false,el:[0,0,0,0,0,0]})}}}>Add</button></div>
+  ${ro.length?h`<label className="text-sm flex items-start gap-2"><input type="checkbox" checked=${spend} onChange=${e=>ss(e.target.checked)} className="w-5 h-5 mt-0.5 accent-amber-500"/><span>Use up Grit when I press + on a stat <span className="block text-xs text-slate-500">Takes one Grit from Stock (Dust at 0 to 2, Gravel 3 to 5, Pebble 6 to 8, Rock at 9). Only items you have counted.</span></span></label>`:null}
+  ${ro.map((m,i)=>h`<details key=${i} className="card"><summary className="p-3 cursor-pointer text-sm"><b>${m.n}</b> <span className="text-slate-400">${[m.t1,m.t2].filter(Boolean).join("/")} · Lv.${m.lv}${m.nat?" · "+m.nat:""}${m.al?" · Alpha":""}</span><span className="float-right">EL ${tot(m)}/60</span></summary>
+   <div className="px-3 pb-3 space-y-3"><input value=${m.n} onInput=${e=>edit(i,{n:e.target.value})} className=${IN+" w-full"}/>
+    <div className="flex flex-wrap gap-2 items-center">${tsel(m.t1,v=>edit(i,{t1:v}))}${tsel(m.t2||"",v=>edit(i,{t2:v}),1)}<span className="text-sm">Lv <${Step} v=${m.lv} set=${v=>edit(i,{lv:v})} min=${1} max=${100} w="w-14"/></span></div>
+    <div className="flex flex-wrap gap-2 items-center"><input list="natn" placeholder="Nature" value=${m.nat||""} onInput=${e=>edit(i,{nat:e.target.value})} className=${IN+" w-32"}/><label className="text-sm flex items-center gap-2"><input type="checkbox" checked=${!!m.al} onChange=${e=>edit(i,{al:e.target.checked})} className="w-5 h-5 accent-amber-500"/>Alpha</label></div>
+    <${ELGrid} el=${m.el} onSet=${(j,v)=>setEl(i,j,v)}/>
+    <div className="flex gap-2 flex-wrap">${[0,5,10].map(v=>h`<button key=${v} className="chip" onClick=${()=>edit(i,{el:[v,v,v,v,v,v]})}>All ${v}</button>`)}<button className="chip text-red-300" onClick=${()=>set(p=>({...p,ro:p.ro.filter((_,j)=>j!==i)}))}>Remove</button></div></div></details>`)}</div>`}
+
 function App(){
  const [s,set]=useState(()=>{try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}});
- const [tab,setTab]=useState("dash"),[q,setQ]=useState(""),[imp,setImp]=useState(""),[gq,setGq]=useState(""),[rs,setRs]=useState(false),[foc,setFoc]=useState({tab:"dash",n:0}),[hist,setHist]=useState([]),[sheets,setSheets]=useState([]),[last,setLast]=useState({});
+ const [tab,setTab]=useState("dash"),[q,setQ]=useState(""),[imp,setImp]=useState(""),[gq,setGq]=useState(""),[rs,setRs]=useState(false),[foc,setFoc]=useState({tab:"dash",n:0}),[hist,setHist]=useState([]),[sheets,setSheets]=useState([]),[last,setLast]=useState({}),[quick,setQuick]=useState(null);
  useEffect(()=>{try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}},[s]);
  useEffect(()=>{const g=TABG[tab];if(g)setLast(l=>({...l,[g]:tab}))},[tab]);
  const cnt=p=>Object.keys(s.c||{}).filter(k=>s.c[k]&&k[0]===p).length;
@@ -1378,7 +1528,7 @@ function App(){
  const nav=t=>{setHist([]);setTab(t);setFoc({tab:t,n:FN++});setQ("");setSheets([]);setGq("");top()};
  const back=()=>{const l=hist[hist.length-1];if(!l)return;setHist(a=>a.slice(0,-1));setTab(l.tab);setFoc({...l.foc,n:FN++});setSheets([]);top()};
  const openItem=n=>setSheets(a=>a[a.length-1]===n?a:[...a,n]);
- GO=go;ITEM=openItem;
+ GO=go;ITEM=openItem;QK=m=>setQuick(m||"catch");
  const ql=gq.toLowerCase();
  const res=gq.length>1?[
   ...IDB.filter(x=>x.n.toLowerCase().includes(ql)).slice(0,4).map(x=>({k:"_item",l:"Item",t:x.n,n:x.n})),
@@ -1403,13 +1553,15 @@ function App(){
    ${hist.length?h`<button className="btn2 px-3" onClick=${back}>←</button>`:null}
    <div className="relative flex-1 min-w-0"><input placeholder="Search items, Pokémon, missions…" value=${gq} onInput=${e=>setGq(e.target.value)} className=${IN+" w-full"}/>
     ${res.length?h`<div className="absolute left-0 right-0 top-full mt-1 card max-h-[60vh] overflow-y-auto z-50" style=${{background:"#111827"}}>${res.map((r,i)=>h`<button key=${i} onClick=${()=>pick(r)} className="block w-full text-left text-sm p-3 border-b border-slate-800">${r.t} <span className="text-slate-400">· ${r.l}</span></button>`)}</div>`:null}</div>
+   <button className="btn shrink-0 px-3" onClick=${()=>setQuick("catch")}>＋</button>
    <button className="chip shrink-0" onClick=${()=>go("need")}>${PG.gate>27?"Done":"M"+PG.gate} · ★${PG.rk}</button></div></div>
   <div className="max-w-3xl mx-auto px-3 pb-28">
    <div className="pt-2 pb-1 text-xs text-slate-500">${G0[2]} ${G0[1]}${TABN[tab]&&G0[3].length>1?" › "+TABN[tab]:""}</div>
    ${G0[3].length>1?h`<div className="flex flex-wrap gap-2 pb-3">${G0[3].map(([k,n])=>h`<button key=${k} className=${"chip "+(tab===k?"on":"")} onClick=${()=>nav(k)}>${n}${dt(k)}</button>`)}</div>`:null}
    ${body}</div>
   <div className="bnav"><div className="bnav-in">${GROUPS.map(g=>h`<button key=${g[0]} className=${gk===g[0]?"on":""} onClick=${()=>nav(gk===g[0]?g[3][0][0]:(last[g[0]]||g[3][0][0]))}><span className="ic">${g[2]}${dt(g[0])}</span>${g[1]}</button>`)}</div></div>
-  ${sheets.length?h`<${Sheet} n=${sheets[sheets.length-1]} s=${s} set=${set} close=${()=>setSheets([])} back=${sheets.length>1?()=>setSheets(a=>a.slice(0,-1)):null}/>`:null}</div>`}
+  ${sheets.length?h`<${Sheet} n=${sheets[sheets.length-1]} s=${s} set=${set} close=${()=>setSheets([])} back=${sheets.length>1?()=>setSheets(a=>a.slice(0,-1)):null}/>`:null}
+  ${quick?h`<${Quick} m0=${quick} s=${s} set=${set} close=${()=>setQuick(null)}/>`:null}</div>`}
 
 ReactDOM.createRoot(document.getElementById("root")).render(h`<${App}/>`);
 </script></body></html>
