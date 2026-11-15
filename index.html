@@ -1802,6 +1802,10 @@ function RosterEdit({s,set}){
   if(spend&&v>old){const t={...(q.itm||{})};for(let k=old;k<v;k++){const g=GR(k);if(g in t)t[g]=Math.max(0,t[g]-1)}q.itm=t}return q});
  const nameIn=v=>{const d=DEX.find(x=>x.n.toLowerCase()===v.trim().toLowerCase());sf(d?{...f,n:v,t1:d.ty[0],t2:d.ty[1]||""}:{...f,n:v})};
  const preset=v=>sf({...f,el:[v,v,v,v,v,v]});
+ const [q,sq]=useState(""),[so,sso]=useState("new"),ql=q.trim().toLowerCase();
+ const ros=ro.map((m,i)=>[m,i]).filter(([m])=>!ql||String(m.n).toLowerCase().includes(ql)||[m.t1,m.t2].some(t=>t&&t.toLowerCase().includes(ql))).sort(([x,i],[y,j])=>so==="az"?String(x.n).localeCompare(String(y.n)):so==="za"?String(y.n).localeCompare(String(x.n)):so==="old"?i-j:j-i);
+ const tm=ro.map((m,i)=>[m,i]).filter(([m])=>m.tm);
+ const togTeam=i=>set(p=>{const n=(p.ro||[]).filter(x=>x.tm).length,c=p.ro[i];if(!c.tm&&n>=6)return p;return {...p,ro:p.ro.map((x,j)=>j===i?{...x,tm:!x.tm}:x)}});
  return h`<div className="space-y-3">
   <datalist id="dxn2">${DEX.map(d=>h`<option key=${d.i} value=${d.n}/>`)}</datalist><datalist id="natn">${NATS.map(n=>h`<option key=${n} value=${n}/>`)}</datalist>
   <div className="card p-3 space-y-3"><h3 className="font-semibold text-amber-400">Add to roster</h3>
@@ -1814,12 +1818,19 @@ function RosterEdit({s,set}){
   <div className="text-xs text-slate-400">Everything on your roster is marked Caught in the Pokédex automatically (and Alpha Caught if you tick Alpha).</div>
   ${ro.filter(m=>!DEX.some(x=>x.n.toLowerCase()===String(m.n).trim().toLowerCase())).length?h`<div className="card-amb p-2 text-xs">Not matched to a Pokédex entry, so not marked Caught (check the spelling): ${ro.filter(m=>!DEX.some(x=>x.n.toLowerCase()===String(m.n).trim().toLowerCase())).map(m=>m.n).join(", ")}</div>`:null}
   ${ro.length?h`<label className="text-sm flex items-start gap-2"><input type="checkbox" checked=${spend} onChange=${e=>ss(e.target.checked)} className="w-5 h-5 mt-0.5 accent-amber-500"/><span>Use up Grit when I press + on a stat <span className="block text-xs text-slate-500">Takes one Grit from Stock (Dust at 0 to 2, Gravel 3 to 5, Pebble 6 to 8, Rock at 9). Only items you have counted.</span></span></label>`:null}
-  ${ro.map((m,i)=>h`<details key=${i} className="card"><summary className="p-3 cursor-pointer text-sm"><b>${m.n}</b> <span className="text-slate-400">${[m.t1,m.t2].filter(Boolean).join("/")} · Lv.${m.lv}${m.nat?" · "+m.nat:""}${m.al?" · Alpha":""}</span><span className="float-right">EL ${tot(m)}/60</span></summary>
+  ${ro.length?h`<div className="card p-3 space-y-2"><h3 className="font-semibold text-amber-400">My team (${tm.length}/6)</h3>
+   ${tm.length?null:h`<p className="text-sm text-slate-400">No team yet. Open "All my Pokémon" below and press Add to team on up to 6.</p>`}
+   ${tm.map(([m,i])=>h`<div key=${i} className="flex items-center justify-between gap-2 text-sm"><span><b>${m.n}</b> <span className="text-slate-400">${[m.t1,m.t2].filter(Boolean).join("/")} · Lv.${m.lv}${m.al?" · Alpha":""}</span></span><button className="chip text-red-300" onClick=${()=>togTeam(i)}>Remove</button></div>`)}
+   ${tm.length>=6?h`<p className="text-xs text-amber-400">Team is full. Remove someone to add another.</p>`:null}</div>`:null}
+  <details className="card"><summary className="p-3 cursor-pointer font-semibold text-amber-400">All my Pokémon (${ro.length})</summary><div className="p-3 pt-0 space-y-3">
+   <div className="flex flex-wrap gap-2"><input value=${q} onInput=${e=>sq(e.target.value)} placeholder="Search name or type" className=${IN+" flex-1 min-w-0"}/><select value=${so} onChange=${e=>sso(e.target.value)} className=${IN}><option value="new">Most recent</option><option value="old">Oldest</option><option value="az">A to Z</option><option value="za">Z to A</option></select></div>
+   ${ql&&!ros.length?h`<p className="text-sm text-slate-400">No match.</p>`:null}
+   ${ros.map(([m,i])=>h`<details key=${i} className="card"><summary className="p-3 cursor-pointer text-sm">${m.tm?"⭐ ":""}<b>${m.n}</b> <span className="text-slate-400">${[m.t1,m.t2].filter(Boolean).join("/")} · Lv.${m.lv}${m.nat?" · "+m.nat:""}${m.al?" · Alpha":""}</span><button className="chip ml-2" onClick=${e=>{e.preventDefault();e.stopPropagation();togTeam(i)}}>${m.tm?"On team ✓":"Add to team"}</button><span className="float-right">EL ${tot(m)}/60</span></summary>
    <div className="px-3 pb-3 space-y-3"><input value=${m.n} onInput=${e=>edit(i,{n:e.target.value})} className=${IN+" w-full"}/>
     <div className="flex flex-wrap gap-2 items-center">${tsel(m.t1,v=>edit(i,{t1:v}))}${tsel(m.t2||"",v=>edit(i,{t2:v}),1)}<span className="text-sm">Lv <${Step} v=${m.lv} set=${v=>edit(i,{lv:v})} min=${1} max=${100} w="w-14"/></span></div>
     <div className="flex flex-wrap gap-2 items-center"><input list="natn" placeholder="Nature" value=${m.nat||""} onInput=${e=>edit(i,{nat:e.target.value})} className=${IN+" w-32"}/><label className="text-sm flex items-center gap-2"><input type="checkbox" checked=${!!m.al} onChange=${e=>edit(i,{al:e.target.checked})} className="w-5 h-5 accent-amber-500"/>Alpha</label></div>
     <${ELGrid} el=${m.el} onSet=${(j,v)=>setEl(i,j,v)}/>
-    <div className="flex gap-2 flex-wrap">${[0,5,10].map(v=>h`<button key=${v} className="chip" onClick=${()=>edit(i,{el:[v,v,v,v,v,v]})}>All ${v}</button>`)}<button className="chip text-red-300" onClick=${()=>set(p=>({...p,ro:p.ro.filter((_,j)=>j!==i)}))}>Remove</button></div></div></details>`)}</div>`}
+    <div className="flex gap-2 flex-wrap">${[0,5,10].map(v=>h`<button key=${v} className="chip" onClick=${()=>edit(i,{el:[v,v,v,v,v,v]})}>All ${v}</button>`)}<button className="chip text-red-300" onClick=${()=>set(p=>({...p,ro:p.ro.filter((_,j)=>j!==i)}))}>Remove</button></div></div></details>`)}</div></details></div>`}
 
 // ----- V10: Here, Prep, request status, hunt, journal, backup reminder
 const isAct=(s,n)=>!!((s.rqa||{})[n]||(s.sv||{})[n]);
