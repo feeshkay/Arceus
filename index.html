@@ -1352,6 +1352,18 @@ Celestica Flute|Key & misc|Story key. The Flute calls ride Pokémon. Do not disc
 Odd Keystone|Key & misc|Spiritomb-related item tied to the wisp hunt (Request 22). Check its in-game description.|Wisps`);
 const IDB=[...IDBR.map(r=>({n:r[0],c:r[1],d:r[2],w:r[3]||""})),...GIN.map(r=>({n:r[0],c:"Ginter finds",d:"Mystery item sold by Ginter at the Ginkgo Guild. Buying it reveals: "+r[1]+".",w:"Ginter (Ginkgo Guild), cost "+r[2]}))];
 IDBR2.concat(GENR).forEach(r=>{const o=IDB.find(x=>x.n===r[0]);if(o){if(r[2])o.d=r[2];if(r[3])o.w=r[3]}else IDB.push({n:r[0],c:r[1],d:r[2],w:r[3]||""})});
+// ----- V13: items from the pasted list, drops, prices, and use advice
+const ITX=P(`Lost Satchels|Key & misc|Hidden satchels left around Hisui. Picking one up gives Merit Points.|Scattered randomly across all five areas
+Origin Ball|Key & misc|Special ball needed to quell the Origin Forme at the Temple of Sinnoh (Mission 18). It is made from Origin Ore, so do not discard it.|Mission 18: The Counterpart
+Pokeshi Doll|Sellable|Sell at the General Store for 1,000 Poké. Request #18 asks you to make one.|Requests
+Red Shards|Sellable|Used to craft Star Piece. Sells for 150 Poké, so save them for crafting first.|Field pickups, requests
+Blue Shards|Sellable|Used to craft Star Piece. Sells for 150 Poké, so save them for crafting first.|Field pickups, requests
+Green Shards|Sellable|Used to craft Star Piece. Sells for 150 Poké, so save them for crafting first.|Field pickups, requests`);
+const DRP={"Springy Mushroom":"Paras, Goomy, Hisuian Sliggoo, Parasect","Dazzling Honey":"Dustox, Beautifly, Combee, Mothim, Teddiursa, Ursaring","Hearty Grains":"Budew, Yanma, Roselia, Yanmega","Pinap Berry":"Gastrodon, Gyarados, Shellos (pink)","Chesto Berry":"Haunter, Gastly, Gengar, Golbat, Mime Jr., Mr. Mime, Zubat","Cheri Berry":"Shinx, Luxio","Leppa Berry":"Clefairy, Cleffa, Togekiss, Togepi, Togetic","Sitrus Berry":"Dartrix, Dewott, Hisuian Decidueye, Grotle, Monferno, Munchlax, Prinplup, Quilava, Samurott, Hisuian Typhlosion","Oran Berry":"Bidoof, Bibarel, Buneary, Chimchar, Cyndaquil, Oshawott, Pachirisu, Pichu, Pikachu, Rowlet","Pecha Berry":"Stunky, Skuntank","Rawst Berry":"Hisuian Growlithe, Magmar, Magmortar, Ponyta, Vulpix","Lum Berry":"Burmy, Cherrim, Cherubi, Hisuian Lilligant, Wormadam","Nanab Berry":"Shellos (blue)","Hopo Berry":"Abra, Kadabra","Razz Berry":"Eevee, Flareon","Plump Beans":"Chatot, Murkrow, Sealeo, Spheal, Whiscash","Aspear Berry":"Vulpix","Crunchy Salt":"Bergmite, Swinub","Pop Pod":"Basculin, Hisuian Qwilfish, Octillery, Remoraid","Wood":"Scyther, Kleavor","Apricorn":"Starly, Staravia, Staraptor, Kricketot, Kricketune, Wurmple","Tumblestone":"Croagunk, Geodude, Graveler, Machoke, Machop, Magikarp","Vivichoke":"Eevee, Flareon, Drifloon, Budew, Yanma","Pep-Up Plant":"Sneasel, Stantler","Medicinal Leek":"Buizel, Floatzel, Gardevoir, Psyduck, Golduck, Kirlia, Snorunt, Tangela","Iron Chunk":"Bastiodon, Bonsly, Onix, Rhydon, Rhyhorn, Shieldon, Skorupi, Sudowoodo","Sky Tumblestone":"Mantine, Mantyke, Porygon, Porygon2, Porygon-Z","Black Tumblestone":"Bastiodon, Bonsly, Onix, Rhydon, Rhyhorn, Shieldon, Skorupi, Sudowoodo","King's Leaf":"Cherrim, Hisuian Decidueye, Hisuian Lilligant, Samurott, Torterra, Hisuian Typhlosion, Wormadam","Bugwort":"Drifblim, Drifloon, Dusclops, Finneon","Caster Fern":"Carnivine, Glameow, Lickilicky, Lickitung, Hisuian Voltorb","Sootfoot Root":"Abomasnow, Hisuian Braviary, Hippopotas, Rufflet, Snover","Exp. Candy S":"Alpha Eevee, Alpha Kricketune","Exp. Candy M":"Alpha Ambipom, Chansey, Drapion, Graveler, Heracross, Hippowdon, Hisuian Zoroark, Honchkrow, Hisuian Sliggoo, Lopunny, Octillery, Parasect, Purugly, Rapidash, Snorlax, Steelix, Vespiquen, Yanmega","Exp. Candy L":"Alpha Alakazam, Blissey, Clefable, Crobat, Dusknoir, Electivire, Gallade, Garchomp, Hisuian Goodra, Infernape, Raichu, Rhyperior, Roserade, Scizor, Torterra, Ursaluna, Walrein","Seed of Mastery":"Every Alpha Pokémon"};
+const PRI={"Thunder Stone":"1,000 MP","Water Stone":"1,000 MP","Fire Stone":"1,000 MP","Moon Stone":"1,000 MP","Leaf Stone":"1,000 MP","Ice Stone":"1,000 MP","Sun Stone":"1,000 MP","Shiny Stone":"1,200 MP","Dusk Stone":"1,200 MP","Dawn Stone":"1,200 MP","Oval Stone":"400 MP","Full Restore":"2,500 Poké at the shop","Stardust":"sells for 1,000 Poké","Pokeshi Doll":"sells for 1,000 Poké","Star Piece":"sells for 5,000 Poké","Comet Shard":"sells for 15,000 Poké","Nugget":"sells for 10,000 Poké","Red Shards":"sells for 150 Poké","Blue Shards":"sells for 150 Poké","Green Shards":"sells for 150 Poké"};
+ITX.forEach(r=>{if(!IDB.some(x=>x.n===r[0]))IDB.push({n:r[0],c:r[1]==="Sellable"?((IDB.find(x=>x.n==="Stardust")||{}).c||"Sellables"):r[1],d:r[2],w:r[3]})});
+IDB.forEach(x=>{if(DRP[x.n])x.dr=DRP[x.n];if(PRI[x.n])x.pr=PRI[x.n]});
+
 const IDM={},ORD={};IDB.forEach((x,i)=>{IDM[x.n]=x;ORD[x.n]=i});
 const IDBS=[...IDB].sort((a,b)=>a.n.localeCompare(b.n));
 const ordIdx=n=>n in ORD?ORD[n]:9999;
@@ -1481,6 +1493,7 @@ function Sheet({n,s,set,close,back}){
    <div className="flex flex-wrap gap-2 mt-2">${evo.map(([e,i])=>h`<button key=${i} className="chip" onClick=${()=>{close();GO("evo",{id:"e"+i})}}>${e[0]} → ${e[1]} ›</button>`)}</div>
    ${shS.map(x=>h`<div key=${x[0]} className="text-sm mt-1">Simona's Trading Post: ${x[1]} MP</div>`)}${shG.map(x=>h`<div key=${x[0]} className="text-sm mt-1">Ginter sells it disguised as ${x[0]} (${x[2]})</div>`)}
    ${shS.length||shG.length?h`<button className="lnk text-sm mt-1" onClick=${()=>{close();GO("shop")}}>Open Shops ›</button>`:null}</div>`:null}
+  <${ItemAdvice} n=${n} s=${s} close=${close}/>
   <input placeholder="My notes about this item…" value=${(s.n||{})["i:"+n]||""} onInput=${e=>{const v=e.target.value;set(p=>({...p,n:{...p.n,["i:"+n]:v}}))}} className=${IN+" w-full mb-3"}/>
   <div className="flex gap-2 flex-wrap"><button className="btn2" onClick=${()=>{close();GO("need")}}>To Get list</button><button className="btn2" onClick=${()=>{close();GO("gloss")}}>Item Guide</button>${r?h`<button className="btn2" onClick=${()=>{close();GO("sat")}}>Satchel</button>`:null}</div>
  </div></div>`}
@@ -1681,7 +1694,7 @@ function ItemBox({s,set}){
    ${nd?h`<div className="text-xs text-amber-300">Low in your Satchel (aim for ${tgtOf(s,n)}). Take ${nd} out of the box.</div>`:null}</div>`})}
   ${R.length>lim?h`<button className="btn2 w-full" onClick=${()=>sl(lim+40)}>Show more (${R.length-lim} left)</button>`:null}</div>`}
 
-const EVIT=new Set(["Linking Cord","Black Augurite","Peat Block","Razor Claw","Razor Fang","Metal Coat","Oval Stone","Dubious Disc","Reaper Cloth","Magmarizer","Electirizer","Upgrade","Sun Stone","Leaf Stone","Thunder Stone","Moon Stone","Shiny Stone","Dawn Stone","Dusk Stone","Water Stone","Fire Stone","Ice Stone"]);
+const EVIT=new Set(["Linking Cord","Black Augurite","Peat Block","Razor Claw","Razor Fang","Metal Coat","Oval Stone","Dubious Disc","Reaper Cloth","Magmarizer","Electirizer","Protector","Upgrade","Sun Stone","Leaf Stone","Thunder Stone","Moon Stone","Shiny Stone","Dawn Stone","Dusk Stone","Water Stone","Fire Stone","Ice Stone"]);
 const evOpts=d=>{const t=String(d.evo||"").replace(/->/g,"→").trim();
  if(!t||/^(Final stage|Legendary|Mythical)/i.test(t)||!/→|Branches/.test(t))return[];
  if(/Branches/.test(t))return[{k:"sp",x:t}];
@@ -1740,6 +1753,42 @@ function FindMon({s}){
  const [q,sq]=useState(""),PG=prog(s),ql=q.trim().toLowerCase(),R=ql.length>1?DEX.filter(d=>d.n.toLowerCase().includes(ql)).slice(0,6):[];
  return h`<div className="card p-3 space-y-2"><div className="font-semibold text-amber-400 text-sm">Find any Pokémon</div><input placeholder="Type a name…" value=${q} onInput=${e=>sq(e.target.value)} className=${IN+" w-full"}/>
   ${R.map(d=>h`<div key=${d.i} className="text-sm border-t border-slate-800 pt-1"><b>#${d.i} ${d.n}</b> <span className="text-xs text-slate-400">${d.ty.join("/")}</span><div className="text-xs">${d.rg.map(r=>(RGN[r]||r)+(PG.open[RGN[r]]===false?" (not open yet)":"")).join(", ")}</div><div className="text-xs text-slate-300">${d.loc}</div><div className="text-xs text-slate-400">${d.cond}${d.evo?" · "+d.evo:""}</div></div>`)}</div>`}
+
+// ----- V13: item advice (when, who, best of yours)
+const EEV="Each Eevee becomes only one Eeveelution, so catch a few and pick the type your team lacks.",EXT={"Thunder Stone":["Eevee"],"Water Stone":["Eevee"],"Fire Stone":["Eevee"],"Leaf Stone":["Eevee"],"Ice Stone":["Eevee"]},ANY="Any time, from the Satchel.";
+const ITIP={"Thunder Stone":[ANY,EEV],"Water Stone":[ANY,EEV],"Fire Stone":[ANY,EEV],"Leaf Stone":[ANY,EEV],"Ice Stone":[ANY,EEV+" It also evolves Alolan Vulpix."],
+"Moon Stone":[ANY,"Cleffa must reach high friendship to become Clefairy first."],"Shiny Stone":[ANY,"Roserade is a strong Grass/Poison attacker and Togekiss a Fairy/Flying one."],"Dusk Stone":[ANY,"Mismagius is the Ghost type Beni leads with, so Ghost attackers are useful in Mission 17."],
+"Dawn Stone":[ANY,"Kirlia must be male for Gallade (a False Swipe user, great for catching). Snorunt must be female for Froslass."],"Oval Stone":["During the day (Morning, Midday or Evening).","Chansey needs high friendship to become Blissey."],"Sun Stone":[ANY,"Hisuian Lilligant is Grass/Fighting."],
+"Razor Fang":["At night only: sleep at camp until Nightfall, then use it.","Gliscor can use False Swipe, so it doubles as a catcher."],"Razor Claw":["Daytime for Hisuian Sneasel → Sneasler. Night for Johtonian Sneasel → Weavile.","Sneasler (Fighting/Poison) is the better story pick. Weavile only comes from Obsidian Fieldlands distortions."],
+"Reaper Cloth":[ANY,"Mission 10 also needs a spare Dusclops, so catch two."],"Metal Coat":[ANY,"One Scyther goes only one way: Scizor (this) or Kleavor (Black Augurite). Onix → Steelix also uses it."],"Black Augurite":[ANY,"Scyther → Kleavor (Bug/Rock, False Swipe user). Pick the Scyther you want on your team."],
+"Peat Block":["Only during a Full Moon: sleep at camp until Nightfall and check the sky first.","Ursaring → Ursaluna. Do not spend the block until the moon is out."],"Linking Cord":[ANY,"Evolves four Pokémon. Use it on the ones you will actually battle with."],
+"Upgrade":[ANY,"Porygon line mostly fills Pokédex entries."],"Dubious Disc":[ANY,"Porygon-Z mostly fills a Pokédex entry."],"Magmarizer":[ANY,"Magmortar: Pokédex entry and a strong Fire attacker."],"Electirizer":[ANY,"Electivire: Pokédex entry and a strong Electric attacker."],"Protector":[ANY,"Rhyperior: Pokédex entry and a strong Ground/Rock attacker. The Alpha drops Exp. Candy L."],
+"Rare Candy":["Any time. Best on the last few levels before an evolution, or to bring a new teammate up to your obedience cap.","It cannot go past the level your Star Rank allows."],
+"Exp. Candy S":["When a Pokémon is 1 or 2 levels from a level-up or evolution.","Small gains; bigger candies are for big jumps."],"Exp. Candy M":["On teammates a few levels behind.","Bigger candies are for newly caught Pokémon."],"Exp. Candy L":["On newly caught or low-level teammates.","One L is a big jump, so check your obedience cap first."],"Exp. Candy XL":["On a new teammate that is far behind.","Check your obedience cap first."],
+"Grit Dust":["On a stat at EL 0 to 2 (takes it to 3).","Pick stats for the role: Attack or Sp. Atk for attackers, Speed for fast ones, HP and defenses for tanks. Do not spread evenly."],"Grit Gravel":["On a stat at EL 3 to 4 (takes it to 5).","Finish the stats that matter most first."],"Grit Pebble":["On a stat at EL 5 to 7 (takes it to 8).","Finish the stats that matter most first."],"Grit Rock":["On a stat at EL 8 to 9 (takes it to 10).","Only worth it on your main team."],
+"Seed of Mastery":["After a Pokémon reaches the level where it learns the move.","Master your most-used moves first. False Swipe on your catcher is the best first pick."],"Full Restore":["Boss, Noble and legendary fights you cannot afford to lose.","Keep two or three in reserve."],
+"Mechanical Box":["Use from the Satchel on Rotom.","Heat Rotom: Electric/Fire. Pick the form whose type your team lacks."],"Mechanical Cabinet":["Use from the Satchel on Rotom.","Frost Rotom: Electric/Ice."],"Mechanical Tub":["Use from the Satchel on Rotom.","Wash Rotom: Electric/Water."],"Mechanical Pinwheel":["Use from the Satchel on Rotom.","Fan Rotom: Electric/Flying."],"Mechanical Circular Saw":["Use from the Satchel on Rotom.","Mow Rotom: Electric/Grass."],
+"Stardust":["Keep until you can craft Star Pieces, then sell.","Selling early loses the Star Piece."],"Star Piece":["Sell at the General Store when you need Poké.","Crafted from Stardust and shards."]};
+const gritFor=(n,s)=>{const ro=s.ro||[],o=[];ro.forEach(m=>(m.el||[]).forEach((e,j)=>{if(GR(e)===n)o.push({m,j,e})}));return o.sort((a,b)=>(b.m.tm?1:0)-(a.m.tm?1:0)||a.e-b.e).slice(0,3).map(x=>x.m.n+": "+STN[x.j]+" (EL "+x.e+")")};
+function advBest(n,s){
+ const ro=s.ro||[],pool=ro.filter(m=>m.tm).length?ro.filter(m=>m.tm):ro;
+ if(/^Grit /.test(n))return gritFor(n,s);
+ if(n==="Rare Candy"||/^Exp\. Candy/.test(n)){const o=[];ro.forEach(m=>{const e=evFor(m,s);if(e)e.O.filter(x=>x.k==="lv"&&m.lv<x.n).forEach(x=>o.push({m,df:x.n-m.lv,to:x.to}))});
+  const a=o.sort((x,y)=>x.df-y.df).slice(0,3).map(x=>x.m.n+" is "+x.df+" level"+(x.df>1?"s":"")+" from "+x.to);return a.length?a:[...pool].sort((x,y)=>x.lv-y.lv).slice(0,3).map(m=>m.n+" (Lv. "+m.lv+")")}
+ if(n==="Seed of Mastery")return pool.slice(0,3).map(m=>m.n);
+ if(EVIT.has(n)){const T=[...new Set([...DEX.filter(d=>String(d.evo).includes(n)).map(d=>d.n),...(EXT[n]||[])])],tl=T.map(x=>x.toLowerCase());
+  const c=ro.filter(m=>tl.includes(String(m.n).trim().toLowerCase())).sort((a,b)=>((b.tm?30:0)+(b.al?20:0)+b.lv/10)-((a.tm?30:0)+(a.al?20:0)+a.lv/10)).slice(0,3).map(m=>m.n+" Lv. "+m.lv+(m.tm?" (on your team)":"")+(m.al?" (Alpha)":""));
+  return c.length?c:["None on your Roster yet. It works on: "+T.join(", ")]}
+ return[]}
+function ItemAdvice({n,s,close}){
+ const it=IDM[n]||{},tip=ITIP[n]||(/Berry$/.test(n)?["Heal or cure in a pinch, or throw as bait. Keep extras for crafting.","Razz Berry makes wild Pokémon easier to catch; Hopo Berry restores PP."]:null),b=bxN(s,n),best=tip?advBest(n,s):[];
+ if(!tip&&!it.dr&&!it.pr&&!b)return null;
+ return h`<div className="card p-3 mb-3 text-sm space-y-1"><b className="text-amber-400">Advice</b>
+  <div className="text-xs text-slate-400">Satchel ${cntOf(s,n)} · Item Box ${b} · Total ${cntOf(s,n)+b} <button className="lnk" onClick=${()=>{close();GO("box")}}>Item Box ›</button></div>
+  ${it.pr?h`<div><b>Price:</b> ${it.pr}</div>`:null}${it.dr?h`<div><b>Dropped by:</b> ${it.dr}</div>`:null}
+  ${EVIT.has(n)?h`<div className="text-xs text-slate-400">Also found in Space-Time Distortions, and Ginter may sell it disguised.</div>`:null}
+  ${tip?h`<div><b>When to use:</b> ${tip[0]}</div><div><b>Consider:</b> ${tip[1]}</div>`:null}
+  ${best.length?h`<div><b>Best on your Roster:</b>${best.map((x,i)=>h`<div key=${i} className="text-xs">• ${x}</div>`)}</div>`:null}</div>`}
 
 const NEW={route:Route,box:ItemBox,evh:EvoHelper,farm:Farm,here:Here,prep:Prep,hunt:Hunt,jr:Journal,buy:Buy,setup:Setup,tool:Tool,gloss:Gloss,items:Items,pick:Pick,guide:Guide,plan:Plan,log:Log,dex:Dex,types:TypesTab,roster:Roster,sat:Satchel,shiny:Shiny,stars:Stars,path:PATH,mech:MECH,catch:CATCH,need:Need,dash:Dash};
 
