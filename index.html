@@ -1723,14 +1723,14 @@ function evFor(m,s){
  return{d,O}}
 function EvoHelper({s,set}){
  const ro=s.ro||[],c=s.c||{},names=new Set(ro.map(m=>String(m.n).trim().toLowerCase()));
- const L=ro.map(m=>({m,e:evFor(m,s)})).filter(x=>x.e&&x.e.O.length).map(x=>({...x,best:Math.min(...x.e.O.map(o=>o.r))}));
+ const L=ro.map((m,i)=>({m,i,e:evFor(m,s)})).filter(x=>x.e&&x.e.O.length).map(x=>({...x,best:Math.min(...x.e.O.map(o=>o.r))}));
  const held=[...EVIT].filter(k=>cntOf(s,k)+bxN(s,k)>0).map(k=>({k,l:DEX.filter(d=>String(d.evo).includes(k))}));
  const G=[[0,"✅ Ready now","card-grn"],[1,"🟡 Almost there","card"],[2,"🛠 Easy to set up","card"],[3,"⏳ Needs more work","card"]],ic=["✅","🟡","🛠","⏳"];
  return h`<div className="space-y-3">
   <p className="text-sm text-slate-400">Checks every Pokémon on your Roster against its evolution, using your levels, Satchel, Item Box and Star Rank. Pokémon that cannot evolve any more are not listed.</p>
   ${held.length?h`<div className="card p-3 text-sm"><b className="text-amber-400">Evolution items you have</b>${held.map(x=>h`<div key=${x.k} className="py-1 border-t border-slate-800"><${IL} n=${x.k}/> (${cntOf(s,x.k)} in Satchel, ${bxN(s,x.k)} in box) → ${x.l.map(d=>d.n+(names.has(d.n.toLowerCase())?" ✓ on roster":c["dc"+d.i]?" (caught)":"")).join(", ")}</div>`)}</div>`:null}
   ${ro.length?null:h`<div className="card-amb p-3 text-sm">Your Roster is empty. Add Pokémon with their levels in <button className="lnk" onClick=${()=>GO("roster")}>Roster</button> to see what can evolve.</div>`}
-  ${G.map(([g,ti,cl])=>{const R=L.filter(x=>x.best===g);return R.length?h`<div key=${g} className="space-y-2"><h3 className="font-semibold text-amber-400">${ti} (${R.length})</h3>${R.map((x,i)=>h`<div key=${i} className=${cl+" p-3 text-sm space-y-1"}><div><b>${x.m.n}</b> <span className="text-xs text-slate-400">Lv. ${x.m.lv}</span></div>${x.e.O.map((o,j)=>h`<div key=${j} className="text-xs"><span>${ic[o.r]}</span> ${o.to?h`<b>→ ${o.to}: </b>`:null}${o.t}</div>`)}</div>`)}</div>`:null})}</div>`}
+  ${G.map(([g,ti,cl])=>{const R=L.filter(x=>x.best===g);return R.length?h`<div key=${g} className="space-y-2"><h3 className="font-semibold text-amber-400">${ti} (${R.length})</h3>${R.map((x,i)=>h`<div key=${i} className=${cl+" p-3 text-sm space-y-1"}><div><b>${x.m.n}</b> <span className="text-xs text-slate-400">Lv. ${x.m.lv}</span></div><${EvolveBtns} m=${x.m} i=${x.i} s=${s} set=${set}/>${x.e.O.map((o,j)=>h`<div key=${j} className="text-xs"><span>${ic[o.r]}</span> ${o.to?h`<b>→ ${o.to}: </b>`:null}${o.t}</div>`)}</div>`)}</div>`:null})}</div>`}
 
 const locSplit=l=>String(l).split(/,(?![^(]*\))|;/).map(x=>x.trim()).filter(Boolean);
 const locKey=p=>p.replace(/\s*\(.*?\)/g,"").trim();
@@ -1885,6 +1885,19 @@ function KeepRelease({s,set}){
   ${easy.length?h`<h3 className="font-semibold text-amber-400">Release for Grit (${easy.length})</h3>${easy.map(row)}`:null}
   ${chk.length?h`<h3 className="font-semibold text-amber-400">Check first: has Grit invested (${chk.length})</h3>${chk.map(row)}`:null}
   ${keepL.length?h`<h3 className="font-semibold text-green-400">Keep (${keepL.length})</h3>${keepL.map(row)}`:null}</div>`}
+
+
+// ----- V16: evolve a Roster Pokémon (renames it and updates types)
+const evTargets=o=>String(o.to||"").split(/ or | \/ /i).map(x=>x.replace(/\s*\(.*?\)/g,"").trim()).filter(Boolean);
+const evolveTo=(set,i,m,to,item)=>{const hi=/^hisuian\s/i.test(m.n),f=x=>DEX.find(d=>d.n.toLowerCase()===x.toLowerCase()),d=(hi&&f("Hisuian "+to))||f(to);
+ if(!d){alert("Could not find "+to+" in the Pokédex list. Rename it by hand in the Roster.");return}
+ if(!confirm("Evolve "+m.n+" into "+d.n+"?"+(item?" One "+item+" will be used from your Satchel or Item Box.":"")))return;
+ set(p=>{let q={...p,ro:p.ro.map((x,j)=>j===i?{...x,n:d.n,t1:d.ty[0],t2:d.ty[1]||""}:x),c:{...p.c,["dc"+d.i]:true}};
+  if(item){const a=cntOf(q,item),b=bxN(q,item);if(a>0)q=applyCnt(q,item,a-1);else if(b>0)q={...q,bx:{...q.bx,[item]:b-1}}}return q})};
+function EvolveBtns({m,i,s,set}){
+ const e=evFor(m,s);if(!e||!e.O.length)return null;const seen=new Set(),L=[];
+ e.O.forEach(o=>evTargets(o).forEach(x=>{if(!seen.has(x)){seen.add(x);L.push([x,o.k==="it"?o.it:null])}}));
+ return L.length?h`<div className="flex flex-wrap items-center gap-2 text-xs"><span className="text-slate-400">It evolved:</span>${L.map(([x,it])=>h`<button key=${x} className="chip" onClick=${()=>evolveTo(set,i,m,x,it)}>→ ${x}</button>`)}</div>`:null}
 
 const NEW={keep:KeepRelease,catchf:CatchThis,bat:Battle,route:Route,box:ItemBox,evh:EvoHelper,farm:Farm,here:Here,prep:Prep,hunt:Hunt,jr:Journal,buy:Buy,setup:Setup,tool:Tool,gloss:Gloss,items:Items,pick:Pick,guide:Guide,plan:Plan,log:Log,dex:Dex,types:TypesTab,roster:Roster,sat:Satchel,shiny:Shiny,stars:Stars,path:PATH,mech:MECH,catch:CATCH,need:Need,dash:Dash};
 
@@ -2093,7 +2106,7 @@ function RosterEdit({s,set}){
    <div className="flex flex-wrap gap-2"><input value=${q} onInput=${e=>sq(e.target.value)} placeholder="Search name or type" className=${IN+" flex-1 min-w-0"}/><select value=${so} onChange=${e=>sso(e.target.value)} className=${IN}><option value="new">Most recent</option><option value="old">Oldest</option><option value="az">A to Z</option><option value="za">Z to A</option></select></div>
    ${ql&&!ros.length?h`<p className="text-sm text-slate-400">No match.</p>`:null}
    ${ros.map(([m,i])=>h`<details key=${i} className="card"><summary className="p-3 cursor-pointer text-sm">${m.tm?"⭐ ":""}<b>${m.n}</b> <span className="text-slate-400">${[m.t1,m.t2].filter(Boolean).join("/")} · Lv.${m.lv}${m.nat?" · "+m.nat:""}${m.al?" · Alpha":""}</span>${isFS(m)?h`<span className="text-xs text-emerald-400"> · False Swipe</span>`:null}<button className="chip ml-2" onClick=${e=>{e.preventDefault();e.stopPropagation();togTeam(i)}}>${m.tm?"On team ✓":"Add to team"}</button><span className="float-right">EL ${tot(m)}/60</span></summary>
-   <div className="px-3 pb-3 space-y-3"><input value=${m.n} onInput=${e=>edit(i,{n:e.target.value})} className=${IN+" w-full"}/>
+   <div className="px-3 pb-3 space-y-3"><input value=${m.n} onInput=${e=>edit(i,{n:e.target.value})} className=${IN+" w-full"}/><${EvolveBtns} m=${m} i=${i} s=${s} set=${set}/>
     <div className="flex flex-wrap gap-2 items-center">${tsel(m.t1,v=>edit(i,{t1:v}))}${tsel(m.t2||"",v=>edit(i,{t2:v}),1)}<span className="text-sm">Lv <${Step} v=${m.lv} set=${v=>edit(i,{lv:v})} min=${1} max=${100} w="w-14"/></span></div>
     <div className="flex flex-wrap gap-2 items-center"><input list="natn" placeholder="Nature" value=${m.nat||""} onInput=${e=>edit(i,{nat:e.target.value})} className=${IN+" w-32"}/><label className="text-sm flex items-center gap-2"><input type="checkbox" checked=${!!m.al} onChange=${e=>edit(i,{al:e.target.checked})} className="w-5 h-5 accent-amber-500"/>Alpha</label></div>
     <div className="card-amb p-2 text-xs space-y-1"><b>Moves to master</b>${isFS(m)?h`<div>🗡 False Swipe: learn it from Zisu (Training Grounds, Jubilife Village) and master it. It leaves wild Pokémon at 1 HP, so it is your catch tool.</div>`:h`<div>No known False Swipe for this one. Pair it with a False Swipe teammate when catching.</div>`}${/gallade/i.test(m.n)?h`<div>💤 Hypnosis (Lv. 18): put targets to sleep before you throw.</div>`:null}${[m.t1,m.t2].filter(Boolean).map(x=>h`<div key=${x}>⭐ ${x} moves to look for: ${(MVT[x]||[]).join(", ")}</div>`)}<div className="text-slate-400">Check its own move list in the game; it can only learn moves on that list. Use Seeds of Mastery on the ones you use most.</div><div>Weak to: ${wkOf(m).join(", ")||"nothing"}. Keep it out of fights against those types.</div></div>
